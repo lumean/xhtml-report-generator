@@ -1,0 +1,135 @@
+/* general styles */
+
+body{
+	background:#FFFFFF;
+    font:100% Arial, Helvetica, sans-serif;
+    color:#555555;
+    line-height:100%;
+}
+
+p{
+    background:#FFFFFF;
+    font:100% Arial, Helvetica, sans-serif;
+    color:#555;
+    line-height:100%;
+    text-align:left;
+}
+
+/***********************
+div classes
+************************/
+div.head{
+	font: 200% Arial, Helvetica, sans-serif, bold;
+	text-align:center;
+	margin:auto; /*zentriert die div box*/
+	width:100%;
+	height:auto;
+}
+
+/* div.headleft{
+	margin-top:40px;
+	margin-left:20px;
+	float:left;
+	width:20%;
+}
+
+div.headmiddle{
+	float:left;
+	width:39%;
+	margin-top:10px;
+}
+
+div.headright{
+	float:right;
+	width:40%;
+	margin-top:10px;
+} */
+
+div.overlay{
+position: fixed;
+size:auto;
+display:none;
+}
+
+div.lefttoc{
+	position:fixed;
+	width:25%;
+	/*height:90%;*/
+    top: 100px;
+    left: 5px;
+    bottom: 10px;
+	border:solid 1px #000000;
+	overflow:auto;
+	white-space:nowrap;
+    /*display:none;*/      /*uncomment on the left for printing*/
+}
+
+div.middle{
+	margin: 0 160px 0 27%; /*top right bottom left*/
+	/* margin: x y   =  Xpx each - botten and top,   ypx each - left and right */
+}
+
+div.righttoc{
+	position:fixed;
+	width:150px;
+    top:100px;
+    right:5px;
+	border:solid 1px #000000;
+    /*display:none;*/      /*uncomment on the left for printing*/
+}
+
+button{
+    width:100%;
+}
+
+/*code*/
+pre{
+	background:#E5F1F4;
+	font-size: 80%;
+	border: 1px dotted;
+}
+
+/*default highlight yellow*/
+span{
+	background:#FFFF00;
+}
+
+/*red*/
+span.r{
+	background:#FF0000;
+}
+
+/*green*/
+span.g{
+	background:#00FF00;
+}
+/*blue*/
+span.b{
+	background:#00FFFF;
+}
+
+a{
+        text-decoration:none;
+        color:#057fac;
+}
+a:hover{
+        text-decoration:none;
+        color:#999999;
+}
+
+h1{
+        font-size:140%;
+        margin:20px 0px;
+}
+
+h2{
+        font-size:120%;
+}
+
+form{
+        margin:1em 0;
+        padding:.2em 20px;
+        background:#eeeeee; 
+}
+
+
