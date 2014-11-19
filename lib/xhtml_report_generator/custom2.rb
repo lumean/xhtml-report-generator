@@ -17,6 +17,9 @@ EOF
     end
 end
 
+# we must extend the module here, because this code is loaded with
+# instance_eval, and thus gets directly attached to the unique 
+# Generator class
 extend Custom
 
 #class Test
