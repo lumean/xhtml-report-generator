@@ -6,7 +6,7 @@ head = <<EOF
 EOF
 
 # create the xml document
-doc = REXML::Document.new(head)
+doc = REXML::Document.new(head, {:raw => :all})
 
 # create some elements
 e1 = REXML::Element.new "elem1"
@@ -27,9 +27,19 @@ e2.text = "noch mehr"
 e2.add_text "Hallo welt"
 
 # no let's add also some content for the parent
-e1.add REXML::Text.new("und nochmals eine Zeile")
+e1.add REXML::Text.new("und nochmals & eine Zeile")
 e1.text = "test"
-e1.add_text "Hallo welt"
+#blub = REXML::Text.new("tests&&&", false, nil, false)
+
+cd = REXML::CData.new("<&")
+
+REXML::Text.new( "<&", false, nil, false ) #-> "<&"
+blub = REXML::Text.new( "<&", true, nil, false ) #-> "&lt;&amp;"
+#REXML::Text.new( "<&", false, nil, true ) #-> Parse exception
+#REXML::Text.new( "<&", true, nil, true ) #-> "<&"
+
+e1.add_text(cd)
+e1.add_text "Hallo & welt"
 
 # OK so let's assume we don't have a direct handle to the element we want to change and call it elem3:
 e1.add(REXML::Element.new("elem3"))

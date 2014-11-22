@@ -1,24 +1,32 @@
 # The module needs to be called 'Custom'
 module Custom
-    #puts Module.nesting
-    def header
-      return <<EOF
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-EOF
-    end
-    def H1
-      puts "hallo H1"
-    end
+  #puts Module.nesting
 
-    def H2
-      puts "hallo H2"
+  # @document is a valid REXML xhtml document
+  def createLayout
+    if !@layout
+      body =@document.elements["//body"]
+      body.add_element("div", {"class" => "head"})
+      body.add_element("div", {"class" => "lefttoc", "id" => "ltoc"})
+      body.add_element("div", {"class" => "righttoc", "id" => "rtoc"})
+      body.add_element("div", {"class" => "middle"})
+      @layout = true
     end
+  end
+
+  def H1
+    div = @document.elements["//div"]
+    div.add_text("Test")
+  end
+
+  def H2
+    puts "hallo H2"
+  end
 end
 
 extend Custom
 #class Test
 #  include XhtmlReportGenerator::Custom
-#  
+#
 #end
 #puts Test.new.header()
