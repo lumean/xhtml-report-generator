@@ -7,7 +7,6 @@ require 'rexml/document'
 module XhtmlReportGenerator
   class Generator
     attr_accessor :document
-    
     # @param opts [Hash]
     #   :jquery       if specified, path to a version of jquery, that will be inlined into the html header section
     #   :toc          if specified, path to a javascript.js.rb file that contains the magic to generate all
@@ -32,18 +31,18 @@ module XhtmlReportGenerator
       # all existing Generator classes
       instance_eval symbols[:custom_rb]
 
-      @document = Generator.createXhtml("Report")
+      @document = Generator.createXhtml("Title")
       head = @document.elements["//head"]
       # insert the custom css, and javascript files
       style = head.add_element("style", {"type" => "text/css"})
-      # remove all newlines 
+      # remove all newlines
       style.add_text(REXML::CData.new("\n"+symbols[:css].gsub(/\n/, "")+"\n"))
-      
+
       script = head.add_element("script", {"type" => "text/javascript"})
       script.add_text(REXML::CData.new("\n"+symbols[:jquery]+"\n"))
-      
+
       script = head.add_element("script", {"type" => "text/javascript"})
-      script.add_text(REXML::CData.new("\n"+symbols[:toc]+"\n"))      
+      script.add_text(REXML::CData.new("\n"+symbols[:toc]+"\n"))
     end
 
     # Creates a minimal valid xhtml document including header title and body elements
@@ -51,7 +50,7 @@ module XhtmlReportGenerator
     def self.createXhtml(title)
       header = '<?xml version="1.0" encoding="UTF-8" standalone="no"?>'
       header += '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">'
-      
+
       doc = REXML::Document.new(header)
       html = doc.add_element("html", {"xmlns" => "http://www.w3.org/1999/xhtml"})
       # create header
@@ -61,8 +60,7 @@ module XhtmlReportGenerator
       html.add_element("body")
       return doc
     end
-    
-    
+
     def code(mystring)
     end
 
@@ -81,17 +79,5 @@ module XhtmlReportGenerator
   end
 end
 
-gen1 = XhtmlReportGenerator::Generator.new
-#
-gen2 = XhtmlReportGenerator::Generator.new(:custom_rb => "lib/xhtml_report_generator/custom2.rb")
-gen2.H1
-
-gen1.createLayout
-gen1.H1
-#recurse_constants(XhtmlReportGenerator)
-
-#puts XhtmlReportGenerator.constants()
-
-File.open("test1.xhtml", 'w'){|f| f.write(gen1.to_s)}
 
 

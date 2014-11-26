@@ -1,29 +1,32 @@
 /* general styles */
-
-body{
-	background:#FFFFFF;
-    font:100% Arial, Helvetica, sans-serif;
-    color:#555555;
-    line-height:100%;
+body {
+	background: #FFFFFF;
+	font: 100% Arial, Helvetica, sans-serif;
+	color: #555555;
+	line-height: 100%;
+	margin: 0;
 }
 
-p{
-    background:#FFFFFF;
-    font:100% Arial, Helvetica, sans-serif;
-    color:#555;
-    line-height:100%;
-    text-align:left;
+p {
+	background: #FFFFFF;
+	font: 100% Arial, Helvetica, sans-serif;
+	color: #555;
+	line-height: 100%;
+	text-align: left;
 }
 
 /***********************
 div classes
 ************************/
-div.head{
+div.head {
 	font: 200% Arial, Helvetica, sans-serif, bold;
-	text-align:center;
-	margin:auto; /*zentriert die div box*/
-	width:100%;
-	height:auto;
+	text-align: center;
+	width: 100%;
+	position: fixed;
+	top: 0px;
+	height: 100px;
+	background: #FFFFFF;
+	z-index: 99;
 }
 
 /* div.headleft{
@@ -44,92 +47,120 @@ div.headright{
 	width:40%;
 	margin-top:10px;
 } */
-
-div.overlay{
-position: fixed;
-size:auto;
-display:none;
+div.overlay {
+	position: fixed;
+	size: auto;
+	display: none;
 }
 
-div.lefttoc{
-	position:fixed;
-	width:25%;
+div.lefttoc {
+	position: fixed;
+	width: 25%;
 	/*height:90%;*/
-    top: 100px;
-    left: 5px;
-    bottom: 10px;
-	border:solid 1px #000000;
-	overflow:auto;
-	white-space:nowrap;
-    /*display:none;*/      /*uncomment on the left for printing*/
+	top: 100px;
+	left: 5px;
+	bottom: 10px;
+	border: solid 1px #000000;
+	overflow: auto;
+	white-space: nowrap;
+	/*display:none;*/ /*uncomment on the left for printing*/
 }
 
-div.middle{
-	margin: 0 160px 0 27%; /*top right bottom left*/
+div.middle {
+	position: relative;
+	margin: 100px 160px 0 27%; /*top right bottom left */
 	/* margin: x y   =  Xpx each - botten and top,   ypx each - left and right */
 }
 
-div.righttoc{
-	position:fixed;
-	width:150px;
-    top:100px;
-    right:5px;
-	border:solid 1px #000000;
-    /*display:none;*/      /*uncomment on the left for printing*/
+div.righttoc {
+	position: fixed;
+	width: 150px;
+	top: 100px;
+	right: 5px;
+	border: solid 1px #000000;
+	/*display:none;*/ /*uncomment on the left for printing*/
 }
 
-button{
-    width:100%;
+button {
+	width: 100%;
 }
 
 /*code*/
-pre{
-	background:#E5F1F4;
+pre {
+	background: #E5F1F4;
 	font-size: 80%;
 	border: 1px dotted;
 }
 
 /*default highlight yellow*/
-span{
-	background:#FFFF00;
+span {
+	background: #FFFF00;
 }
 
 /*red*/
-span.r{
-	background:#FF0000;
+span.r {
+	background: #FF0000;
 }
 
 /*green*/
-span.g{
-	background:#00FF00;
+span.g {
+	background: #00FF00;
 }
 /*blue*/
-span.b{
-	background:#00FFFF;
+span.b {
+	background: #00FFFF;
 }
 
-a{
-        text-decoration:none;
-        color:#057fac;
-}
-a:hover{
-        text-decoration:none;
-        color:#999999;
+a {
+	text-decoration: none;
+	color: #057fac;
 }
 
-h1{
-        font-size:140%;
-        margin:20px 0px;
+a:hover {
+	text-decoration: none;
+	color: #999999;
 }
 
-h2{
-        font-size:120%;
+h1 {
+	font-size: 140%;
+	margin: 20px 0px;
 }
 
-form{
-        margin:1em 0;
-        padding:.2em 20px;
-        background:#eeeeee; 
+h2 {
+	font-size: 120%;
 }
 
+/* work-around for margin/padding issues with hash-tag links */
+/* http://css-tricks.com/hash-tag-links-padding/             */
+h1:before {
+	font-size: 140%;
+	display: block;
+	content: " ";
+	margin-top: -120px;
+	height: 120px;
+	visibility: hidden;
+}
 
+h2:before {
+	font-size: 120%;
+	display: block;
+	content: " ";
+	margin-top: -100px;
+	height: 100px;
+	visibility: hidden;
+}
+
+h3:before {
+	display: block;
+	content: " ";
+	margin-top: -100px;
+	height: 100px;
+	visibility: hidden;
+}
+
+/*End of work-around*/
+form {
+	margin: 1em 0;
+	padding: .2em 20px;
+	background: #eeeeee;
+}
