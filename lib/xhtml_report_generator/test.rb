@@ -15,7 +15,7 @@ for i in 1..20 do
   gen1.heading("h3", "section")
   gen1.code("some fancy cisco code\nwith newline!\nand another fancy code")
   
-  gen1.highlight(1,2)
+  gen1.highlight(/fancy/)
   #recurse_constants(XhtmlReportGenerator)
 end
 #puts XhtmlReportGenerator.constants()

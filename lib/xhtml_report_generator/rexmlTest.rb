@@ -56,7 +56,8 @@ three.add_element(child)
 tt = three.add_text("after child")
 
 puts three.size
-puts three.texts()[0]
+puts three.to_a[1]
+# puts three.texts()[0]
 three.texts()[0].value = "test"
 three.texts()[1].value = "test"
 three.each {|e|

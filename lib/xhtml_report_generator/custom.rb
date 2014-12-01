@@ -36,7 +36,7 @@ module Custom
     pre = REXML::Element.new("pre")
     parent = @div_middle.insert_after(@current, pre)
     @current = pre
-    @current.text(text)
+    @current.add_text(text)
   end
   
   def content(text)
@@ -53,14 +53,62 @@ module Custom
   end
   
   
-  def highlight(regex, color="y")
-    text = @current.text
-    matchdata = text.scan(regex)
-    arr = text.split(regex)
-    @current.te
-    for i in 0..(matchdata.lenght-1) do
+  def highlight(regex, color="y", el = @current)
+    # get all children of the current node
+    arr = el.to_a()
+    
+    # depth first recursion into grand-children
+    for i in arr do 
+    if i.class.to_s()  == "REXML::Text"  
       
-    end
+      # the following possibilities exist:
+      # matchstring
+      # text matchstring
+      # matchstring text
+      # text matchstring text
+      # matchstring text matchstring
+      # 
+      
+      match_index = 0
+      while match_index != -1 do
+        match_index = i.value().index(regex,match_index)
+        # remove all chars up to occurence of regex
+        text = i.value().substr()
+      end
+      
+      matches = i.value().scan(regex)
+      text_arr = i.value().split(regex)
+      # detach from parent
+      i.parent = nil 
+      # reattach the splitted elements
+      for j in matches.size do
+        span = REXML::Element.new("span")
+        # add the color if it is not default
+        if color != "y"
+          span.add_attribute("class",color)
+          end
+        span.add_text(matches[j])
+        
+        text_el = REXML::Text.new(text_arr[j])
+        el.add()
+      end
+      
+      
+      
+    else
+      highlight(regex, color, i)
+    end  
+    
+    end 
+    
+    
+#    text = @current.text
+#    matchdata = text.scan(regex)
+#    arr = text.split(regex)
+#    @current.te
+#    for i in 0..(matchdata.lenght-1) do
+#      
+#    end
     
   end
   
