@@ -1,8 +1,8 @@
-require_relative '../xhtml_report_generator'
+require_relative '../lib/xhtml_report_generator'
 
 gen1 = XhtmlReportGenerator::Generator.new
 #
-gen2 = XhtmlReportGenerator::Generator.new(:custom_rb => "lib/xhtml_report_generator/custom2.rb")
+gen2 = XhtmlReportGenerator::Generator.new(:custom_rb => "test/custom2.rb")
 gen2.H1
 
 gen1.createLayout
