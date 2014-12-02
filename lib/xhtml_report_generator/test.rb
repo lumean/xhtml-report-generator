@@ -1,6 +1,10 @@
 require_relative '../xhtml_report_generator'
 
 
+
+puts positions.inspect
+
+
 gen1 = XhtmlReportGenerator::Generator.new
 #
 gen2 = XhtmlReportGenerator::Generator.new(:custom_rb => "lib/xhtml_report_generator/custom2.rb")
@@ -20,4 +24,4 @@ for i in 1..20 do
 end
 #puts XhtmlReportGenerator.constants()
 
-File.open("test1.xhtml", 'w'){|f| f.write(gen1.to_s)}
+File.open("test1.xhtml", 'w') {|f| f.write(gen1.to_s)}

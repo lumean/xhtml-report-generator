@@ -55,15 +55,24 @@ child = REXML::Element.new("child")
 three.add_element(child)
 tt = three.add_text("after child")
 
-puts three.size
-puts three.to_a[1]
-# puts three.texts()[0]
-three.texts()[0].value = "test"
-three.texts()[1].value = "test"
-three.each {|e|
-  puts e.class.to_s
-  puts e
+four = three.clone
+
+puts four.inspect
+
+s = "AustinTexasDallasTexas"
+positions = s.enum_for(:scan, /Texas/).map { 
+  [Regexp.last_match.begin(0), Regexp.last_match.end(0)]
 }
+
+#puts three.size
+#puts three.to_a[1]
+## puts three.texts()[0]
+#three.texts()[0].value = "test"
+#three.texts()[1].value = "test"
+#three.each {|e|
+#  puts e.class.to_s
+#  puts e
+#}
 
 #textelems = tt.get_text()
 #textelems.parent = nil
@@ -79,9 +88,9 @@ three.each {|e|
 #end
 
 
-#output = ""
-#doc.write(output, 2)
-#puts output
+output = ""
+doc.write(output, 2)
+puts output
 
 
 
