@@ -34,23 +34,35 @@ module Custom
     parent = @div_middle.insert_after(@current, pre)
     @current = pre
     @current.add_text(text)
+
   end
 
-  def content(text)
+  def content(text, attrs={})
+    @current = @div_middle.add_element("p", attrs)
+    @current.add_text(text)
+    return @current
   end
 
+  def html(text, attrs={})
+    @current = @div_middle.add_element("p", attrs)
+    # we need to create a new document with a pseudo root
+    doc = REXML::Document.new("<root>"+text+"</root>")
+    # then we move all children of root to the actual <p> </p> element
+    for i in doc.root.to_a do
+      @current.add(i)
+    end
+    return @current
+  end
+
+  #TODO
   def contentAfter(locaiton, text)
   end
 
+  #TODO
   def contentBefore(locaiton, text)
   end
 
-  def highlight(start_regex, end_regex, color="y")
-
-  end
-
   def highlight(regex, color="y", el = @current)
-
     # get all children of the current node
     arr = el.to_a()
 
@@ -59,60 +71,46 @@ module Custom
       # detach from current
       i.parent = nil
       if i.class.to_s()  == "REXML::Text"
-        # the following possibilities exist:
-        # matchstring
-        # text matchstring
-        # matchstring text
-        # <elem/>
-        # text matchstring text
-        # matchstring text matchstring
-        # ...
+        # in general a text looks as follows:
+        # .*(matchstring|.*)*
         # We get an array of [[start,length], [start,length], ...] for all our regex matches
         positions = i.value().enum_for(:scan, regex).map {
           [Regexp.last_match.begin(0),
             Regexp.last_match.end(0)-Regexp.last_match.begin(0)]
         }
 
-        last_start = 0
         last_end = 0
+        index = 0
         for j in positions do
           # reattach normal (unmatched) text
           if j[0] > last_end
-            text = REXML::Text.new(i.value()[ last_start, j[0] - last_start ])
-            el.add(text)
+            text = REXML::Text.new(i.value()[ last_end, j[0] - last_end ])
+            el.add_text(text)
           end
-          last_start = j[0]
           #create the span node with color and add the text to it
           span = el.add_element(REXML::Element.new("span"), {"class" => color})
           span.add_text(i.value()[ j[0], j[1] ])
-
-          # add final text if any
-          if j[1] < i.value().length
-            text = REXML::Text.new(i.value()[ last_start, j[0] - last_start ])
-            el.add(text)
+          last_end = j[0]+j[1]
+          # in the last round check for any remaining text
+          if index == positions.length - 1
+            if last_end < i.value().length
+              text = REXML::Text.new(i.value()[ last_end, i.value().length - last_end ])
+              el.add(text)
+            end
           end
-        end
+          index  += 1
+        end # for j in positions do
 
+        # don't forget to reattach the textnode if there are no regex matches at all
+        if index == 0
+          el.add(i)
+        end
       else
         # for non-text nodes we recurse into it and finally reattacht to our parent to preserve ordering
-        highligth(regex, color, i)
+        highlight(regex, color, i)
         el.add(i)
-      end
-    end
-
-    s = "AustinTexasDallasTexas"
-    positions = s.enum_for(:scan, /Texas/).map {
-      [Regexp.last_match.begin(0), Regexp.last_match.end(0)]
-    }
-
-    #    text = @current.text
-    #    matchdata = text.scan(regex)
-    #    arr = text.split(regex)
-    #    @current.te
-    #    for i in 0..(matchdata.lenght-1) do
-    #
-    #    end
-
+      end # if  i.class.to_s()  == "REXML::Text"
+    end # for i in arr do
   end
 
   # creates a table from csv data

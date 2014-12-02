@@ -61,15 +61,10 @@ module XhtmlReportGenerator
       return doc
     end
 
-    def code(mystring)
-    end
-
-    def write
-    end
-
-    def to_s
+    def to_s(indent = 0)
       output = ""
-      @document.write(:output=>output,:indent=>2)
+      # note transitive is needed to preserve newlines in <pre> tags
+      @document.write(:output=>output,:indent=>indent, :transitive=>true)
       return output
     end
 
