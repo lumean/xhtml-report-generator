@@ -9,7 +9,7 @@ module Custom
 EOF
     end
     def H1
-      puts "Custom2 hallo H1"
+      return "Custom2 hallo H1"
     end
 
     def H2
