@@ -1,12 +1,14 @@
 # The module needs to be called 'Custom'
 module Custom
+
   #puts Module.nesting
-  # css classes mapped to toc
-  # creates the basic page layout and sets the current Element to
-  # //body/div[@class='middle']
+  
+  # creates the basic page layout and sets the current Element to the main content area (middle div)
+  # @example The middle div is matched by the following xPath
+  #   //body/div[@class='middle']
   def createLayout
     @body = @document.elements["//body"]
-
+    # only add the layout if it is not already there
     if !@layout
       @body.add_element("div", {"class" => "head"})
       @body.add_element("div", {"class" => "lefttoc", "id" => "ltoc"})
@@ -23,44 +25,55 @@ module Custom
     div = @document.elements["//body/div[@class='head']"]
     div.text = title
   end
+  
+  def getTitle()
+    pagetitle = @document.elements["//head/title"]
+    return pagetitle.text
+  end
 
-  # set the current element the first element matched by the xpath expression
-  def setPosition!(xpath)
+  # set the current element to the first element matched by the xpath expression.
+  # The current element is the one which was last added
+  def setCurrent!(xpath)
     @current = @document.elements[xpath]
   end
-
-  def code(text)
-    pre = REXML::Element.new("pre")
-    parent = @div_middle.insert_after(@current, pre)
-    @current = pre
-    @current.add_text(text)
-
+  
+  # returns the current xml element
+  def getCurrent()
+    return @current
   end
 
+  # Appends a <pre> node after the @current node
+  def code(text, attrs={})
+    temp = REXML::Element.new("pre")
+    temp.add_attributes(attrs)
+    @div_middle.insert_after(@current, temp)
+    @current = temp
+    @current.add_text(text)
+    return @current
+  end
+  
+  # Appends a <p> node after the @current node
   def content(text, attrs={})
-    @current = @div_middle.add_element("p", attrs)
+    temp = REXML::Element.new("p")
+    temp.add_attributes(attrs)
+    @div_middle.insert_after(@current, temp)
+    @current = temp
     @current.add_text(text)
     return @current
   end
 
-  def html(text, attrs={})
-    @current = @div_middle.add_element("p", attrs)
+  # insert arbitrary xml code after the @current element in the content pane (div middle)
+  def html(text)
     # we need to create a new document with a pseudo root
     doc = REXML::Document.new("<root>"+text+"</root>")
-    # then we move all children of root to the actual <p> </p> element
+    # then we move all children of root to the actual div middle element and insert after current
     for i in doc.root.to_a do
-      @current.add(i)
+      @div_middle.insert_after(@current, i)
+      @current = i
     end
     return @current
   end
 
-  #TODO
-  def contentAfter(locaiton, text)
-  end
-
-  #TODO
-  def contentBefore(locaiton, text)
-  end
 
   # puts a <span> </span> tag around all captures of the regex
   # NOTE: nested captures are not supported and don't make sense in this context!!
@@ -131,16 +144,31 @@ module Custom
     end # for i in arr do
   end
 
-  # creates a table from csv data
-  def table (table_data)
+  # creates a html table from two dimensional array of the form Array[row][col] 
+  def table (table_data, table_attrs={}, tr_attrs={}, th_attrs={}, td_attrs={})
+    @current = @div_middle.add_element("table", table_attrs)
+    
+    for i in 0..table_data.length-1 do
+      row = @current.add_element("tr", tr_attrs)
+      for j in 0..table_data[i].length-1 do
+        if j == 0
+          col = row.add_element("th", th_attrs)
+          col.add_text(table_data[i][j])
+        else
+          col = row.add_element("td", td_attrs)
+          col.add_text(table_data[i][j])
+        end
+      end
+    end
+    
   end
 
-  # Appends a new heading element to body
-  # @param type [String] specifiy "h1", "h2", "h3" for the heading
+  # Appends a new heading element to body, and sets current to this new heading
   # @param text [String] the heading text
+  # @param type [String] specifiy "h1", "h2", "h3" for the heading
   # @param toc [symbol] one of :ltoc, :rtoc, :btoc  depending on in which toc you want to display the heading
   # @return the added element
-  def heading(type, text, toc=:ltoc)
+  def heading(text, type, toc=:ltoc)
     case toc
     when :rtoc
       opts = {"class" => "onlyrtoc"}
@@ -150,13 +178,16 @@ module Custom
       opts = {}
     end
 
-    @current = @div_middle.add_element(type, opts)
+    temp = REXML::Element.new(type)
+    temp.add_attributes(opts)
+    
+    @div_middle.insert_after(@current, temp)
+    @current = temp
     @current.text = text
-
     return @current
   end
 
-  #
+
   # @param element [REXML::Element] the element in whose text tags will be added at the specified indices of @index_length_array
   # @param parent [REXML::Element] the parent to which @element should be attached after parsing
   # @param tagname [String] the tag that will be introduced as <tagname> at the indices specified

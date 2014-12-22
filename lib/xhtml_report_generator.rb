@@ -7,7 +7,8 @@ require 'rexml/document'
 module XhtmlReportGenerator
   class Generator
     attr_accessor :document
-    # @param opts [Hash]
+    # @param opts [Hash] See the example for an explanation of the valid symbols
+    # @example Valid symbols for the opts Hash
     #   :jquery       if specified, path to a version of jquery, that will be inlined into the html header section
     #   :toc          if specified, path to a javascript.js.rb file that contains the magic to generate all
     #   :css          if specified, path to a css file that contains the markup rules for your generated reports
@@ -31,7 +32,7 @@ module XhtmlReportGenerator
       # all existing Generator classes
       instance_eval symbols[:custom_rb]
 
-      @document = Generator.createXhtml("Title")
+      @document = Generator.createXhtmlDoc("Title")
       head = @document.elements["//head"]
       # insert the custom css, and javascript files
       style = head.add_element("style", {"type" => "text/css"})
@@ -47,7 +48,7 @@ module XhtmlReportGenerator
 
     # Creates a minimal valid xhtml document including header title and body elements
     # @param title [String] Title in the header section
-    def self.createXhtml(title)
+    def self.createXhtmlDoc(title)
       header = '<?xml version="1.0" encoding="UTF-8" standalone="no"?>'
       header += '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">'
 

@@ -28,13 +28,13 @@ class TestReportGenerator < Test::Unit::TestCase
     rand = Random.new(seed)
         
     for i in 1..10 do
-      gen1.heading("h1", "titel #{"Manuel".split("").shuffle(random: rand).join}", :btoc)
-      gen1.heading("h2", "subtitel", :ltoc)
-      gen1.heading("h3", "section")
-      gen1.heading("h4", "subsection")
-      gen1.content("content function: Hallo welt <br /> html test <span class=\"r\" >red span test</span>",{"class"=>"bold"})
+      gen1.heading("titel #{"Manuel".split("").shuffle(random: rand).join}", "h1", :btoc)
+      gen1.heading("subtitel", "h2", :ltoc)
+      gen1.heading("section", "h3")
+      gen1.heading("subsection", "h4")
+      gen1.content("content function: Hallo welt <br /> html test <span class=\"r\" >red span test</span>", {"class"=>"bold"})
 
-      gen1.html("html function: Hallo welt <br /> html test <span class=\"r\" >red span test</span>",{"class"=>"italic"})
+      gen1.html("<p class=\"italic\">html function: Hallo welt <br /> html test <span class=\"r\" >red span test</span></p>")
 
       # test for nested highlighting
       gen1.code("some sp fancy cisco < & > an code\nwith newline!\nand sp another second fancy coconut an code")
