@@ -2,7 +2,6 @@
 module Custom
 
   #puts Module.nesting
-  
   # creates the basic page layout and sets the current Element to the main content area (middle div)
   # @example The middle div is matched by the following xPath
   #   //body/div[@class='middle']
@@ -25,7 +24,7 @@ module Custom
     div = @document.elements["//body/div[@class='head']"]
     div.text = title
   end
-  
+
   def getTitle()
     pagetitle = @document.elements["//head/title"]
     return pagetitle.text
@@ -36,7 +35,7 @@ module Custom
   def setCurrent!(xpath)
     @current = @document.elements[xpath]
   end
-  
+
   # returns the current xml element
   def getCurrent()
     return @current
@@ -51,7 +50,7 @@ module Custom
     @current.add_text(text)
     return @current
   end
-  
+
   # Appends a <p> node after the @current node
   def content(text, attrs={})
     temp = REXML::Element.new("p")
@@ -73,7 +72,6 @@ module Custom
     end
     return @current
   end
-
 
   # puts a <span> </span> tag around all captures of the regex
   # NOTE: nested captures are not supported and don't make sense in this context!!
@@ -144,23 +142,30 @@ module Custom
     end # for i in arr do
   end
 
-  # creates a html table from two dimensional array of the form Array[row][col] 
-  def table (table_data, table_attrs={}, tr_attrs={}, th_attrs={}, td_attrs={})
+  # creates a html table from two dimensional array of the form Array[row][col]
+  # @param table_data [Array] containing all data, the '.to_s' method will be called on each element
+  # @param headers [Number] either of 0, 1, 2, 3. Where 0 is no headers (<th>) at all, 1 is only the first row,
+  #   2 is only the first column and 3 is both, first row and first column as <th> elements. Every other number
+  #   is equivalent to the bitwise AND of the two least significant bits with 1, 2 or 3
+  def table (table_data, headers=0, table_attrs={}, tr_attrs={}, th_attrs={}, td_attrs={})
     @current = @div_middle.add_element("table", table_attrs)
-    
+
     for i in 0..table_data.length-1 do
       row = @current.add_element("tr", tr_attrs)
       for j in 0..table_data[i].length-1 do
-        if j == 0
+        if (i == 0 && (0x1 & headers)==0x1)
           col = row.add_element("th", th_attrs)
-          col.add_text(table_data[i][j])
+        elsif (j == 0 && (0x2 & headers)==0x2)
+          col = row.add_element("th", th_attrs)
+        elsif ((i == 0 || j ==0) && (0x3 & headers)==0x3)
+          col = row.add_element("th", th_attrs)
         else
           col = row.add_element("td", td_attrs)
-          col.add_text(table_data[i][j])
         end
+        col.add_text(table_data[i][j].to_s)
       end
     end
-    
+
   end
 
   # Appends a new heading element to body, and sets current to this new heading
@@ -180,13 +185,12 @@ module Custom
 
     temp = REXML::Element.new(type)
     temp.add_attributes(opts)
-    
+
     @div_middle.insert_after(@current, temp)
     @current = temp
     @current.text = text
     return @current
   end
-
 
   # @param element [REXML::Element] the element in whose text tags will be added at the specified indices of @index_length_array
   # @param parent [REXML::Element] the parent to which @element should be attached after parsing
