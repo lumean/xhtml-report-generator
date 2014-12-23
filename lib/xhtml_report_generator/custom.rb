@@ -1,7 +1,7 @@
-# The module needs to be called 'Custom'
+# The module name doesn't matter, just make sure at the end to 'extend' it
+# because it will be 'eval'ed  by the initialize method of the XhtmlReportGenerator::Generator class.
 module Custom
-
-  #puts Module.nesting
+  
   # creates the basic page layout and sets the current Element to the main content area (middle div)
   # @example The middle div is matched by the following xPath
   #   //body/div[@class='middle']
@@ -18,22 +18,33 @@ module Custom
     @current = @document.elements["//body/div[@class='middle']"]
   end
 
+  # sets the title of the document in the header section as well as in the layout.
+  # createLayout must be called before!
   def setTitle(title)
+    if !@layout 
+      raise "call createLayout first"
+    end
     pagetitle = @document.elements["//head/title"]
     pagetitle.text = title
     div = @document.elements["//body/div[@class='head']"]
     div.text = title
   end
 
+  # returns the title text of the report
   def getTitle()
     pagetitle = @document.elements["//head/title"]
     return pagetitle.text
   end
 
-  # set the current element to the first element matched by the xpath expression.
-  # The current element is the one which was last added
+  # set the current element to the element or first element matched by the xpath expression.
+  # The current element is the one which can be modified through highlighting.
+  # @param xpath [REXML::Element|String] the element or a string
   def setCurrent!(xpath)
-    @current = @document.elements[xpath]
+    if xpath.is_a?(REXML::Element)
+      @current = xpath
+    else
+      @current = @document.elements[xpath]
+    end
   end
 
   # returns the current xml element
@@ -173,7 +184,7 @@ module Custom
   # @param type [String] specifiy "h1", "h2", "h3" for the heading
   # @param toc [symbol] one of :ltoc, :rtoc, :btoc  depending on in which toc you want to display the heading
   # @return the added element
-  def heading(text, type, toc=:ltoc)
+  def heading(text, type="h1", toc=:ltoc)
     case toc
     when :rtoc
       opts = {"class" => "onlyrtoc"}
@@ -191,6 +202,30 @@ module Custom
     @current.text = text
     return @current
   end
+  
+# Inserts a new heading element at the very beginning of the middle div section, and points @current to this heading
+# @param text [String] the heading text
+# @param type [String] specifiy "h1", "h2", "h3" for the heading
+# @param toc [symbol] one of :ltoc, :rtoc, :btoc  depending on in which toc you want to display the heading
+# @return the added element
+def headingTop(text, type="h1", toc=:ltoc)
+  case toc
+  when :rtoc
+    opts = {"class" => "onlyrtoc"}
+  when :btoc
+    opts = {"class" => "bothtoc"}
+  else
+    opts = {}
+  end
+
+  temp = REXML::Element.new(type)
+  temp.add_attributes(opts)
+  # insert before the first child of div middle
+  @div_middle.insert_before("//div[@class='middle']/*[1]", temp)
+  @current = temp
+  @current.text = text
+  return @current
+end
 
   # @param element [REXML::Element] the element in whose text tags will be added at the specified indices of @index_length_array
   # @param parent [REXML::Element] the parent to which @element should be attached after parsing

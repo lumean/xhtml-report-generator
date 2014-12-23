@@ -5,6 +5,9 @@
 require 'rexml/document'
 
 module XhtmlReportGenerator
+  
+  # This is the main generator class. It can be instanced with custom javascript, css, and ruby files to allow
+  # generation of arbitrary reports.
   class Generator
     attr_accessor :document
     # @param opts [Hash] See the example for an explanation of the valid symbols
@@ -62,13 +65,21 @@ module XhtmlReportGenerator
       return doc
     end
 
+    # returns the string representation of the xml document
+    # @param indent [Number] indent for child elements. defaults to 0.
     def to_s(indent = 0)
       output = ""
       # note transitive is needed to preserve newlines in <pre> tags
-      @document.write(:output=>output,:indent=>indent, :transitive=>true)
+      # note2:  the hash options syntax is supported only from ruby version >= 2.0.0 we need the old style
+      #         for compatibility with 1.9.3
+      #@document.write({:output=>output, :indent=>indent, :transitive=>true})
+      @document.write(output, indent, true)
       return output
     end
-
+    
+    # saves the xml document as a file
+    # @param file [String] absolute or relative path to the file to which will be written.
+    # @param mode [String] defaults to 'w', one of the file open modes that allows writing ['r+','w','w+','a','a+']
     def writeToFile(file, mode='w')
       File.open(file, "#{mode}:UTF-8") {|f| f.write(self.to_s)}
     end

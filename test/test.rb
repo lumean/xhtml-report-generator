@@ -88,5 +88,24 @@ class TestReportGenerator < Test::Unit::TestCase
     assert(test1 == expected)
   end
 
+  def testGetSetCurrent()
+    gen1 = XhtmlReportGenerator::Generator.new
+    gen1.createLayout
+    gen1.code("some example code before we put a heading")
+    gen1.heading("test", "h1", :btoc)
+    gen1.content("blabsklfja;lsjdfka;sjdf;als")
+    cur = gen1.getCurrent()
+    
+    gen1.headingTop("this is before 'test'")
+    gen1.content("here we are before 'test'")
+    gen1.setCurrent!(cur)
+    gen1.content("here we are at the end")
+    
+    gen1.writeToFile("test/toptest1.xhtml")
+    test1 = File.read("test/toptest1.xhtml")
+    expected = File.read("test/GetSetRef.xhtml")
+    assert(test1 == expected)
+  end
+  
 end
 
