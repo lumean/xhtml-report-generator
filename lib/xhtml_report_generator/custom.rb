@@ -159,10 +159,12 @@ module Custom
   #   2 is only the first column and 3 is both, first row and first column as <th> elements. Every other number
   #   is equivalent to the bitwise AND of the two least significant bits with 1, 2 or 3
   def table (table_data, headers=0, table_attrs={}, tr_attrs={}, th_attrs={}, td_attrs={})
-    @current = @div_middle.add_element("table", table_attrs)
+    
+    temp = REXML::Element.new("table")
+    temp.add_attributes(table_attrs)
 
     for i in 0..table_data.length-1 do
-      row = @current.add_element("tr", tr_attrs)
+      row = temp.add_element("tr", tr_attrs)
       for j in 0..table_data[i].length-1 do
         if (i == 0 && (0x1 & headers)==0x1)
           col = row.add_element("th", th_attrs)
@@ -177,6 +179,9 @@ module Custom
       end
     end
 
+    @div_middle.insert_after(@current, temp)
+    @current = temp
+    return @current
   end
 
   # Appends a new heading element to body, and sets current to this new heading
