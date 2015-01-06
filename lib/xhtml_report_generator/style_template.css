@@ -3,7 +3,7 @@ body {
 	background: #FFFFFF;
 	font: 100% Arial, Helvetica, sans-serif;
 	color: #555555;
-	line-height: 100%;
+	line-height: 110%;
 	margin: 0;
 }
 
@@ -11,7 +11,7 @@ p {
 	background: #FFFFFF;
 	font: 100% Arial, Helvetica, sans-serif;
 	color: #555;
-	line-height: 100%;
+	line-height: 110%;
 	text-align: left;
 }
 
@@ -27,30 +27,6 @@ div.head {
 	height: 100px;
 	background: #FFFFFF;
 	z-index: 99;
-}
-
-/* div.headleft{
-	margin-top:40px;
-	margin-left:20px;
-	float:left;
-	width:20%;
-}
-
-div.headmiddle{
-	float:left;
-	width:39%;
-	margin-top:10px;
-}
-
-div.headright{
-	float:right;
-	width:40%;
-	margin-top:10px;
-} */
-div.overlay {
-	position: fixed;
-	size: auto;
-	display: none;
 }
 
 div.lefttoc {
@@ -90,6 +66,7 @@ pre {
 	background: #E5F1F4;
 	font-size: 80%;
 	border: 1px dotted;
+	line-height: 100%;
 }
 
 /*default highlight yellow*/
@@ -159,6 +136,7 @@ h3:before {
 }
 
 /*End of work-around*/
+
 form {
 	margin: 1em 0;
 	padding: .2em 20px;

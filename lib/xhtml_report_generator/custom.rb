@@ -10,8 +10,12 @@ module Custom
     # only add the layout if it is not already there
     if !@layout
       @body.add_element("div", {"class" => "head"})
-      @body.add_element("div", {"class" => "lefttoc", "id" => "ltoc"})
-      @body.add_element("div", {"class" => "righttoc", "id" => "rtoc"})
+      div = @body.add_element("div", {"class" => "lefttoc", "id" => "ltoc"})
+      div.add_text("Table of Contents")
+      div.add_element("br")
+      div = @body.add_element("div", {"class" => "righttoc", "id" => "rtoc"})
+      div.add_text("Quick Links")
+      div.add_element("br");div.add_element("br")
       @div_middle = @body.add_element("div", {"class" => "middle"})
       @layout = true
     end

@@ -47,10 +47,10 @@ class TestReportGenerator < Test::Unit::TestCase
 
     end
 
-    gen1.writeToFile("test/test1.xhtml")
+    gen1.writeToFile("test/OverallReference1.xhtml")
     #File.open("test1.xhtml", 'w') {|f| f.write(gen1.to_s)}
 
-    test1 = File.read("test/test1.xhtml")
+    test1 = File.read("test/OverallReference1.xhtml")
     expected = File.read("test/OverallReference.xhtml")
     assert(test1 == expected)
   end
@@ -82,8 +82,8 @@ class TestReportGenerator < Test::Unit::TestCase
     table_data = [[1,2,3],[4,5,6],[7,8,9]]
     gen1.table(table_data,3)
 
-    gen1.writeToFile("test/table1.xhtml")
-    test1 = File.read("test/table1.xhtml")
+    gen1.writeToFile("test/TableReference1.xhtml")
+    test1 = File.read("test/TableReference1.xhtml")
     expected = File.read("test/TableReference.xhtml")
     assert(test1 == expected)
   end
@@ -101,8 +101,8 @@ class TestReportGenerator < Test::Unit::TestCase
     gen1.setCurrent!(cur)
     gen1.content("here we are at the end")
     
-    gen1.writeToFile("test/toptest1.xhtml")
-    test1 = File.read("test/toptest1.xhtml")
+    gen1.writeToFile("test/GetSetRef1.xhtml")
+    test1 = File.read("test/GetSetRef1.xhtml")
     expected = File.read("test/GetSetRef.xhtml")
     assert(test1 == expected)
   end
