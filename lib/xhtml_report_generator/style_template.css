@@ -2,7 +2,7 @@
 body {
 	background: #FFFFFF;
 	font: 100% Arial, Helvetica, sans-serif;
-	color: #555555;
+	color: #404040;
 	line-height: 110%;
 	margin: 0;
 }
@@ -10,7 +10,7 @@ body {
 p {
 	background: #FFFFFF;
 	font: 100% Arial, Helvetica, sans-serif;
-	color: #555;
+	color: #202020;
 	line-height: 110%;
 	text-align: left;
 }
@@ -24,18 +24,18 @@ div.head {
 	width: 100%;
 	position: fixed;
 	top: 0px;
-	height: 100px;
+	height: 90px;
 	background: #FFFFFF;
 	z-index: 99;
 }
 
 div.lefttoc {
 	position: fixed;
-	width: 25%;
+	width: 20%;
 	/*height:90%;*/
 	top: 100px;
 	left: 5px;
-	bottom: 10px;
+	bottom: 20px;
 	border: solid 1px #000000;
 	overflow: auto;
 	white-space: nowrap;
@@ -44,7 +44,7 @@ div.lefttoc {
 
 div.middle {
 	position: relative;
-	margin: 100px 160px 0 27%; /*top right bottom left */
+	margin: 100px 160px 0 23%; /*top right bottom left */
 	/* margin: x y   =  Xpx each - botten and top,   ypx each - left and right */
 }
 
@@ -61,13 +61,33 @@ button {
 	width: 100%;
 }
 
-/*code*/
+/*code light-blue*/
 pre {
+	font-family: courier;
 	background: #E5F1F4;
 	font-size: 80%;
 	border: 1px dotted;
-	line-height: 100%;
+	line-height: 110%;
+	color: #000000;
+	white-space: pre-wrap;
+	word-wrap: break-word;
 }
+.code0 {
+	background: #E5F1F4;
+}
+/*code red-brown*/
+.code1 {
+	background: #A66C75;
+}
+/*code light-green*/
+.code2 {
+	background: #DAF1DD;
+}
+/*code light-yellow*/
+.code3 {
+	background: #F5F2B7;
+}
+
 
 /*default highlight yellow*/
 span {
@@ -113,8 +133,8 @@ h1:before {
 	font-size: 140%;
 	display: block;
 	content: " ";
-	margin-top: -120px;
-	height: 120px;
+	margin-top: -100px;
+	height: 100px;
 	visibility: hidden;
 }
 

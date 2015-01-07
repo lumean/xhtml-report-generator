@@ -1,0 +1,35 @@
+/* special css file for media=print, to hide and change some elements */
+/* this is additive to the style_template.css */
+
+/***********************
+change positions to absolute to avoid printing the title and table
+of contents on every page. Remove the Quicklink toc on the right.
+Make toc on the left floating on top of middle div.
+************************/
+div.head {
+	position: absolute;
+}
+
+div.lefttoc {
+	position: relative;
+	width: 100%;
+	/*height:90%;*/
+	top: 100px;
+	left: 30px;
+	right: 30px;
+	bottom: auto;
+	border: none;
+	margin-bottom: 200px;
+	overflow: visible;
+}
+
+div.middle {
+	position: relative;
+	margin: 100px 30px 0 20px; /*top right bottom left */
+	/* margin: x y   =  Xpx each - botten and top,   ypx each - left and right */
+}
+
+div.righttoc {
+	display: none;
+}
+

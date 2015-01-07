@@ -15,6 +15,7 @@ module XhtmlReportGenerator
     #   :jquery       if specified, path to a version of jquery, that will be inlined into the html header section
     #   :toc          if specified, path to a javascript.js.rb file that contains the magic to generate all
     #   :css          if specified, path to a css file that contains the markup rules for your generated reports
+    #   :css_print    if specified, path to a css file that contains the markup rules for printing the report
     #   :custom_rb    if specified, path to a custom Module containing
     def initialize(opts = {})
       # define the default values
@@ -23,6 +24,7 @@ module XhtmlReportGenerator
         :jquery => File.expand_path("jquery.js",path),
         :toc => File.expand_path("toc.js",path),
         :css => File.expand_path("style_template.css",path),
+        :css_print => File.expand_path("print_template.css",path),
         :custom_rb => File.expand_path("custom.rb",path)
       }
       # either use the default files provided with the gem, or those provided by the caller
@@ -41,6 +43,9 @@ module XhtmlReportGenerator
       style = head.add_element("style", {"type" => "text/css"})
       # remove all newlines
       style.add_text(REXML::CData.new("\n"+symbols[:css].gsub(/\n/, "")+"\n"))
+        
+      style = head.add_element("style", {"type" => "text/css", "media"=>"print"})
+      style.add_text(REXML::CData.new("\n"+symbols[:css_print].gsub(/\n/, "")+"\n"))
 
       script = head.add_element("script", {"type" => "text/javascript"})
       script.add_text(REXML::CData.new("\n"+symbols[:jquery]+"\n"))

@@ -36,7 +36,7 @@ class TestReportGenerator < Test::Unit::TestCase
       gen1.html("<p class=\"italic\">html function: Hallo welt <br /> html test <span class=\"r\" >red span test</span></p>")
 
       # test for nested highlighting
-      gen1.code("some sp fancy cisco < & > an code\nwith newline!\nand sp another second fancy coconut an code")
+      gen1.code("some sp fancy console < & > an code\nwith newline!\nand sp another second fancy coconut an code")
 
       gen1.highlight(/sp.*an/)
       gen1.highlight(/second(.*)nut/, "g")
@@ -44,6 +44,13 @@ class TestReportGenerator < Test::Unit::TestCase
       gen1.highlightCaptures(/c(o)d(e)/,"r")
 
       gen1.content("this is really good lookin'")
+      
+      gen1.code("some other Code from another device\nwith a very long line that really should be wraped." \
+      + ".................................................................................................................", {"class" =>"code1"})
+      gen1.code("some other Code from another device\nwith a very long line that really should be wraped." \
+      + ".................................................................................................................", {"class" =>"code2"})
+      gen1.code("some other Code from another device\nwith a very long line that really should be wraped." \
+      + ".................................................................................................................", {"class" =>"code3"})
 
     end
 
@@ -71,11 +78,11 @@ class TestReportGenerator < Test::Unit::TestCase
     gen1.table(table_data)
 
     gen1.heading("1st Row only", "h1", :btoc)
-    table_data = [[1,2,3],[4,5,6],[7,8,9]]
+    table_data = [[1,2,3],[4,"passed",6],[7,8,9]]
     gen1.table(table_data,1)
 
     gen1.heading("1st Col only", "h1", :btoc)
-    table_data = [[1,2,3],[4,5,6],[7,8,9]]
+    table_data = [[1,2,3],[4,5,6],[7,8,"failed"]]
     gen1.table(table_data,2)
 
     gen1.heading("1st Row and 1st Col", "h1", :btoc)

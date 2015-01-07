@@ -26,6 +26,17 @@
    <a class="h1" >hyperlink to most recent h1</a>
 */
 $(document).ready(function() {
+	// highlight "passed" or "failed" in the summary table
+	$("td").each(function(i) {
+		var current = $(this);
+		if (!(current.html().match(/passed/) === null)) {
+			current.attr("style", "background-color:#00FF00;");
+		}
+		if (!(current.html().match(/failed/) === null)) {
+			current.attr("style", "background-color:#FF0000;");
+		}
+	});
+	
     // to include new chaptes in the right div tag use class=rtoconly or bothtoc
 	$("[class=rtoconly],[class=bothtoc]").each(function(i) {
 		//alert("h1:"+i);
