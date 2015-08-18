@@ -21,9 +21,9 @@ module XhtmlReportGenerator
       # define the default values
       path = File.expand_path("../xhtml_report_generator", __FILE__)
       symbols = {
-        :jquery => File.expand_path("jquery.js",path),
-        :toc => File.expand_path("toc.js",path),
-        :css => File.expand_path("style_template.css",path),
+        :jquery    => File.expand_path("jquery.js",path),
+        :toc       => File.expand_path("toc.js",path),
+        :css       => File.expand_path("style_template.css",path),
         :css_print => File.expand_path("print_template.css",path),
         :custom_rb => File.expand_path("custom.rb",path)
       }
@@ -74,7 +74,7 @@ module XhtmlReportGenerator
     # @param indent [Number] indent for child elements. defaults to 0.
     def to_s(indent = 0)
       output = ""
-      # note transitive is needed to preserve newlines in <pre> tags
+      # note :  transitive is needed to preserve newlines in <pre> tags
       # note2:  the hash options syntax is supported only from ruby version >= 2.0.0 we need the old style
       #         for compatibility with 1.9.3
       #@document.write({:output=>output, :indent=>indent, :transitive=>true})

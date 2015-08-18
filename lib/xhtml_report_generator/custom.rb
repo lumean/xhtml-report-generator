@@ -5,7 +5,7 @@ module Custom
   # creates the basic page layout and sets the current Element to the main content area (middle div)
   # @example The middle div is matched by the following xPath
   #   //body/div[@class='middle']
-  def createLayout
+  def create_layout
     @body = @document.elements["//body"]
     # only add the layout if it is not already there
     if !@layout
@@ -24,7 +24,7 @@ module Custom
 
   # sets the title of the document in the header section as well as in the layout.
   # createLayout must be called before!
-  def setTitle(title)
+  def set_title(title)
     if !@layout 
       raise "call createLayout first"
     end
@@ -236,6 +236,15 @@ def headingTop(text, type="h1", toc=:ltoc)
   return @current
 end
 
+  # Helper Method for the highlight methods. it will introduce specific xhtml tags around parts of a text child of an xml element.
+  # @example
+  #   we have the following xml part
+  #   <test>
+  #     some arbitrary
+  #     text child content
+  #   </test> 
+  #   now we call replaceTextWithElements
+  #
   # @param element [REXML::Element] the element in whose text tags will be added at the specified indices of @index_length_array
   # @param parent [REXML::Element] the parent to which @element should be attached after parsing
   # @param tagname [String] the tag that will be introduced as <tagname> at the indices specified
