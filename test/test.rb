@@ -18,101 +18,113 @@ module Test
 end
 
 class TestReportGenerator < Test::Unit::TestCase
-  def testOverall()
+  
+  def setup
+    @cd = File.expand_path("..", __FILE__)
+  end
+  
+  def test_overall()
     gen1 = XhtmlReportGenerator::Generator.new
-    gen1.createLayout
-    gen1.setTitle("Manu's Testreport")
+    gen1.create_layout("Manu's Testreport")
+    # gen1.set_title("Manu's Testreport")
 
     seed = 123456789
     rand = Random.new(seed)
 
     for i in 1..10 do
-      gen1.heading("titel #{"Manuel".split("").shuffle(random: rand).join}", "h1", :btoc)
-      gen1.heading("subtitel", "h2", :ltoc)
-      gen1.heading("section", "h3")
-      gen1.heading("subsection", "h4")
-      gen1.content("content function: Hallo welt <br /> html test <span class=\"r\" >red span test</span>", {"class"=>"bold"})
+      gen1.heading("h1", {"class" => "bothtoc"}) {"titel #{"Manuel".split("").shuffle(random: rand).join}"}
+      gen1.heading("h2") {"subtitel"}
+      gen1.heading("h3") {"section"}
+      gen1.heading("h4") {"subsection"}
+      gen1.content({"class"=>"bold"}) {"content function: Hallo welt <br /> html test <span class=\"r\" >red span test</span>"}
 
       gen1.html("<p class=\"italic\">html function: Hallo welt <br /> html test <span class=\"r\" >red span test</span></p>")
 
       # test for nested highlighting
-      gen1.code("some sp fancy console < & > an code\nwith newline!\nand sp another second fancy coconut an code")
+      gen1.code() {"some sp fancy console < & > an code\nwith newline!\nand sp another second fancy coconut an code"}
 
-      gen1.highlight(/sp.*an/)
-      gen1.highlight(/second(.*)nut/, "g")
-      gen1.highlight(/fancy/, "b")
-      gen1.highlightCaptures(/c(o)d(e)/,"r")
+      # assert the highlighting is counted correctly
+      assert_equal(2, gen1.highlight(/sp.*an/))
+      assert_equal(1, gen1.highlight(/second(.*)nut/, "g"))
+      assert_equal(2, gen1.highlight(/fancy/, "b"))
+      assert_equal(4, gen1.highlight_captures(/c(o)d(e)/,"r"))
 
-      gen1.content("this is really good lookin'")
-      
-      gen1.code("some other Code from another device\nwith a very long line that really should be wraped." \
-      + ".................................................................................................................", {"class" =>"code1"})
-      gen1.code("some other Code from another device\nwith a very long line that really should be wraped." \
-      + ".................................................................................................................", {"class" =>"code2"})
-      gen1.code("some other Code from another device\nwith a very long line that really should be wraped." \
-      + ".................................................................................................................", {"class" =>"code3"})
+      gen1.content() {"this is really good lookin'"}
+
+      gen1.code({"class" =>"code1"}) {
+        "some other Code from another device\nwith a very long line that really should be wraped." \
+        + "................................................................................................................."
+      }
+      gen1.code({"class" =>"code2"}) {
+        "some other Code from another device\nwith a very long line that really should be wraped." \
+        + "................................................................................................................."
+      }
+      gen1.code({"class" =>"code3"}) {
+        "some other Code from another device\nwith a very long line that really should be wraped." \
+        + "................................................................................................................."
+      }
 
     end
 
-    gen1.writeToFile("test/OverallReference1.xhtml")
+    gen1.write("test/OverallReference1.xhtml")
     #File.open("test1.xhtml", 'w') {|f| f.write(gen1.to_s)}
 
     test1 = File.read("test/OverallReference1.xhtml")
     expected = File.read("test/OverallReference.xhtml")
-    assert(test1 == expected)
+    assert(test1 == expected, "Reports are not equal")
   end
 
-  def testCustomizedModule()
+  def test_customized_module()
     gen2 = XhtmlReportGenerator::Generator.new(:custom_rb => "test/custom2.rb")
     result = gen2.H1
 
     assert( result ==  "Custom2 hallo H1")
   end
 
-  def testTable()
+  def test_table()
     gen1 = XhtmlReportGenerator::Generator.new
-    gen1.createLayout
-    gen1.setTitle("Manu's Table")
-    gen1.heading("No Headers", "h1", :btoc)
+    gen1.create_layout("Manu's Table")
+    # gen1.set_title("Manu's Table")
+    gen1.heading("h1", {"class" => "bothtoc"}) {"No Headers"}
     table_data = [[1,2,3],[4,5,6],[7,8,9]]
     gen1.table(table_data)
 
-    gen1.heading("1st Row only", "h1", :btoc)
+    gen1.heading("h1", {"class" => "bothtoc"}) {"1st Row only"}
     table_data = [[1,2,3],[4,"passed",6],[7,8,9]]
     gen1.table(table_data,1)
 
-    gen1.heading("1st Col only", "h1", :btoc)
+    gen1.heading("h1", {"class" => "bothtoc"}) {"1st Col only"}
     table_data = [[1,2,3],[4,5,6],[7,8,"failed"]]
     gen1.table(table_data,2)
 
-    gen1.heading("1st Row and 1st Col", "h1", :btoc)
+    gen1.heading("h1", {"class" => "bothtoc"}) {"1st Row and 1st Col"}
     table_data = [[1,2,3],[4,5,6],[7,8,9]]
     gen1.table(table_data,3)
 
-    gen1.writeToFile("test/TableReference1.xhtml")
+    gen1.write("test/TableReference1.xhtml")
     test1 = File.read("test/TableReference1.xhtml")
     expected = File.read("test/TableReference.xhtml")
-    assert(test1 == expected)
+    assert(test1 == expected, "Reports are not equal")
   end
 
-  def testGetSetCurrent()
+  def test_get_set_current()
     gen1 = XhtmlReportGenerator::Generator.new
-    gen1.createLayout
-    gen1.code("some example code before we put a heading")
-    gen1.heading("test", "h1", :btoc)
-    gen1.content("blabsklfja;lsjdfka;sjdf;als")
-    cur = gen1.getCurrent()
-    
-    gen1.headingTop("this is before 'test'")
-    gen1.content("here we are before 'test'")
-    gen1.setCurrent!(cur)
-    gen1.content("here we are at the end")
-    
-    gen1.writeToFile("test/GetSetRef1.xhtml")
+    gen1.create_layout("")
+    gen1.code() {"some example code before we put a heading"}
+    gen1.heading("h1", {"class" => "bothtoc"}) {"test"}
+    gen1.content() {"blabsklfja;lsjdfka;sjdf;als"}
+    cur = gen1.get_current()
+
+    gen1.heading_top() {"this is before 'test'"}
+    gen1.content() {"here we are before 'test'"}
+    gen1.set_current!(cur)
+    gen1.content() {"here we are at the end"}
+
+    gen1.write("test/GetSetRef1.xhtml")
     test1 = File.read("test/GetSetRef1.xhtml")
     expected = File.read("test/GetSetRef.xhtml")
-    assert(test1 == expected)
+    assert(test1 == expected, "Results not equal")
   end
-  
+
 end
 

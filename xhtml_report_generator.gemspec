@@ -13,14 +13,14 @@ Gem::Specification.new do |s|
     The generator can be used to create xhtml files. It comes with some default utility functions.
     == Here is an example usage
       gen1 = XhtmlReportGenerator::Generator.new
-      gen1.createLayout
-      gen1.setTitle("Example Report")
-      gen1.heading("titel", "h1", :btoc)
-      gen1.heading("subtitel", "h2", :ltoc)
-      gen1.heading("section", "h3")
-      gen1.content("content function: Hallo welt <br /> html test <span class=\"r\" >red span test</span>", {"class"=>"bold"})
+      gen1.create_layout("Title")
+      gen1.heading("h1", {"class" => "bothtoc"}) {"titel"}
+      gen1.heading("h2") {"subtitel"}
+      gen1.heading("h3") {"section"}
+      gen1.content() {"content function: Hallo welt <br /> html test <span class=\"r\" >red span test</span>", {"class"=>"bold"}}
       gen1.html("<p class="italic">html function: Hallo welt <br /> html test <span class=\"r\" >red span test</span></p>")
-    
+      gen1.highlight(/Ha.*lt/)
+      
     The javascript to render the table of contents, the custom generator functions and style sheet all can be
     supplied by your own, if necessary. 
   HEREDOC

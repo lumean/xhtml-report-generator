@@ -10,20 +10,20 @@
 /* The following conventions must be followed in order to support 
    automatic TOC generation and heading numbers
 
-   The script will generate two TOCs, each one of them residing in a <div id=xyz></div>
-   the id has to bei either "ltoc" or "rtoc" (left or right table of content)
+   The script will generate two tables of content (TOCs), each one of them residing in a <div id=xyz></div>
+   the id has to be either "ltoc" or "rtoc" (left or right table of content)
    Headers h1 to h3 are automatically numbered in 1.1.1 style
    ltoc includes the numbers, whereas rtoc only has unnumbered headings
    
-   Ther are two predefined classes for headings. 
+   There are two predefined classes for headings. 
    appear in the ltoc only: no special class needed
-   appear in the rtoc only: class="onlyrtoc"
+   appear in the rtoc only: class="rtoconly"
    appear in both tocs:     class="bothtoc"
-   <h2 class="rtoconly">This title will only appear in rtoc</h2>
+   <h2 class="rtoconly">This title will only appear in the toc on the right</h2>
    
-   In addition the script can create quicklinks to the most recent h1 or h2 tag.
+   In addition the script can create jumplinks to the most recent h1 or h2 tag.
    use the classes "h1" or "h2" respectively:
-   <a class="h1" >hyperlink to most recent h1</a>
+   <a class="h1">hyperlink to most recent h1</a>
 */
 $(document).ready(function() {
 	// highlight "passed" or "failed" in the summary table
@@ -37,7 +37,7 @@ $(document).ready(function() {
 		}
 	});
 	
-    // to include new chaptes in the right div tag use class=rtoconly or bothtoc
+    // to include new chapters in the right div tag use class=rtoconly or bothtoc
 	$("[class=rtoconly],[class=bothtoc]").each(function(i) {
 		//alert("h1:"+i);
 		var current = $(this);  // refer to the current <h1> element

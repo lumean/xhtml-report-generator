@@ -9,7 +9,7 @@ module XhtmlReportGenerator
   # This is the main generator class. It can be instanced with custom javascript, css, and ruby files to allow
   # generation of arbitrary reports.
   class Generator
-    attr_accessor :document
+    attr_accessor :document, :file
     # @param opts [Hash] See the example for an explanation of the valid symbols
     # @example Valid symbols for the opts Hash
     #   :jquery       if specified, path to a version of jquery, that will be inlined into the html header section
@@ -37,7 +37,7 @@ module XhtmlReportGenerator
       # all existing Generator classes
       instance_eval symbols[:custom_rb]
 
-      @document = Generator.createXhtmlDoc("Title")
+      @document = Generator.create_xhtml_document("Title")
       head = @document.elements["//head"]
       # insert the custom css, and javascript files
       style = head.add_element("style", {"type" => "text/css"})
@@ -56,7 +56,7 @@ module XhtmlReportGenerator
 
     # Creates a minimal valid xhtml document including header title and body elements
     # @param title [String] Title in the header section
-    def self.createXhtmlDoc(title)
+    def self.create_xhtml_document(title)
       header = '<?xml version="1.0" encoding="UTF-8" standalone="no"?>'
       header += '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">'
 
@@ -82,12 +82,19 @@ module XhtmlReportGenerator
       return output
     end
     
-    # saves the xml document as a file
-    # @param file [String] absolute or relative path to the file to which will be written.
+    # Saves the xml document to a file. If no file is given, the file which was used most recently for this Generator
+    # object will be overwritten.
+    # @param file [String] absolute or relative path to the file to which will be written. Default: last file used.
     # @param mode [String] defaults to 'w', one of the file open modes that allows writing ['r+','w','w+','a','a+']
-    def writeToFile(file, mode='w')
+    def write(file=@file, mode='w')
+      # instance variables are nil if they were never initialized
+      if file == nil
+        raise "no valid file given"
+      end
+      @file = file
       File.open(file, "#{mode}:UTF-8") {|f| f.write(self.to_s)}
     end
+    
   end
 end
 

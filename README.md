@@ -26,12 +26,50 @@ in addition the method naming convention was changed from camelCase to underscor
 require 'xhtml-report-generator'
 
 gen1 = XhtmlReportGenerator::Generator.new
-gen1.createLayout
-gen1.setTitle("Example Report")
-gen1.heading("titel", "h1", :btoc)
-gen1.heading("subtitel", "h2", :ltoc)
-gen1.heading("section", "h3")
-gen1.content("content function: Hallo welt <br /> html test <span class=\"r\" >red span test</span>", {"class"=>"bold"})
-      gen1.html("<p class="italic">html function: Hallo welt <br /> html test <span class=\"r\" >red span test</span></p>")
+gen1.create_layout("Title")
+gen1.heading("h1", {"class" => "bothtoc"}) {"titel"}
+gen1.heading("h2") {"subtitel"}
+gen1.heading("h3") {"section"}
+gen1.content() {"content function: Hallo welt <br /> html test <span class=\"r\" >red span test</span>", {"class"=>"bold"}}
+gen1.html("<p class="italic">html function: Hallo welt <br /> html test <span class=\"r\" >red span test</span></p>")
+gen1.highlight(/Ha.*lt/)
+
+</pre>
+
+Changes from version 1.x to 2.x
+-------------------------------
+To ease with migration here is a list with the changed function names, please also check the new synopsis
+
+XhtmlReportGenerator::Generator :
+
+<pre>
+createXhtmlDoc  -> create_xhtml_document
+
+writeToFile	    -> write(file=@file, mode='w')
+</pre>
+
+Custom :
+
+<pre>
+createLayout 	-> create_layout(title, layout=3)
+
+setTitle		-> set_title(title)
+
+getTitle		-> get_title
+
+setCurrent!		-> set_current!(xpath)
+
+getCurrent		-> get_current
+
+highlightCaptures -> highlight_captures(regex, color="y", el = @current)
+
+code 			-> code(attrs={}, &block)
+
+content			-> content(attrs={}, &block)
+
+heading			-> heading(tag_type="h1", attrs={}, &block)
+
+headingTop		-> heading_top(tag_type="h1", attrs={}, &block)
+
 </pre>
 
