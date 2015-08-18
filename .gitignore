@@ -1,0 +1,14 @@
+
+#ignore yard and documentation
+*doc
+*.yardoc
+*.settings
+
+#ignore eclipse files
+.buildpath
+.project
+
+#ignore any logfiles
+*.log
+logs
+
