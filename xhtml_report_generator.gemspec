@@ -17,8 +17,8 @@ Gem::Specification.new do |s|
       gen1.heading("h1", {"class" => "bothtoc"}) {"titel"}
       gen1.heading("h2") {"subtitel"}
       gen1.heading("h3") {"section"}
-      gen1.content() {"content function: Hallo welt <br /> html test <span class=\"r\" >red span test</span>", {"class"=>"bold"}}
-      gen1.html("<p class="italic">html function: Hallo welt <br /> html test <span class=\"r\" >red span test</span></p>")
+      gen1.content({"class"=>"bold"}) {"content function: Hallo welt &lt;br /> html test &lt;span class=\"r\" >red span test&lt;/span>"}
+      gen1.html("&lt;p class=\"italic\">html function: Hallo welt &lt;br /> html test &lt;span class=\"r\" >red span test&lt;/span>&lt;/p>")
       gen1.highlight(/Ha.*lt/)
       
     The javascript to render the table of contents, the custom generator functions and style sheet all can be

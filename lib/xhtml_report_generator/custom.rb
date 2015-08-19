@@ -265,8 +265,16 @@ module Custom
   def heading_top(tag_type="h1", attrs={}, &block)
     temp = REXML::Element.new(tag_type)
     temp.add_attributes(attrs)
-    # insert before the first child of div middle
-    @div_middle.insert_before("//div[@class='middle']/*[1]", temp)
+    
+    # check if there are any child elements 
+    if @div_middle.has_elements?()
+      # insert before the first child of div middle
+      @div_middle.insert_before("//div[@class='middle']/*[1]", temp)
+    else
+      # middle is empty, just insert the heading
+      @div_middle.insert_after(@current, temp)
+    end
+    
     @current = temp
     raise "Block argument is mandatory" unless block_given?
     text = block.call()

@@ -18,7 +18,7 @@ Here an example for version >= 2 of this gem is provided.
 
 Basically starting from version 2 the syntax for each method of custom.rb is unified. It accepts an hash of html attributes as argument, and the actual contents as block argument.
 
-def method({"attribute" => "value", "attribute" => "value"}) {contents}
+def method({"attribute" => "value", "attribute2" => "value2"}) {contents}
 
 in addition the method naming convention was changed from camelCase to underscore to comply more with ruby conventions.
  
@@ -30,8 +30,8 @@ gen1.create_layout("Title")
 gen1.heading("h1", {"class" => "bothtoc"}) {"titel"}
 gen1.heading("h2") {"subtitel"}
 gen1.heading("h3") {"section"}
-gen1.content() {"content function: Hallo welt <br /> html test <span class=\"r\" >red span test</span>", {"class"=>"bold"}}
-gen1.html("<p class="italic">html function: Hallo welt <br /> html test <span class=\"r\" >red span test</span></p>")
+gen1.content({"class"=>"bold"}) {"content function: Hallo welt &lt;br /> html test &lt;span class=\"r\" >red span test&lt;/span>"}
+gen1.html("&lt;p class=\"italic\">html function: Hallo welt &lt;br /> html test &lt;span class=\"r\" >red span test&lt;/span>&lt;/p>")
 gen1.highlight(/Ha.*lt/)
 
 </pre>
@@ -69,7 +69,7 @@ content			-> content(attrs={}, &block)
 
 heading			-> heading(tag_type="h1", attrs={}, &block)
 
-headingTop		-> heading_top(tag_type="h1", attrs={}, &block)
+headingTop		-> heading\_top(tag_type="h1", attrs={}, &block)
 
 </pre>
 

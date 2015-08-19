@@ -126,5 +126,14 @@ class TestReportGenerator < Test::Unit::TestCase
     assert(test1 == expected, "Results not equal")
   end
 
+  # regression heading top failed when middle-div has no children
+  def test_heading_top()
+    gen1 = XhtmlReportGenerator::Generator.new
+    gen1.create_layout("")
+    el = gen1.heading_top() {"test"}
+    assert(el != nil, "heading_top element should not be nil")
+  end
+  
+  
 end
 
