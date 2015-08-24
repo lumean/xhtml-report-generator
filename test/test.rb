@@ -48,7 +48,12 @@ class TestReportGenerator < Test::Unit::TestCase
       assert_equal(1, gen1.highlight(/second(.*)nut/, "g"))
       assert_equal(2, gen1.highlight(/fancy/, "b"))
       assert_equal(4, gen1.highlight_captures(/c(o)d(e)/,"r"))
-
+      # check zero match
+      assert_equal(0, gen1.highlight(/this_regex_will_not_match/,"r"))
+      # check captures without captures
+      assert_equal(0, gen1.highlight_captures(/this_regex_will_not_match/,"r"))
+      assert_equal(0, gen1.highlight_captures(/this_regex_will_(not)_match/,"r"))
+      
       gen1.content() {"this is really good lookin'"}
 
       gen1.code({"class" =>"code1"}) {
