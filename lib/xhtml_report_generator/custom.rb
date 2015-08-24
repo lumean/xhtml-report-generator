@@ -204,8 +204,8 @@ module Custom
     return num_matches
   end
 
-  # creates a html table from two dimensional array of the form Array[row][col]
-  # @param table_data [Array<Array>] of the form Array[row][column] containing all data, the '.to_s' method will be called on each element, 
+  # creates a html table from two dimensional array of the form Array [row] [col]
+  # @param table_data [Array<Array>] of the form Array [row] [col] containing all data, the '.to_s' method will be called on each element, 
   # @param headers [Number] either of 0, 1, 2, 3. Where 0 is no headers (<th>) at all, 1 is only the first row,
   #   2 is only the first column and 3 is both, first row and first column as <th> elements. Every other number
   #   is equivalent to the bitwise AND of the two least significant bits with 1, 2 or 3
