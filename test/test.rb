@@ -94,7 +94,10 @@ class TestReportGenerator < Test::Unit::TestCase
     gen1.table(table_data,1)
 
     gen1.heading("h1", {"class" => "bothtoc"}) {"1st Col only"}
-    table_data = [[1,2,3],[4,5,6],[7,8,"failed"]]
+    table_data = [
+      [1,2,"check"],
+      [4,5,"passed"],
+      [7,8,"failed"]]
     gen1.table(table_data,2)
 
     gen1.heading("h1", {"class" => "bothtoc"}) {"1st Row and 1st Col"}

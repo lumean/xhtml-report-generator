@@ -19,22 +19,27 @@
    appear in the ltoc only: no special class needed
    appear in the rtoc only: class="rtoconly"
    appear in both tocs:     class="bothtoc"
+   example:
    <h2 class="rtoconly">This title will only appear in the toc on the right</h2>
    
-   In addition the script can create jumplinks to the most recent h1 or h2 tag.
-   use the classes "h1" or "h2" respectively:
+   The script can create jumplinks to the most recent h1 or h2 tag.
+   use the classes "h1" or "h2" in an anchor tag:
    <a class="h1">hyperlink to most recent h1</a>
+   
+   It will also set the background-color attribute of <td> elements of tables containing
+   "passed", "failed", or "check" with green, red, or yellow respectively
 */
 $(document).ready(function() {
-	// highlight "passed" or "failed" in the summary table
+	// highlight "passed", "failed", or "check" in any table
 	$("td").each(function(i) {
 		var current = $(this);
-		if (!(current.html().match(/passed/) === null)) {
-			current.attr("style", "background-color:#00FF00;");
-		}
-		if (!(current.html().match(/failed/) === null)) {
-			current.attr("style", "background-color:#FF0000;");
-		}
+		if (!(current.html().match(/^passed$/) === null)) {
+			current.attr("style", "background-color:#19D119;");  //green
+		} else if (!(current.html().match(/^failed$/) === null)) {
+			current.attr("style", "background-color:#FF4719;");  //red
+		} else if (!(current.html().match(/^check$/) === null)) {
+            current.attr("style", "background-color:#FFFF00;");  //yellow
+        }
 	});
 	
     // to include new chapters in the right div tag use class=rtoconly or bothtoc
