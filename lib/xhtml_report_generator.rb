@@ -92,7 +92,7 @@ module XhtmlReportGenerator
         raise "no valid file given"
       end
       @file = file
-      File.open(file, "#{mode}:UTF-8") {|f| f.write(self.to_s)}
+      File.open(file, "#{mode}:UTF-8") {|f| f.write(self.to_s.force_encoding(Encoding::UTF_8))}
     end
     
   end
