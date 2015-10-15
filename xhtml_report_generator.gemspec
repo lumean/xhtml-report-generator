@@ -7,7 +7,7 @@ Gem::Specification.new do |s|
   s.platform    = Gem::Platform::RUBY
   s.date        = Time.now.strftime("%Y-%m-%d")
   s.summary     = "A simple and quick xhtml report generator"
-  s.required_ruby_version = '>= 1.8.7'
+  s.required_ruby_version = '>= 1.9.3'
 
   s.description = <<-HEREDOC.gsub(/^ {4}/, '')
     The generator can be used to create xhtml files. It comes with some default utility functions.
@@ -34,6 +34,7 @@ Gem::Specification.new do |s|
 
   # dependencies
   # s.add_runtime_dependency 'builder', '~> 3.2'
+  # s.add_runtime_dependency 'imagesize', '>= 0.1.1'
   # is the same as spec.add_runtime_dependency 'library', ['>= 3.2.0', '< 4.0']
   
 end

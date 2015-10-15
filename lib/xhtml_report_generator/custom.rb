@@ -1,3 +1,4 @@
+require 'base64'
 # The module name doesn't matter, just make sure at the end to 'extend' it
 # because it will be 'eval'ed  by the initialize method of the XhtmlReportGenerator::Generator class.
 module Custom
@@ -115,6 +116,25 @@ module Custom
       @div_middle.insert_after(@current, i)
       @current = i
     end
+    return @current
+  end
+  
+  # @param path [String] absolute or relative path to the image that should be inserted into the report
+  # @param attrs [Hash] attributes for the <img> element, any valid html attributes can be specified
+  #   you may specify attributes such "alt", "height", "width"
+  # @option attrs [String] "class" by default every heading is added to the left table of contents (toc)
+  def image(path, attributes = {})
+    # read image as binary and do a base64 encoding
+    binary_data = Base64.strict_encode64(IO.binread(path))
+    type = File.extname(path).gsub('.', '')
+    # create the element
+    temp = REXML::Element.new("img")
+    # add the picture
+    temp.add_attribute("src","data:image/#{type};base64,#{binary_data}")
+    temp.add_attributes(attributes)
+
+    @div_middle.insert_after(@current, temp)
+    @current = temp
     return @current
   end
   

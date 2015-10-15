@@ -25,14 +25,10 @@ class TestReportGenerator < Test::Unit::TestCase
   
   def test_overall()
     gen1 = XhtmlReportGenerator::Generator.new
-    gen1.create_layout("Manu's Testreport")
-    # gen1.set_title("Manu's Testreport")
-
-    seed = 123456789
-    rand = Random.new(seed)
+    gen1.create_layout("XHTML's Testreport")
 
     for i in 1..10 do
-      gen1.heading("h1", {"class" => "bothtoc"}) {"titel #{"Manuel".split("").shuffle(random: rand).join}"}
+      gen1.heading("h1", {"class" => "bothtoc"}) {"titel #{i+100}"}
       gen1.heading("h2") {"subtitel"}
       gen1.heading("h3") {"section"}
       gen1.heading("h4") {"subsection"}
@@ -71,16 +67,16 @@ class TestReportGenerator < Test::Unit::TestCase
 
     end
 
-    gen1.write("test/OverallReference1.xhtml")
+    gen1.write("#{@cd}/Overall.xhtml")
     #File.open("test1.xhtml", 'w') {|f| f.write(gen1.to_s)}
 
-    test1 = File.read("test/OverallReference1.xhtml")
-    expected = File.read("test/OverallReference.xhtml")
+    test1 = File.read("#{@cd}/Overall.xhtml")
+    expected = File.read("#{@cd}/OverallReference.xhtml")
     assert(test1 == expected, "Reports are not equal")
   end
 
   def test_customized_module()
-    gen2 = XhtmlReportGenerator::Generator.new(:custom_rb => "test/custom2.rb")
+    gen2 = XhtmlReportGenerator::Generator.new(:custom_rb => "#{@cd}/custom2.rb")
     result = gen2.H1
 
     assert( result ==  "Custom2 hallo H1")
@@ -109,9 +105,9 @@ class TestReportGenerator < Test::Unit::TestCase
     table_data = [[1,2,3],[4,5,6],[7,8,9]]
     gen1.table(table_data,3)
 
-    gen1.write("test/TableReference1.xhtml")
-    test1 = File.read("test/TableReference1.xhtml")
-    expected = File.read("test/TableReference.xhtml")
+    gen1.write("#{@cd}/TableReference1.xhtml")
+    test1 = File.read("#{@cd}/TableReference1.xhtml")
+    expected = File.read("#{@cd}/TableReference.xhtml")
     assert(test1 == expected, "Reports are not equal")
   end
 
@@ -128,9 +124,9 @@ class TestReportGenerator < Test::Unit::TestCase
     gen1.set_current!(cur)
     gen1.content() {"here we are at the end"}
 
-    gen1.write("test/GetSetRef1.xhtml")
-    test1 = File.read("test/GetSetRef1.xhtml")
-    expected = File.read("test/GetSetRef.xhtml")
+    gen1.write("#{@cd}/GetSetRef1.xhtml")
+    test1 = File.read("#{@cd}/GetSetRef1.xhtml")
+    expected = File.read("#{@cd}/GetSetRef.xhtml")
     assert(test1 == expected, "Results not equal")
   end
 
@@ -140,6 +136,30 @@ class TestReportGenerator < Test::Unit::TestCase
     gen1.create_layout("")
     el = gen1.heading_top() {"test"}
     assert(el != nil, "heading_top element should not be nil")
+  end
+  
+  # testcase for images
+  def test_image()
+    gen1 = XhtmlReportGenerator::Generator.new
+    gen1.create_layout("titel")
+    el = gen1.heading() {"PNG"}
+    # insert image with explicit size and alt-text
+    gen1.image("#{@cd}/test.png", {"width" => "55", "height"=> "20", "alt" => "some_interesting_text"})
+    
+    el = gen1.heading() {"JPG"}
+    gen1.content() {"ending .jpg"}
+    # insert image with explicit size (style notation)
+    gen1.image("#{@cd}/test.jpg", {"style" => "width:33px;height:27px;"})
+    gen1.content() {"ending .jpeg"}
+    # insert image with automatic size (no additional attributes)
+    gen1.image("#{@cd}/test.jpeg")
+    
+    gen1.write("#{@cd}/Image.xhtml")
+    
+    test1 = File.read("#{@cd}/ImageRef.xhtml")
+    expected = File.read("#{@cd}/Image.xhtml")
+    assert(test1 == expected, "Results not equal")
+    #assert(el != nil, "heading_top element should not be nil")
   end
   
   
