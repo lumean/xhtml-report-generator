@@ -105,8 +105,8 @@ class TestReportGenerator < Test::Unit::TestCase
     table_data = [[1,2,3],[4,5,6],[7,8,9]]
     gen1.table(table_data,3)
 
-    gen1.write("#{@cd}/TableReference1.xhtml")
-    test1 = File.read("#{@cd}/TableReference1.xhtml")
+    gen1.write("#{@cd}/Table.xhtml")
+    test1 = File.read("#{@cd}/Table.xhtml")
     expected = File.read("#{@cd}/TableReference.xhtml")
     assert(test1 == expected, "Reports are not equal")
   end
@@ -124,8 +124,8 @@ class TestReportGenerator < Test::Unit::TestCase
     gen1.set_current!(cur)
     gen1.content() {"here we are at the end"}
 
-    gen1.write("#{@cd}/GetSetRef1.xhtml")
-    test1 = File.read("#{@cd}/GetSetRef1.xhtml")
+    gen1.write("#{@cd}/GetSet.xhtml")
+    test1 = File.read("#{@cd}/GetSet.xhtml")
     expected = File.read("#{@cd}/GetSetRef.xhtml")
     assert(test1 == expected, "Results not equal")
   end
@@ -156,8 +156,8 @@ class TestReportGenerator < Test::Unit::TestCase
     
     gen1.write("#{@cd}/Image.xhtml")
     
-    test1 = File.read("#{@cd}/ImageRef.xhtml")
-    expected = File.read("#{@cd}/Image.xhtml")
+    test1 = File.read("#{@cd}/Image.xhtml")
+    expected = File.read("#{@cd}/ImageRef.xhtml")
     assert(test1 == expected, "Results not equal")
     #assert(el != nil, "heading_top element should not be nil")
   end
