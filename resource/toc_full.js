@@ -44,11 +44,11 @@ $(document).ready(function() {
 	// highlight "passed", "failed", or "check" in any table
 	$("td").each(function(i) {
 		var current = $(this);
-		if (!(current.html().match(/^passed$/) === null)) {
+		if (!(current.html().match(/^passed$/i) === null)) {
 			current.attr("style", "background-color:#19D119;");  //green
-		} else if (!(current.html().match(/^failed$/) === null)) {
+		} else if (!(current.html().match(/^failed$/i) === null)) {
 			current.attr("style", "background-color:#FF4719;");  //red
-		} else if (!(current.html().match(/^check$/) === null)) {
+		} else if (!(current.html().match(/^check$/i) === null)) {
       current.attr("style", "background-color:#FFFF00;");  //yellow
     }
 	});
@@ -70,8 +70,12 @@ $(document).ready(function() {
 	h2index = 0;
 	h3index = 0;
 	
-    // scan the document top down 
-    // i = starting at 0 increases for each matched tag / class
+  // reason for .toUpperCase() string comparison instead of .toLowerCase()
+  // https://msdn.microsoft.com/en-us/library/bb386042.aspx
+  // https://en.wikipedia.org/wiki/Capital_%E1%BA%9E
+  
+  // scan the document top down 
+  // i = starting at 0 increases for each matched tag / class
 	$("h1, h2, h3, a.h2, a.h1").each(function(i) {
 		var current = $(this);// refer to the current <hX> or <a> element
     // use correct id if it was already defined by bothtoc or define ltoc id
@@ -79,7 +83,7 @@ $(document).ready(function() {
        current.attr("id", "title"+i); //ltoc id
     } 
 		// autonumbering + ltoc to previous chapters (h1,h2,h3)
-		if ("h1" == current.prop("tagName")) {
+		if ("H1" == current.prop("tagName").toUpperCase()) {
 			// auto numbering
 			h1index += 1;
 			h2index = 0;
@@ -89,29 +93,31 @@ $(document).ready(function() {
 			// save the link to the previous <h1>
 			lasth1 = "#" + current.attr("id");
 			lasth1cont = current.html();
-		} else if ("h2" == current.prop("tagName")) {
+		} else if ("H2" == current.prop("tagName").toUpperCase()) {
 			h2index += 1;
 			h3index = 0;
 			current.prepend(h1index + "." + h2index + " ");
 			lasth2 = "#" + current.attr("id");
 			lasth2cont = current.html();
-		} else if ("h3" == current.prop("tagName")) {
+		} else if ("H3" == current.prop("tagName").toUpperCase()) {
 			h3index += 1;
 			current.prepend(h1index + "." + h2index + "." + h3index + " ");
-		} else if(current.attr("class") == "h1") {
+		} else if(current.attr("class").toUpperCase() == "H1") {
 			current.attr("href", lasth1);
 			current.html(lasth1cont); // add hyperlink to last h1 tag
 			return 0;
-		} else if(current.attr("class") == "h2") {
+		} else if(current.attr("class").toUpperCase() == "H2") {
 			current.attr("href", lasth2);
 			current.html(lasth2cont); // add hyperlink to last h2 tag
 			return 0;
 		}
 		
 		// exclude rtoconly from ltoc
-		if (current.attr("class") == "rtoconly") {
-			return 0;// we have to use return 0 b/c we are in a callback function
-		}
+    if (typeof current.attr("class") != 'undefined') {
+      if (current.attr("class").toUpperCase() == "RTOCONLY") {
+        return 0;// we have to use return 0 b/c we are in a callback function
+      }
+    }
 
     // add the quicklink to the ltoc
     // for ltoc insert also a folding -/+ hyperlink

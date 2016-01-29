@@ -23,6 +23,27 @@ class TestReportGenerator < Test::Unit::TestCase
     @cd = File.expand_path("..", __FILE__)
   end
   
+  def test_encoding_issues()
+    gen1 = XhtmlReportGenerator::Generator.new
+    gen1.create_layout("report")
+    gen1.heading("h1", {"class" => "bothtoc"}) {"Encoding"}
+    # U+01BA	ƺ	c6 ba	LATIN SMALL LETTER EZH WITH TAIL
+    teststring = "\xE2\x80hallo\x98\x99\x01\xbaäöü"
+    puts "Encoding of teststring: #{teststring.encoding()}"
+    
+    gen1.content() {teststring}
+    gen1.highlight(/hallo/) 
+    gen1.heading("h1") {"xml chars"}
+    gen1.content() {"< > /> ;&   <http://www.cl.cam.ac.uk/~mgk25/> "}
+    gen1.code() {"< > /> ;&     <http://www.cl.cam.ac.uk/~mgk25/> "}
+    content = IO.binread("#{@cd}/UTF-8-test.txt")
+    gen1.content() {"Encoding: #{content.encoding()}"}
+    gen1.code() {content}
+    gen1.write("#{@cd}/test_encoding.xhtml")
+    gen1.write("#{@cd}/test_encoding.html")
+  end
+  
+  
   def test_overall()
     gen1 = XhtmlReportGenerator::Generator.new
     gen1.create_layout("XHTML's Testreport")

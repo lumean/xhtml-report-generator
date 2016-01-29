@@ -28,7 +28,7 @@ module Custom
       div.add_text("Quick Links")
       div.add_element("br");div.add_element("br")
       end
-      
+
       @div_middle = @body.add_element("div", {"class" => "middle"})
       @layout = true
     end
@@ -85,7 +85,7 @@ module Custom
     @div_middle.insert_after(@current, temp)
     @current = temp
     raise "Block argument is mandatory" unless block_given?
-    text = block.call()
+    text = encoding_fixer(block.call())
     @current.add_text(text)
     return @current
   end
@@ -100,7 +100,7 @@ module Custom
     @div_middle.insert_after(@current, temp)
     @current = temp
     raise "Block argument is mandatory" unless block_given?
-    text = block.call()
+    text = encoding_fixer(block.call())
     @current.add_text(text)
     return @current
   end
@@ -270,7 +270,7 @@ module Custom
     @div_middle.insert_after(@current, temp)
     @current = temp
     raise "Block argument is mandatory" unless block_given?
-    text = block.call()
+    text = encoding_fixer(block.call())
     @current.text = text
     return @current
   end
@@ -297,7 +297,7 @@ module Custom
     
     @current = temp
     raise "Block argument is mandatory" unless block_given?
-    text = block.call()
+    text = encoding_fixer(block.call())
     @current.text = text
     return @current
   end
