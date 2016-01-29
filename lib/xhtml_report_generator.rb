@@ -64,34 +64,26 @@ module XhtmlReportGenerator
     def cdata(str, parent_element)
       f = REXML::Formatters::Transitive.new(0) # use Transitive to preserve source formatting
       # somehow there is a problem with CDATA, any text added after will automatically go into the CDATA
-      # so we prepare the CDATA manually and add the text as raw.
-      #out = "/*"
-      #f.write(REXML::CData.new("*/\n"+str+"\n"), out)
-      #out << "*/"
-      #t = REXML::Text.new(out, true, nil, true)
-      #parent_element.add(t)
+      # so we have do add a dummy node after the CDATA and then add the text.
       parent_element.add_text("/*")
       parent_element.add(REXML::CData.new("*/\n"+str+"\n/*"))
       parent_element.add(REXML::Comment.new("dummy comment to make c-style comments for cdata work"))
       parent_element.add_text("*/")
     end
     
-    # Check if the give string is a valid UTF-8 byte sequence.
-    # If it is not valid UTF-8, then assumes the source encoding to be ISO-8859-1 
-    # and converts to UTF-8
+    # Check if the give string is a valid UTF-8 byte sequence. If it is not valid UTF-8, then 
+    # all invalid bytes are replaced by "\u2e2e" ('REVERSED QUESTION MARK') because the default
+    # replacement character "\uFFFD" ('QUESTION MARK IN DIAMOND BOX') is two slots wide and might 
+    # destroy mono spaced formatting
     # @param str [String] of any encoding
     # @return [String] UTF-8 encoded valid string
     def encoding_fixer(str)
       #if !str.force_encoding('UTF-8').valid_encoding?
       #  str.encode!('UTF-8', 'ISO-8859-1', {:invalid => :replace, :undef => :replace, :xml => :text})
       #end
-      tmp = str.force_encoding('UTF-8').encode('UTF-8',{:invalid => :replace, :undef => :replace})
-      # replace all special control chars as well but keep newline and whitespace
-      tmp.gsub!(/[\u0000-\u0007\u000C-\u001F]|\xef\xbf\xbe|\xef\xbf\xbf/, "\uFFFD")
-      
-      if tmp.match(/\x00/)
-        puts "jklajsljflkjlk"
-      end
+      tmp = str.force_encoding('UTF-8').encode('UTF-8',{:invalid => :replace, :undef => :replace, :replace => "\u2e2e"})
+      # replace all special control chars as well but keep newline and whitespace "\u2e2e"
+      tmp.gsub!(/[\u0000-\u0007\u000C-\u001F]|\xef\xbf\xbe|\xef\xbf\xbf/, "\u2e2e")
       return tmp
     end
 

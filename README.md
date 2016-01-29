@@ -1,15 +1,14 @@
-xhtml-report-generator
+xhtml_report_generator
 ======================
 
-This project was written to provide an easy way to create valid xhtml documents.
+This project was written to provide an easy way to create valid xhtml or html documents.
 Usecases are the automatic creation of reports (e.g. program logs) with automatically created table of contents.
-xhtml-report-generator is not a Logger replacement, since the complete document is always kept in memory and
-only written to disk on demand. Hence in case of crashes the data might be lost.
-
+xhtml_report_generator is not a Logger replacement, since the complete document is always kept in memory and
+only written to disk on demand. Hence in case of crashes the data might be lost if you didn't write before.
 
 Example usage
 -------------
-In the following you can find a quick start on how to use xhtml-report-generator.
+In the following you can find a quick start on how to use xhtml_report_generator.
 Basically the project is built in a way that lets you supply your own methods for everything.
 By default "custom.rb" is loaded through instance eval, so you can check the corresponding documentation for available methods.
 
@@ -21,9 +20,11 @@ Basically starting from version 2 the syntax for each method of custom.rb is uni
 def method({"attribute" => "value", "attribute2" => "value2"}) {contents}
 
 in addition the method naming convention was changed from camelCase to underscore to comply more with ruby conventions.
+
+See <a href=http://www.rubydoc.info/gems/xhtml_report_generator/Custom>http://www.rubydoc.info/gems/xhtml_report_generator/Custom</> for the documentation of available methods.
  
 <pre>
-require 'xhtml-report-generator'
+require 'xhtml_report_generator'
 
 gen1 = XhtmlReportGenerator::Generator.new
 gen1.create_layout("Title")
@@ -33,8 +34,61 @@ gen1.heading("h3") {"section"}
 gen1.content({"class"=>"bold"}) {"content function: Hallo welt &lt;br /> html test &lt;span class=\"r\" >red span test&lt;/span>"}
 gen1.html("&lt;p class=\"italic\">html function: Hallo welt &lt;br /> html test &lt;span class=\"r\" >red span test&lt;/span>&lt;/p>")
 gen1.highlight(/Ha.*lt/)
+gen1.link("https://rubygems.org/gems/xhtml_report_generator/") {"download the gem"}
+# browser will parse this as html (based on file extension)
+gen1.write("myreport.html")
+# browser will parse this as xhtml (based on file extension)
+gen1.write("myreport.xhtml")
+</pre>
+
+Adding some graphs to your reports
+----------------------------------
+Due to the xml nature it is also easy to insert SVG graphs / pictures. Check out the svg-graph gem
+
+<pre>
+require 'xhtml_report_generator'
+require 'SVG/Graph/Line'
+require 'REXML/document'
+
+gen1 = XhtmlReportGenerator::Generator.new
+gen1.create_layout("Graph example")
+gen1.heading("h1") {"my graph"}
+
+x_axis = %w(Jan Feb Mar);
+data_sales_02 = [12, 45, 21]
+data_sales_03 = [15, 30, 40]
+
+graph = SVG::Graph::Line.new({
+       :height => 300,
+      :width => 500,
+  :show_graph_title      => true,
+  :graph_title          => 'Graph Title',
+  :show_x_title  => true,
+  :x_title => 'Month',
+  :show_y_title  => true,
+  #:y_title_text_direction => :bt,
+  :y_title => 'cash',
+  :fields => x_axis})
+
+graph.add_data({:data => data_sales_02, :title => 'Sales2002'})
+graph.add_data({:data => data_sales_03, :title => 'Sales2003'})
+
+# we can't add the entire xml document since multiple xml declarations are invalid
+# so we add only 
+doc = REXML::Document.new(graph.burn())
+svg = doc.elements["//svg"]
+out = ''
+f = REXML::Formatters::Pretty.new(0)
+f.compact = true
+f.write(svg, out)
+
+gen1.html(out)
+gen1.write("graph.xhtml")
 
 </pre>
+
+
+
 
 Changes from version 1.x to 2.x
 -------------------------------

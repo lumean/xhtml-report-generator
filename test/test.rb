@@ -28,21 +28,24 @@ class TestReportGenerator < Test::Unit::TestCase
     gen1.create_layout("report")
     gen1.heading("h1", {"class" => "bothtoc"}) {"Encoding"}
     # U+01BA	ƺ	c6 ba	LATIN SMALL LETTER EZH WITH TAIL
-    teststring = "\xE2\x80hallo\x98\x99\x01\xbaäöü"
+    teststring = "\xE2\x80hallo\x98\x99\xc6\xbaäöü"
     puts "Encoding of teststring: #{teststring.encoding()}"
     
     gen1.content() {teststring}
     gen1.highlight(/hallo/) 
-    gen1.heading("h1") {"xml chars"}
+    gen1.heading("h1") {"Special characters"}
+    gen1.heading("h2") {"XML forbidden chars"}
     gen1.content() {"< > /> ;&   <http://www.cl.cam.ac.uk/~mgk25/> "}
     gen1.code() {"< > /> ;&     <http://www.cl.cam.ac.uk/~mgk25/> "}
+    gen1.heading("h3") {"UTF-8 encoding stress test"}
     content = IO.binread("#{@cd}/UTF-8-test.txt")
     gen1.content() {"Encoding: #{content.encoding()}"}
     gen1.code() {content}
     gen1.write("#{@cd}/test_encoding.xhtml")
     gen1.write("#{@cd}/test_encoding.html")
+    # check if LATIN SMALL LETTER EZH WITH TAIL  is in final output
+    assert(IO.binread("#{@cd}/test_encoding.xhtml").force_encoding('UTF-8').match(/\u01baäöü/), "ƺ (\\u01baäöü was not found")    
   end
-  
   
   def test_overall()
     gen1 = XhtmlReportGenerator::Generator.new
@@ -51,6 +54,7 @@ class TestReportGenerator < Test::Unit::TestCase
     for i in 1..10 do
       gen1.heading("h1", {"class" => "bothtoc"}) {"titel #{i+100}"}
       gen1.heading("h2") {"subtitel"}
+      gen1.link("https://rubygems.org/gems/xhtml_report_generator/") {"download the gem"}
       gen1.heading("h3") {"section"}
       gen1.heading("h4") {"subsection"}
       gen1.content({"class"=>"bold"}) {"content function: Hallo welt <br /> html test <span class=\"r\" >red span test</span>"}

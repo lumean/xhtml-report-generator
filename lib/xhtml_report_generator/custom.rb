@@ -109,13 +109,31 @@ module Custom
   # @param text [String] valid xhtml code which is included into the document
   # @return [REXML::Element] the Element which was just added 
   def html(text)
-    # we need to create a new document with a pseudo root
+    # we need to create a new document with a pseudo root becaus having multiple nodes at top 
+    # level is not valid xml
     doc = REXML::Document.new("<root>"+text+"</root>")
     # then we move all children of root to the actual div middle element and insert after current
     for i in doc.root.to_a do
       @div_middle.insert_after(@current, i)
       @current = i
     end
+    return @current
+  end
+  
+  # Appends  a <a href = > node after the @current nodes
+  # @param href [String] this is the
+  # @param attrs [Hash] attributes for the <a> element
+  # @yieldreturn [String] the text to be added to the <a> element
+  # @return [REXML::Element] the Element which was just added
+  def link(href, attrs={}, &block) 
+    temp = REXML::Element.new("a")
+    attrs.merge!({"href" => href})
+    temp.add_attributes(attrs)
+    @div_middle.insert_after(@current, temp)
+    @current = temp
+    raise "Block argument is mandatory" unless block_given?
+    text = encoding_fixer(block.call())
+    @current.add_text(text)
     return @current
   end
   

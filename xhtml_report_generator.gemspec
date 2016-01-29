@@ -6,23 +6,25 @@ Gem::Specification.new do |s|
   s.version     = XhtmlReportGenerator::VERSION
   s.platform    = Gem::Platform::RUBY
   s.date        = Time.now.strftime("%Y-%m-%d")
-  s.summary     = "A simple and quick xhtml report generator"
+  s.summary     = "A simple html or xhtml generator to create human readable support"
   s.required_ruby_version = '>= 1.9.3'
 
   s.description = <<-HEREDOC.gsub(/^ {4}/, '')
-    The generator can be used to create xhtml files. It comes with some default utility functions.
-    == Here is an example usage
+    The generator can be used to create html or xhtml files. It comes with many utility functions.
+    == Example usage
       gen1 = XhtmlReportGenerator::Generator.new
       gen1.create_layout("Title")
       gen1.heading("h1", {"class" => "bothtoc"}) {"titel"}
       gen1.heading("h2") {"subtitel"}
       gen1.heading("h3") {"section"}
-      gen1.content({"class"=>"bold"}) {"content function: Hallo welt &lt;br /> html test &lt;span class=\"r\" >red span test&lt;/span>"}
-      gen1.html("&lt;p class=\"italic\">html function: Hallo welt &lt;br /> html test &lt;span class=\"r\" >red span test&lt;/span>&lt;/p>")
+      gen1.content({"class"=>"bold"}) {"content function: Hallo welt <br /> html test <span class=\"r\" >red span test</span>"}
+      gen1.html("<p class=\"italic\">html function: Hallo welt <br /> html test <span class=\"r\" >red span test<span></p>")
       gen1.highlight(/Ha.*lt/)
       
     The javascript to render the table of contents, the custom generator functions and style sheet all can be
-    supplied by your own, if necessary. 
+    supplied by your own, if necessary. By default there are methods to insert tables, links, paragraphs, preformatted text
+    and arbitrary xhtml code. Due to the xml nature it is also easy to insert SVG graphs / pictures.
+    
   HEREDOC
 
   s.authors      = ["Manuel Widmer"]
