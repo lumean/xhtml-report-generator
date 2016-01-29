@@ -1,3 +1,4 @@
+# encoding: utf-8
 require 'base64'
 # The module name doesn't matter, just make sure at the end to 'extend' it
 # because it will be 'eval'ed  by the initialize method of the XhtmlReportGenerator::Generator class.

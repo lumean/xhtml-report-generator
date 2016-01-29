@@ -72,7 +72,7 @@ module XhtmlReportGenerator
     end
     
     # Check if the give string is a valid UTF-8 byte sequence. If it is not valid UTF-8, then 
-    # all invalid bytes are replaced by "\u2e2e" ('REVERSED QUESTION MARK') because the default
+    # all invalid bytes are replaced by "\u2e2e" (\xe2\xb8\xae) ('REVERSED QUESTION MARK') because the default
     # replacement character "\uFFFD" ('QUESTION MARK IN DIAMOND BOX') is two slots wide and might 
     # destroy mono spaced formatting
     # @param str [String] of any encoding
@@ -83,8 +83,8 @@ module XhtmlReportGenerator
       #end
       tmp = str.force_encoding('UTF-8').encode('UTF-8',{:invalid => :replace, :undef => :replace, :replace => "\u2e2e"})
       # replace all special control chars as well but keep newline and whitespace "\u2e2e"
-      tmp.gsub!(/[\u0000-\u0007\u000C-\u001F]|\xef\xbf\xbe|\xef\xbf\xbf/, "\u2e2e")
-      return tmp
+      tmp.force_encoding('binary').gsub!(/[\x00-\x07\x0C-\x1F]|\xef\xbf\xbe|\xef\xbf\xbf/n, "\xe2\xb8\xae".force_encoding('binary'))
+      return tmp.force_encoding('UTF-8')
     end
 
     # Creates a minimal valid xhtml document including header title and body elements

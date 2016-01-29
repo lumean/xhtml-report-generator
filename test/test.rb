@@ -1,3 +1,4 @@
+﻿# encoding: utf-8
 require 'test/unit'
 
 require_relative '../lib/xhtml_report_generator'
@@ -44,7 +45,9 @@ class TestReportGenerator < Test::Unit::TestCase
     gen1.write("#{@cd}/test_encoding.xhtml")
     gen1.write("#{@cd}/test_encoding.html")
     # check if LATIN SMALL LETTER EZH WITH TAIL  is in final output
-    assert(IO.binread("#{@cd}/test_encoding.xhtml").force_encoding('UTF-8').match(/\u01baäöü/), "ƺ (\\u01baäöü was not found")    
+    result = IO.binread("#{@cd}/test_encoding.xhtml").force_encoding('UTF-8')
+    puts "valid encoding? : #{result.valid_encoding?}"
+    assert(result.match(/\u01baäöü/u), "ƺ (\\u01baäöü was not found")    
   end
   
   def test_overall()

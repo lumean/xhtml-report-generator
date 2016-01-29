@@ -6,6 +6,12 @@ Usecases are the automatic creation of reports (e.g. program logs) with automati
 xhtml_report_generator is not a Logger replacement, since the complete document is always kept in memory and
 only written to disk on demand. Hence in case of crashes the data might be lost if you didn't write before.
 
+Ruby version
+-----
+This gem was mainly tested with ruby version 2.2.3. Except of the test_encoding_issues unit tests, all other tests are 
+also passing with 1.9.3. Probably there were issues in ruby itself for earlier versions.
+
+
 Example usage
 -------------
 In the following you can find a quick start on how to use xhtml_report_generator.
