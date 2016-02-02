@@ -139,7 +139,7 @@ module Custom
   end
   
   # @param path [String] absolute or relative path to the image that should be inserted into the report
-  # @param attrs [Hash] attributes for the <img> element, any valid html attributes can be specified
+  # @param attributes [Hash] attributes for the <img> element, any valid html attributes can be specified
   #   you may specify attributes such "alt", "height", "width"
   # @option attrs [String] "class" by default every heading is added to the left table of contents (toc)
   def image(path, attributes = {})
