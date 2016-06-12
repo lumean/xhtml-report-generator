@@ -40,23 +40,19 @@
    "passed", "failed", or "check" with green, red, or yellow respectively
 */
 
-
-$(function() {
-  $("#ltoc").resizable({
-    alsoResize: ".middle"
-  });
-  $(".middle").resizable();
-});
-
-$(function() {
-  $("#rtoc").resizable({
-    alsoResize: ".middle"
-  });
-  $(".middle").resizable();
-});
-
+var myLayout;// a var is required because this page utilizes: myLayout.allowOverflow() method
 
 $(document).ready(function() {
+  
+  // layout
+  myLayout = $('body').layout({
+    // enable showOverflow on west-pane so popups will overlap north pane
+    west__showOverflowOnHover: true
+
+  //,	west__fxSettings_open: { easing: "easeOutBounce", duration: 750 }
+  });
+  
+  
 	// highlight "passed", "failed", or "check" in any table
 	$("td").each(function(i) {
 		var current = $(this);

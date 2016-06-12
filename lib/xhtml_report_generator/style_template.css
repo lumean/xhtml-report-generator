@@ -21,42 +21,42 @@ div classes
 div.head {
 	font: 200% Arial, Helvetica, sans-serif, bold;
 	text-align: center;
-	width: 100%;
-	position: fixed;
-	top: 0px;
-	height: 90px;
-	background: #FFFFFF;
-	z-index: 99;
+	//width: 100%;
+	//position: fixed;
+	//top: 0px;
+	//height: 90px;
+	//background: #FFFFFF;
+	//z-index: 99;
 }
 
 div.lefttoc {
-	position: fixed;
-  float:left
-	width: 20%;
-	/*height:90%;*/
-	top: 100px;
-	left: 5px;
-	bottom: 20px;
-	border: solid 1px #000000;
+	//position: fixed;
+  //float:left
+	//width: 20%;
+	///*height:90%;*/
+	//top: 100px;
+	//left: 5px;
+	//bottom: 20px;
+	//border: solid 1px #000000;
 	overflow: auto;
 	white-space: nowrap;
-	/*display:none;*/ /*uncomment on the left for printing*/
+	///*display:none;*/ /*uncomment on the left for printing*/
 }
 
 div.middle {
-	position: relative;
+	//position: relative;
 	//margin: 100px 160px 0 23%; /*top right bottom left */
 	/* margin: x y   =  Xpx each - botten and top,   ypx each - left and right */
 }
 
 div.righttoc {
-	position: fixed;
-  float:right
-	width: 150px;
-	top: 100px;
-	right: 5px;
-	border: solid 1px #000000;
-	/*display:none;*/ /*uncomment on the left for printing*/
+	//position: fixed;
+  //float:right
+	//width: 150px;
+	//top: 100px;
+	//right: 5px;
+	//border: solid 1px #000000;
+	///*display:none;*/ /*uncomment on the left for printing*/
 }
 
 button {
@@ -131,36 +131,36 @@ h2 {
 
 /* work-around for margin/padding issues with hash-tag links */
 /* http://css-tricks.com/hash-tag-links-padding/             */
-h1:before {
-	font-size: 140%;
-	display: block;
-	content: " ";
-	margin-top: -100px;
-	height: 100px;
-	visibility: hidden;
-}
-
-h2:before {
-	font-size: 120%;
-	display: block;
-	content: " ";
-	margin-top: -100px;
-	height: 100px;
-	visibility: hidden;
-}
-
-h3:before {
-	display: block;
-	content: " ";
-	margin-top: -100px;
-	height: 100px;
-	visibility: hidden;
-}
-
-/*End of work-around*/
-
-form {
-	margin: 1em 0;
-	padding: .2em 20px;
-	background: #eeeeee;
-}
+//h1:before {
+//	font-size: 140%;
+//	display: block;
+//	content: " ";
+//	margin-top: -100px;
+//	height: 100px;
+//	visibility: hidden;
+//}
+//
+//h2:before {
+//	font-size: 120%;
+//	display: block;
+//	content: " ";
+//	margin-top: -100px;
+//	height: 100px;
+//	visibility: hidden;
+//}
+//
+//h3:before {
+//	display: block;
+//	content: " ";
+//	margin-top: -100px;
+//	height: 100px;
+//	visibility: hidden;
+//}
+//
+///*End of work-around*/
+//
+//form {
+//	margin: 1em 0;
+//	padding: .2em 20px;
+//	background: #eeeeee;
+//}
