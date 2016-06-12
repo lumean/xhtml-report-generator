@@ -31,6 +31,7 @@ div.head {
 
 div.lefttoc {
 	position: fixed;
+  float:left
 	width: 20%;
 	/*height:90%;*/
 	top: 100px;
@@ -44,12 +45,13 @@ div.lefttoc {
 
 div.middle {
 	position: relative;
-	margin: 100px 160px 0 23%; /*top right bottom left */
+	//margin: 100px 160px 0 23%; /*top right bottom left */
 	/* margin: x y   =  Xpx each - botten and top,   ypx each - left and right */
 }
 
 div.righttoc {
 	position: fixed;
+  float:right
 	width: 150px;
 	top: 100px;
 	right: 5px;

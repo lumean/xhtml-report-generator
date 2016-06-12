@@ -24,8 +24,8 @@ module XhtmlReportGenerator
         :css       => File.expand_path("style_template.css",path),
         :css_print => File.expand_path("print_template.css",path),
         :custom_rb => File.expand_path("custom.rb",path),
-        :jquery-ui => File.expand_path("jquery-ui.min.js",path),
-        :css_jquery-ui => File.expand_path("jquery-ui.min.css",path)
+        :jquery_ui => File.expand_path("jquery-ui.min.js",path),
+        :css_jquery_ui => File.expand_path("jquery-ui.min.css",path)
       }
       # either use the default files provided with the gem, or those provided by the caller
       symbols = symbols.merge(opts)
@@ -50,14 +50,14 @@ module XhtmlReportGenerator
       style = head.add_element("style", {"type" => "text/css", "media"=>"print"})
       cdata(symbols[:css_print], style)
       
-      style = head.add_element("style", {"type" => "text/css", "media"=>"print"})
-      cdata(symbols[:css_jquery-ui], style)
+      style = head.add_element("style", {"type" => "text/css"})
+      cdata(symbols[:css_jquery_ui], style)
 
       script = head.add_element("script", {"type" => "text/javascript"})
       cdata(symbols[:jquery], script)
 
       script = head.add_element("script", {"type" => "text/javascript"})
-      cdata(symbols[:jquery-ui], script)
+      cdata(symbols[:jquery_ui], script)
       
       script = head.add_element("script", {"type" => "text/javascript"})
       cdata(symbols[:toc], script)

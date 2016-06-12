@@ -10,7 +10,7 @@
 /* The following conventions must be followed in order to support 
    automatic TOC generation and heading numbers.
    
-   This script requires jquery (tested with version 1.11.1.min.js)
+   This script requires jquery (tested with version 1.12.4.min.js)
 
    The script will generate two tables of content (TOCs), each one of them residing in a <div id=xyz></div>
    the id has to be either "ltoc" or "rtoc" (left or right table of content)
@@ -39,6 +39,22 @@
    It will also set the background-color attribute of <td> elements of tables containing
    "passed", "failed", or "check" with green, red, or yellow respectively
 */
+
+
+$(function() {
+  $("#ltoc").resizable({
+    alsoResize: ".middle"
+  });
+  $(".middle").resizable();
+});
+
+$(function() {
+  $("#rtoc").resizable({
+    alsoResize: ".middle"
+  });
+  $(".middle").resizable();
+});
+
 
 $(document).ready(function() {
 	// highlight "passed", "failed", or "check" in any table
