@@ -12,3 +12,5 @@
 *.log
 logs
 
+# ignore mac files
+.DS_Store

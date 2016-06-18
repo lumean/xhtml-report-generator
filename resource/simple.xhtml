@@ -1,0 +1,74 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+	<title>Simple Layout Demo</title>
+	
+	<link rel='stylesheet' type='text/css' href='../lib/xhtml_report_generator/style_template.css'>
+	</link>
+
+	<script type="text/javascript" src="jquery-1.12.4.min.js"></script>
+  <script type="text/javascript" src="split.min.js"></script>
+  <script>
+    /*<![CDATA[*/
+          
+    $(document).ready(function() {
+
+      /*Split(['#head', '#content'], {
+        direction: 'vertical',
+        sizes: [5, 100],
+        minSize: [5, 100],
+        snapOffset: 50,
+        gutterSize: 10,
+      })*/
+
+      Split(['#ltoc', '#middle', '#rtoc'], {
+        minSize: [1,10,5],
+        sizes: [20, 70, 10],
+        snapOffset: 50,
+        gutterSize: 10,
+       
+      })
+      
+    });
+     /*]]><!--dummy comment to make c-style comments for cdata work-->*/
+  </script>
+
+
+</head>
+<body>
+
+<div class='head' id='head'>
+XHTML&apos;s Testreport
+</div>
+
+
+<div class='lefttoc split split-horizontal' id='ltoc'
+>Table of Contents<br
+/>
+</div>
+
+
+<div class='split split-horizontal' id='middle'>
+<p>middle</p><p>middle</p><p>middle</p><p>middle</p><p>middle</p><p>middle</p>
+<p>middle</p><p>middle</p><p>middle</p><p>middle</p><p>middle</p><p>middle</p>
+<p>middle</p><p>middle</p><p>middle</p><p>middle</p><p>middle</p><p>middle</p>
+<p>middle</p><p>middle</p><p>middle</p><p>middle</p><p>middle</p><p>middle</p>
+<p>middle</p><p>middle</p><p>middle</p><p>middle</p><p>middle</p><p>middle</p>
+<p>middle</p><p>middle</p><p>middle</p><p>middle</p><p>middle</p><p>middle</p>
+<p>middle</p><p>middle</p><p>middle</p><p>middle</p><p>middle</p><p>middle</p>
+<p>middle</p><p>middle</p><p>middle</p><p>middle</p><p>middle</p><p>middle</p>
+<p>middle</p><p>middle</p><p>middle</p><p>middle</p><p>middle</p><p>middle</p>
+<p>middle</p><p>middle</p><p>middle</p><p>middle</p><p>middle</p><p>middle</p>
+</div>
+
+
+<div class='split split-horizontal' id='rtoc'>
+Quick Links<br
+/><br
+/>
+</div>
+
+
+</body>
+</html>

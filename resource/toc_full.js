@@ -40,17 +40,15 @@
    "passed", "failed", or "check" with green, red, or yellow respectively
 */
 
-var myLayout;// a var is required because this page utilizes: myLayout.allowOverflow() method
-
 $(document).ready(function() {
-  
-  // layout
-  myLayout = $('body').layout({
-    // enable showOverflow on west-pane so popups will overlap north pane
-    west__showOverflowOnHover: true
 
-  //,	west__fxSettings_open: { easing: "easeOutBounce", duration: 750 }
-  });
+    // for split.js
+    Split(['#ltoc', '#middle', '#rtoc'], {
+      minSize: [5,10,5],
+      sizes: [20, 70, 10],
+      snapOffset: 50,
+      gutterSize: 10,
+    })
   
   
 	// highlight "passed", "failed", or "check" in any table
@@ -65,6 +63,8 @@ $(document).ready(function() {
     }
 	});
 	
+	// below section includes headings or elements with the corresponding class
+	// to the right hand toc (aka. quicklinks)
   // to include new chapters in the right div tag use class=rtoconly or bothtoc
 	$("[class=rtoconly],[class=bothtoc]").each(function(i) {
 		//alert("h1:"+i); // i is just a counter that increments for each match 
@@ -86,6 +86,7 @@ $(document).ready(function() {
   // https://msdn.microsoft.com/en-us/library/bb386042.aspx
   // https://en.wikipedia.org/wiki/Capital_%E1%BA%9E
   
+  // below section generates/fills the left table of content (ltoc)
   // scan the document top down 
   // i = starting at 0 increases for each matched tag / class
 	$("h1, h2, h3, a.h2, a.h1").each(function(i) {
@@ -144,7 +145,20 @@ $(document).ready(function() {
     return 0;
 	}); // $("h1, h2, h3, a.h2, a.h1").each
   
-  // implements automatic folding by chapter
+  // add toggle linewrap functionality
+  pre_style = false;
+  $('#pre_toggle_linewrap').click(function() {
+    if (pre_style) {
+      $("pre").css({"white-space":"pre-wrap", "word-wrap":"break-word"});
+      pre_style = false;
+    } else {
+      $("pre").css({"white-space":"pre", "word-wrap":"initial"});
+      pre_style = true;
+    }
+  });//end toggle line wrap
+  
+  
+  // implements folding button for elements in ltoc
   $('a[id^="a_fold"]').click(function() {
     var current = $(this);  // refers to the a tag
     // grab the current chapter indices from the id
@@ -187,7 +201,7 @@ $(document).ready(function() {
         $(this).toggle(show)
       });
     } 
-  }); // click
+  }); // click toc chapter folding
   
   
 });

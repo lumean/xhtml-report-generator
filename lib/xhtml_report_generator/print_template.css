@@ -6,6 +6,11 @@ change positions to absolute to avoid printing the title and table
 of contents on every page. Remove the Quicklink toc on the right.
 Make toc on the left floating on top of middle div.
 ************************/
+
+html, body {
+  height: initial;
+}
+
 div.head {
 	position: absolute;
 }
@@ -27,9 +32,20 @@ div.middle {
 	position: relative;
 	margin: 100px 30px 0 20px; /*top right bottom left */
 	/* margin: x y   =  Xpx each - botten and top,   ypx each - left and right */
+	overflow: visible;
 }
 
+/* quick links are not necessary for printing */
 div.righttoc {
 	display: none;
 }
 
+#pre_toggle_linewrap {
+  display: none;
+}
+
+/* revert pre settings in case they have been toggled*/
+pre {
+	white-space: pre-wrap;
+	word-wrap: break-word;
+}

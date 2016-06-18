@@ -3,71 +3,34 @@
 ><title
 >XHTML&apos;s Testreport</title
 ><meta charset='utf-8'
-/><!--link rel='stylesheet' type='text/css' href='../lib/xhtml_report_generator/style_template.css'
+/><link rel='stylesheet' type='text/css' href='../lib/xhtml_report_generator/style_template.css'
 ></link
-><!--link rel='stylesheet' type='text/css' media='print' href='../lib/xhtml_report_generator/print_template.css'
-></link
---><link rel='stylesheet' type='text/css' href='../lib/xhtml_report_generator/jquery-ui.min.css'
+><link rel='stylesheet' type='text/css' media='print' href='../lib/xhtml_report_generator/print_template.css'
 ></link
 >
 
-
 <script type='text/javascript' src='../lib/xhtml_report_generator/jquery.min.js'></script>
-<script type="text/javascript" src="jquery-ui.min.js"></script>
-<script type='text/javascript' src='jquery.layout-latest.js'></script>
+<script type="text/javascript" src="split.min.js"></script>
 
 <script type='text/javascript' src='toc_full.js'></script>
-
-	<style type="text/css" media='screen'>
-  /*<![CDATA[*/
-	/**
-	 *	Basic Layout Theme
-	 * 
-	 *	This theme uses the default layout class-names for all classes
-	 *	Add any 'custom class-names', from options: paneClass, resizerClass, togglerClass
-	 */
-
-	.ui-layout-pane { /* all 'panes' */ 
-		background: #FFF; 
-		border: 1px solid #BBB; 
-		padding: 10px; 
-		overflow: auto;
-	} 
-
-	.ui-layout-resizer { /* all 'resizer-bars' */ 
-		background: #DDD;
-	} 
-
-	.ui-layout-toggler { /* all 'toggler-buttons' */ 
-		background: #AAA; 
-	} 
-
-
-	/*]]><!--dummy comment to make c-style comments for cdata work-->*/</style>
 
 </head>
 
 <body>
 
-<div class='head ui-layout-north'>
+<div class='head'>
 XHTML&apos;s Testreport
+<button id='pre_toggle_linewrap'>Toggle Linewrapping</button>
 </div>
 
 
-<div class='righttoc ui-layout-east' id='rtoc'>
-Quick Links<br
-/><br
-/>
-</div>
-
-<div class='lefttoc ui-layout-west' id='ltoc'
+<div class='lefttoc split split-horizontal' id='ltoc'
 >Table of Contents<br
 />
 </div>
 
 
-
-<div class='middle ui-layout-center'>
+<div class='middle split split-horizontal' id='middle'>
 <h1 class='bothtoc'
 >titel 101</h1
 ><h2
@@ -570,6 +533,12 @@ with a very long line that really should be wraped..............................
 with a very long line that really should be wraped..................................................................................................................</pre
 >
 
+</div>
+
+<div class='righttoc split split-horizontal' id='rtoc'>
+Quick Links<br
+/><br
+/>
 </div>
 
 </body>

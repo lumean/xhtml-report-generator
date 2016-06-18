@@ -16,21 +16,23 @@ module Custom
     @body = @document.elements["//body"]
     # only add the layout if it is not already there
     if !@layout
-      @body.add_element("div", {"class" => "head"})
+      head = @body.add_element("div", {"class" => "head"})
+      head.add_element("button", {"id" => "pre_toggle_linewrap"}).add_text("Toggle Linewrapping")
       
       if (layout & 0x1) != 0
-      div = @body.add_element("div", {"class" => "lefttoc", "id" => "ltoc"})
+      div = @body.add_element("div", {"class" => "lefttoc split split-horizontal", "id" => "ltoc"})
       div.add_text("Table of Contents")
       div.add_element("br")
       end
       
+      @div_middle = @body.add_element("div", {"class" => "middle split split-horizontal", "id" => "middle"})
+      
       if (layout & 0x2) != 0
-      div = @body.add_element("div", {"class" => "righttoc", "id" => "rtoc"})
+      div = @body.add_element("div", {"class" => "righttoc split split-horizontal", "id" => "rtoc"})
       div.add_text("Quick Links")
       div.add_element("br");div.add_element("br")
       end
 
-      @div_middle = @body.add_element("div", {"class" => "middle"})
       @layout = true
     end
     @current = @document.elements["//body/div[@class='middle']"]
