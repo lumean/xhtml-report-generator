@@ -10,57 +10,62 @@ module XhtmlReportGenerator
     attr_accessor :document, :file
     # @param opts [Hash] See the example for an explanation of the valid symbols
     # @example Valid symbols for the opts Hash
-    #   :jquery       if specified, path to a version of jquery, that will be inlined into the html header section
-    #   :toc          if specified, path to a javascript.js.rb file that contains the magic to generate all
-    #   :css          if specified, path to a css file that contains the markup rules for your generated reports
-    #   :css_print    if specified, path to a css file that contains the markup rules for printing the report
-    #   :custom_rb    if specified, path to a custom Module containing
+    #   :js           if specified, array of javascript files which are inlined into the html header section
+    #   :css          if specified, array of css files which are inlined into the html header section
+    #   :css_print    if specified, array of css files which are inlined into the html header section with media=print
+    #   :custom_rb    if specified, path to a custom Module containing all the logic to create content for the report
+    #                 see (custom.rb) on how to write it. As a last statement you should extend your module name
+    #                 outside of the module definition.
     def initialize(opts = {})
       # define the default values
       path = File.expand_path("../xhtml_report_generator", __FILE__)
-      symbols = {
-        :jquery    => File.expand_path("jquery.min.js",path),
-        :toc       => File.expand_path("toc.js",path),
-        :css       => File.expand_path("style_template.css",path),
-        :css_print => File.expand_path("print_template.css",path),
-        :custom_rb => File.expand_path("custom.rb",path),
-        :jquery_ui => File.expand_path("jquery-ui.min.js",path),
-        :css_jquery_ui => File.expand_path("jquery-ui.min.css",path)
+      defaults = {
+        :js        => [
+            File.expand_path("jquery.min.js",path),
+            File.expand_path("split.min.js",path),
+            File.expand_path("toc.min.js",path)
+          ],
+        :css       => [
+            File.expand_path("style_template.css",path)
+          ],
+        :css_print => [
+            File.expand_path("print_template.css",path)
+          ],
+        :custom_rb => File.expand_path("custom.rb",path)
       }
-      # either use the default files provided with the gem, or those provided by the caller
-      symbols = symbols.merge(opts)
-      custom_rb_path = symbols[:custom_rb]
-      for key in symbols.keys do
-        # read the contents into the symbols hash
-        symbols[key] = File.read(symbols[key])
-      end
+      
+      opts[:js]         = defaults[:js]        if !opts.has_key?(:js)
+      opts[:css]        = defaults[:css]       if !opts.has_key?(:css)
+      opts[:css_print]  = defaults[:css_print] if !opts.has_key?(:css_print)
+      opts[:custom_rb]  = defaults[:custom_rb] if !opts.has_key?(:custom_rb)
+      
       # load the custom module and extend it, use instance_eval otherwise the module will affect
       # all existing Generator classes
-      instance_eval(symbols[:custom_rb], custom_rb_path)
+      instance_eval(File.read(opts[:custom_rb]), opts[:custom_rb])
 
       @document = Generator.create_xhtml_document("Title")
       head = @document.elements["//head"]
       
       head.add_element("meta", {"charset" => "utf-8"})
       
-      # insert the custom css, and javascript files
-      style = head.add_element("style", {"type" => "text/css"})
-      cdata(symbols[:css], style)
-        
-      style = head.add_element("style", {"type" => "text/css", "media"=>"print"})
-      cdata(symbols[:css_print], style)
+      # insert css
+      opts[:css].each do |css_path|
+        style = head.add_element("style", {"type" => "text/css"})
+        cdata(File.read(css_path), style)
+      end
       
-      style = head.add_element("style", {"type" => "text/css"})
-      cdata(symbols[:css_jquery_ui], style)
-
-      script = head.add_element("script", {"type" => "text/javascript"})
-      cdata(symbols[:jquery], script)
-
-      script = head.add_element("script", {"type" => "text/javascript"})
-      cdata(symbols[:jquery_ui], script)
+      # insert css for printing
+      opts[:css_print].each do |css_path|
+        style = head.add_element("style", {"type" => "text/css", "media"=>"print"})
+        cdata(File.read(css_path), style)
+      end
       
-      script = head.add_element("script", {"type" => "text/javascript"})
-      cdata(symbols[:toc], script)
+      # inster js files
+      opts[:js].each do |js_path|
+        script = head.add_element("script", {"type" => "text/javascript"})
+        cdata(File.read(js_path), script)
+      end
+      
     end
 	
     # Surrounds CData tag with c-style comments to remain compatible with normal html. 

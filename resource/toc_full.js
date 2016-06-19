@@ -41,15 +41,38 @@
 */
 
 $(document).ready(function() {
+  // for split.js
+  switch($("#layout").attr('class')) {
+    case "1":
+      Split(['#ltoc', '#middle'], {
+        minSize: [5, 100],
+        sizes: [20, 80],
+        snapOffset: 50,
+        gutterSize: 10,
+      });
+      break;
+    case "2":
+      Split(['#middle', '#rtoc'], {
+        minSize: [100, 5],
+        sizes: [85, 15],
+        snapOffset: 50,
+        gutterSize: 10,
+      });
+      break;
+    case "3":
+      Split(['#ltoc', '#middle', '#rtoc'], {
+        minSize: [5, 100, 5],
+        sizes: [20, 70, 10],
+        snapOffset: 50,
+        gutterSize: 10,
+      });
+      break;
+    default:
+      /* unkown format, split is not safe, do nothing*/
+      $("#middle").attr("style", "width:100%;"); 
+      //alert($("#layout").attr('class'));
+  }
 
-    // for split.js
-    Split(['#ltoc', '#middle', '#rtoc'], {
-      minSize: [5,10,5],
-      sizes: [20, 70, 10],
-      snapOffset: 50,
-      gutterSize: 10,
-    })
-  
   
 	// highlight "passed", "failed", or "check" in any table
 	$("td").each(function(i) {
@@ -203,9 +226,5 @@ $(document).ready(function() {
     } 
   }); // click toc chapter folding
   
-  
 });
-
-
-
 

@@ -6,7 +6,7 @@ module Custom
   
   # creates the basic page layout and sets the current Element to the main content area (middle div)
   # @example The middle div is matched by the following xPath
-  #   //body/div[@class='middle']
+  #   //body/div[@id='middle']
   # @param title [String] the title of the document
   # @param layout [Fixnum] one of 0,1,2,3 where 0 means minimal layout without left and right table of contents,
   #   1 means only left toc, 2 means only right toc, and 3 means full layout with left and right toc.
@@ -16,8 +16,10 @@ module Custom
     @body = @document.elements["//body"]
     # only add the layout if it is not already there
     if !@layout
-      head = @body.add_element("div", {"class" => "head"})
-      head.add_element("button", {"id" => "pre_toggle_linewrap"}).add_text("Toggle Linewrapping")
+      head = @body.add_element("div", {"class" => "head", "id" => "head"})
+      head.add_element("button", {"id" => "pre_toggle_linewrap"}).add_text("Toggle Linewrap")
+      
+      @body.add_element("div", {"class" => "#{layout}", "id" => "layout"})
       
       if (layout & 0x1) != 0
       div = @body.add_element("div", {"class" => "lefttoc split split-horizontal", "id" => "ltoc"})
@@ -35,7 +37,7 @@ module Custom
 
       @layout = true
     end
-    @current = @document.elements["//body/div[@class='middle']"]
+    @current = @document.elements["//body/div[@id='middle']"]
     set_title(title)
   end
 
@@ -48,7 +50,7 @@ module Custom
     end
     pagetitle = @document.elements["//head/title"]
     pagetitle.text = title
-    div = @document.elements["//body/div[@class='head']"]
+    div = @document.elements["//body/div[@id='head']"]
     div.text = title
   end
 
@@ -310,7 +312,7 @@ module Custom
     # check if there are any child elements 
     if @div_middle.has_elements?()
       # insert before the first child of div middle
-      @div_middle.insert_before("//div[@class='middle']/*[1]", temp)
+      @div_middle.insert_before("//div[@id='middle']/*[1]", temp)
     else
       # middle is empty, just insert the heading
       @div_middle.insert_after(@current, temp)

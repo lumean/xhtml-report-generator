@@ -21,6 +21,13 @@ p {
 	text-align: left;
 }
 
+#layout {
+  /* this element is just used as a hint how to seed split.js 
+     it's class value indicates 0-3 which means if only middle
+     ltoc, rtoc or all are shown.
+  */
+  display: none;
+}
 
 /***********************
 split.js specifics
@@ -54,7 +61,7 @@ https://github.com/nathancahill/Split.js
 }
 
 .split.split-horizontal, .gutter.gutter-horizontal {
-  height: 95%;
+  height: 94%;
   float: left;
 }
 
@@ -67,40 +74,15 @@ div.head {
 	text-align: center;
 	width: 100%;
 	height: 5%;
-	//position: fixed;
-	//top: 0px;
-	//background: #FFFFFF;
-	//z-index: 99;
 }
 
 div.lefttoc {
-	overflow: auto;
-	white-space: nowrap;
-	///*display:none;*/ /*uncomment on the left for printing*/
-	
-	//position: fixed;
-  //width: 20%;
-	///*height:90%;*/
-	//top: 100px;
-	//left: 5px;
-	//bottom: 20px;
-	//border: solid 1px #000000;
 }
 
 div.middle {
-	//position: relative;
-	//margin: 100px 160px 0 23%; /*top right bottom left */
-	/* margin: x y   =  Xpx each - botten and top,   ypx each - left and right */
 }
 
 div.righttoc {
-  ///*display:none;*/ /*uncomment on the left for printing*/
-	//position: fixed;
-  //float:right
-	//width: 150px;
-	//top: 100px;
-	//right: 5px;
-	//border: solid 1px #000000;	
 }
 
 #pre_toggle_linewrap {

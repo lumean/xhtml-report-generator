@@ -78,7 +78,7 @@ class TestReportGenerator < Test::Unit::TestCase
       assert_equal(0, gen1.highlight_captures(/this_regex_will_not_match/,"r"))
       assert_equal(0, gen1.highlight_captures(/this_regex_will_(not)_match/,"r"))
       
-      gen1.content() {"this is really good lookin'"}
+      gen1.content() {"this is some normal content"}
 
       gen1.code({"class" =>"code1"}) {
         "some other Code from another device\nwith a very long line that really should be wraped." \
@@ -157,7 +157,18 @@ class TestReportGenerator < Test::Unit::TestCase
     expected = File.read("#{@cd}/GetSetRef.xhtml")
     assert(test1 == expected, "Results not equal")
   end
-
+  
+  def test_layout()
+    for i in 0..3 do
+      gen1 = XhtmlReportGenerator::Generator.new
+      gen1.create_layout("layout #{i}", i)
+      for j in 1..100 do
+        gen1.heading("h1", "class"=>"bothtoc") {"test #{j}"}
+      end
+      gen1.write("#{@cd}/layout#{i}.xhtml")
+    end
+  end
+ 
   # regression heading top failed when middle-div has no children
   def test_heading_top()
     gen1 = XhtmlReportGenerator::Generator.new
