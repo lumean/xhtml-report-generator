@@ -6,8 +6,8 @@ Gem::Specification.new do |s|
   s.version     = XhtmlReportGenerator::VERSION
   s.platform    = Gem::Platform::RUBY
   s.date        = Time.now.strftime("%Y-%m-%d")
-  s.summary     = "A simple html or xhtml generator to create human readable support"
-  s.required_ruby_version = '>= 1.9.3'
+  s.summary     = "A simple html or xhtml generator/logger to create human readable reports and logs"
+  s.required_ruby_version = '>= 2.0.0'
 
   s.description = <<-HEREDOC.gsub(/^ {4}/, '')
     The generator can be used to create html or xhtml files. It comes with many utility functions.
