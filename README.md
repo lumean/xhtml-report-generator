@@ -94,7 +94,11 @@ gen1.write("graph.xhtml")
 </pre>
 
 
-
+Changes from version 2.x to 3.x
+-------------------------------
+The options for the initialize method "XhtmlReportGenerator::Generator.new" changed.
+If you just use the default values (i.e. no options/using defaults) then the upgrade should be
+seamless.
 
 Changes from version 1.x to 2.x
 -------------------------------
