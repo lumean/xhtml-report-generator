@@ -7,6 +7,8 @@ xhtml_report_generator can be used very similar like a ruby Logger, but there ar
 It is not a Logger replacement, since the complete document is always kept in memory and
 only written to disk on demand. Hence in case of crashes the data might be lost if it wasn't written before.
 
+All logic (js and css) is inlined which makes it very easy to send the report to someone else by mail and view it offline.
+
 Ruby version
 -----
 This gem was mainly tested with ruby version 2.2.3. Except of the test_encoding_issues unit tests, all other tests are 
@@ -31,12 +33,13 @@ gen1.write("myreport.html")
 gen1.write("myreport.xhtml")
 ```
 
-More examples can be found in the [examples](../blob/master/examples) or
-[test](../blob/master/test) folders
+### basic
+[code](../master/examples/basic_report.rb)
+[Preview](https://cdn.rawgit.com/lumean/xhtml-report-generator/master/examples/basic_report.html)
 
-Here are the links to the browser-preview of the examples:
 
-
+More examples can be found in the [examples](../master/examples) or
+[test](../master/test) folders
 
 
 By default "custom.rb" is loaded through instance eval, see 
@@ -92,27 +95,31 @@ gen1.write("graph.xhtml")
 
 ```
 
-See result: [SVG in xhtml](../master/lib/xhtml_report_generator/style_template.css)
+### adding svg graph to the report
+[code](../master/examples/graph.rb)
+[Preview](https://cdn.rawgit.com/lumean/xhtml-report-generator/master/examples/graph.xhtml)
 
 
 Customizing the Report with CSS
 -------------------------------
 The styling of the report is done through css. This allowes you to customize most of the formatting as to your liking.
-The split.js relevant section should not be changed, otherwise the layout might break.
+The split.js relevant section should only be changed if you know what you're doing, otherwise the layout might break.
 
 As a starting point begin with the [default css used by the report](../master/lib/xhtml_report_generator/style_template.css)
 ```ruby
 require 'xhtml_report_generator'
 
 opts = {
-  :js => 'path/to/my_css.css'
+  :css => 'path/to/my_css.css'
 }
 
 gen1 = XhtmlReportGenerator::Generator.new(opts)
 gen1.create_layout("Page Title")
 
 ```
-
+### customized styling with own css
+[code](../master/examples/custom_css.rb)
+[Preview](https://cdn.rawgit.com/lumean/xhtml-report-generator/master/examples/custom_css.html)
 
 The project is built in a way that lets you supply your own methods for everything. By default the methods , js and css files provided
 with the gem are used, but you can override those by specifying your own. The primary usecase is to override the default css 

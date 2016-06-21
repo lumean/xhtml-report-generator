@@ -13,7 +13,7 @@ html, body {
 }
 
 div.head {
-	position: relative;
+  position: relative;
   margin-top: 50px;
   text-align: left;
 }
@@ -23,23 +23,23 @@ div.head {
 }
 
 div.lefttoc {
-	position: relative;
-	margin: -50px 10% 100px 10%;
-	top: 100px;
-	border: none;
-	overflow: visible;
+  position: relative;
+  margin: -50px 10% 100px 10%;
+  top: 100px;
+  border: none;
+  overflow: visible;
 }
 
 div.middle {
-	position: relative;
-	margin: 200px 0px 0 10px; /* top right bottom left */
-	/* margin: x y   =  Xpx each - botten and top,   ypx each - left and right */
-	overflow: visible;
+  position: relative;
+  margin: 200px 0px 0 10px; /* top right bottom left */
+  /* margin: x y   =  Xpx each - botten and top,   ypx each - left and right */
+  overflow: visible;
 }
 
 /* quick links are not necessary for printing */
 div.righttoc {
-	display: none;
+  display: none;
 }
 
 #pre_toggle_linewrap {
@@ -48,6 +48,6 @@ div.righttoc {
 
 /* revert pre settings in case they have been toggled*/
 pre {
-	white-space: pre-wrap;
-	word-wrap: break-word;
+  white-space: pre-wrap;
+  word-wrap: break-word;
 }

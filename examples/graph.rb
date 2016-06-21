@@ -1,4 +1,4 @@
-require 'xhtml_report_generator'
+require_relative '../lib/xhtml_report_generator'
 require 'SVG/Graph/Line'
 require 'REXML/document'
 

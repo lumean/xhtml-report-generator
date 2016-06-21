@@ -4,21 +4,21 @@ html {
 }
 
 body {
-	background: #FFFFFF;
-	font: 100% Arial, Helvetica, sans-serif;
-	color: #404040;
-	line-height: 110%;
-	margin: 0;
-	height: 100%;           /* needed for split.js */
-	box-sizing: border-box; /* needed for split.js */
+  background: #2E2E2E;
+  font: 100% Arial, Helvetica, sans-serif;
+  color: #404040;
+  line-height: 110%;
+  margin: 0;
+  height: 100%;           /* needed for split.js */
+  box-sizing: border-box; /* needed for split.js */
 }
 
 p {
-	background: #FFFFFF;
-	font: 100% Arial, Helvetica, sans-serif;
-	color: #202020;
-	line-height: 110%;
-	text-align: left;
+  background: #2E2E2E;
+  font: 100% Arial, Helvetica, sans-serif;
+  color: #FFFFFF;
+  line-height: 110%;
+  text-align: left;
 }
 
 #layout {
@@ -69,11 +69,11 @@ https://github.com/nathancahill/Split.js
 div classes
 ************************/
 div.head {
-	font: 200% Arial, Helvetica, sans-serif, bold;
-	font-size: 16px; font-size: 4vh;
-	text-align: center;
-	width: 100%;
-	height: 5%;
+  font: 200% Arial, Helvetica, sans-serif, bold;
+  font-size: 16px; font-size: 4vh;
+  text-align: center;
+  width: 100%;
+  height: 5%;
 }
 
 div.lefttoc {
@@ -99,66 +99,66 @@ div.righttoc {
 
 /*code light-blue*/
 pre {
-	font-family: courier;
-	background: #E5F1F4;
-	font-size: 80%;
-	border: 1px dotted;
-	line-height: 110%;
-	color: #000000;
-	white-space: pre-wrap;  /* default: pre */
-	word-wrap: break-word;  /* default: initial */
+  font-family: courier;
+  background: #E5F1F4;
+  font-size: 80%;
+  border: 1px dotted;
+  line-height: 110%;
+  color: #000000;
+  white-space: pre-wrap;  /* default: pre */
+  word-wrap: break-word;  /* default: initial */
 }
 .code0 {
-	background: #E5F1F4;
+  background: #E5F1F4;
 }
 /*code red-brown*/
 .code1 {
-	background: #A66C75;
+  background: #A66C75;
 }
 /*code light-green*/
 .code2 {
-	background: #DAF1DD;
+  background: #DAF1DD;
 }
 /*code light-yellow*/
 .code3 {
-	background: #F5F2B7;
+  background: #F5F2B7;
 }
 
 
 /*default highlight yellow*/
 span {
-	background: #FFFF00;
+  background: #FFFF00;
 }
 
 /*red*/
 span.r {
-	background: #FF0000;
+  background: #FF0000;
 }
 
 /*green*/
 span.g {
-	background: #00FF00;
+  background: #00FF00;
 }
 /*blue*/
 span.b {
-	background: #00FFFF;
+  background: #00FFFF;
 }
 
 a {
-	text-decoration: none;
-	color: #057fac;
+  text-decoration: none;
+  color: #057fac;
 }
 
 a:hover {
-	text-decoration: none;
-	color: #999999;
+  text-decoration: none;
+  color: #999999;
 }
 
 h1 {
-	font-size: 140%;
-	margin: 20px 0px;
+  font-size: 140%;
+  margin: 20px 0px;
 }
 
 h2 {
-	font-size: 120%;
+  font-size: 120%;
 }
