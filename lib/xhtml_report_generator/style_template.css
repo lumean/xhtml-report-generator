@@ -1,6 +1,6 @@
 /* general styles */
 html {
-  height: 100%;           // needed for split.js
+  height: 100%;           /* needed for split.js */
 }
 
 body {
@@ -9,8 +9,8 @@ body {
 	color: #404040;
 	line-height: 110%;
 	margin: 0;
-	height: 100%;           // needed for split.js
-	box-sizing: border-box; // needed for split.js
+	height: 100%;           /* needed for split.js */
+	box-sizing: border-box; /* needed for split.js */
 }
 
 p {
@@ -77,12 +77,14 @@ div.head {
 }
 
 div.lefttoc {
+  white-space: nowrap;
 }
 
 div.middle {
 }
 
 div.righttoc {
+  white-space: nowrap;
 }
 
 #pre_toggle_linewrap {
@@ -103,8 +105,8 @@ pre {
 	border: 1px dotted;
 	line-height: 110%;
 	color: #000000;
-	white-space: pre-wrap;  // default: pre
-	word-wrap: break-word;  // default: initial
+	white-space: pre-wrap;  /* default: pre */
+	word-wrap: break-word;  /* default: initial */
 }
 .code0 {
 	background: #E5F1F4;

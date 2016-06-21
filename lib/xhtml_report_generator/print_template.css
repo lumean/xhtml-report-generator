@@ -9,7 +9,7 @@ Make toc on the left floating on top of middle div.
 
 html, body {
   height: initial;
-  width: 115%;  /* fix for scaling done by split.js*/
+  width: 115%;  /* fix for scaling done by split.js */
 }
 
 div.head {
@@ -32,7 +32,7 @@ div.lefttoc {
 
 div.middle {
 	position: relative;
-	margin: 200px 0px 0 10px; /*top right bottom left */
+	margin: 200px 0px 0 10px; /* top right bottom left */
 	/* margin: x y   =  Xpx each - botten and top,   ypx each - left and right */
 	overflow: visible;
 }

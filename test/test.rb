@@ -96,6 +96,7 @@ class TestReportGenerator < Test::Unit::TestCase
     end
 
     gen1.write("#{@cd}/Overall.xhtml")
+    gen1.write("#{@cd}/Overall.htm")
     #File.open("test1.xhtml", 'w') {|f| f.write(gen1.to_s)}
 
     test1 = File.read("#{@cd}/Overall.xhtml")
@@ -166,6 +167,7 @@ class TestReportGenerator < Test::Unit::TestCase
         gen1.heading("h1", "class"=>"bothtoc") {"test #{j}"}
       end
       gen1.write("#{@cd}/layout#{i}.xhtml")
+      gen1.write("#{@cd}/layout#{i}.html")
     end
   end
  

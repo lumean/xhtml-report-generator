@@ -19,8 +19,6 @@ module Custom
       head = @body.add_element("div", {"class" => "head", "id" => "head"})
       head.add_element("button", {"id" => "pre_toggle_linewrap"}).add_text("Toggle Linewrap")
       
-      @body.add_element("div", {"class" => "#{layout}", "id" => "layout"})
-      
       if (layout & 0x1) != 0
       div = @body.add_element("div", {"class" => "lefttoc split split-horizontal", "id" => "ltoc"})
       div.add_text("Table of Contents")
@@ -35,6 +33,8 @@ module Custom
       div.add_element("br");div.add_element("br")
       end
 
+      @body.add_element("p", {"class" => "#{layout}", "id" => "layout"}).add_text("this text should be hidden")
+      
       @layout = true
     end
     @current = @document.elements["//body/div[@id='middle']"]
