@@ -64,16 +64,16 @@ data_sales_02 = [12, 45, 21]
 data_sales_03 = [15, 30, 40]
 
 graph = SVG::Graph::Line.new({
-       :height => 300,
-      :width => 500,
-  :show_graph_title      => true,
-  :graph_title          => 'Graph Title',
-  :show_x_title  => true,
-  :x_title => 'Month',
-  :show_y_title  => true,
-  #:y_title_text_direction => :bt,
-  :y_title => 'cash',
-  :fields => x_axis})
+      :height             => 300,
+      :width              => 500,
+      :show_graph_title   => true,
+      :graph_title        => 'Graph Title',
+      :show_x_title       => true,
+      :x_title            => 'Month',
+      :show_y_title       => true,
+      #:y_title_text_direction => :bt,
+      :y_title            => 'cash',
+      :fields             => x_axis})
 
 graph.add_data({:data => data_sales_02, :title => 'Sales2002'})
 graph.add_data({:data => data_sales_03, :title => 'Sales2003'})
@@ -92,12 +92,15 @@ gen1.write("graph.xhtml")
 
 ```
 
+See result: [SVG in xhtml](../master/lib/xhtml_report_generator/style_template.css)
+
+
 Customizing the Report with CSS
 -------------------------------
 The styling of the report is done through css. This allowes you to customize most of the formatting as to your liking.
 The split.js relevant section should not be changed, otherwise the layout might break.
 
-As a starting point begin with the [default css used by the report](../blob/master/lib/xhtml_report_generator/style_template.css)
+As a starting point begin with the [default css used by the report](../master/lib/xhtml_report_generator/style_template.css)
 ```ruby
 require 'xhtml_report_generator'
 
@@ -115,7 +118,7 @@ The project is built in a way that lets you supply your own methods for everythi
 with the gem are used, but you can override those by specifying your own. The primary usecase is to override the default css 
 to customize the look and feel of the generated html files. But if you want you can event write your complete own generator.
 
-As a start you can copy the [custom.rb](../blob/master/lib/xhtml_report_generator/custom.rb) file and rename the functions if you don't like the 
+As a start you can copy the [custom.rb](../master/lib/xhtml_report_generator/custom.rb) file and rename the functions if you don't like the 
 default naming.
 
 
