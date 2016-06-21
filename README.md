@@ -8,6 +8,7 @@ It is not a Logger replacement, since the complete document is always kept in me
 only written to disk on demand. Hence in case of crashes the data might be lost if it wasn't written before.
 
 All logic (js and css) is inlined which makes it very easy to send the report to someone else by mail and view it offline.
+Also pdf export is easy by just printing the report. By default there is a special css with media print making the layout suitable for printing.
 
 Ruby version
 -----
@@ -33,8 +34,8 @@ gen1.write("myreport.html")
 gen1.write("myreport.xhtml")
 ```
 
-### basic
-[code](../master/examples/basic_report.rb)
+[Code](../master/examples/basic_report.rb)
+
 [Preview](https://cdn.rawgit.com/lumean/xhtml-report-generator/master/examples/basic_report.html)
 
 
@@ -95,8 +96,8 @@ gen1.write("graph.xhtml")
 
 ```
 
-### adding svg graph to the report
-[code](../master/examples/graph.rb)
+[Code](../master/examples/graph.rb)
+
 [Preview](https://cdn.rawgit.com/lumean/xhtml-report-generator/master/examples/graph.xhtml)
 
 
@@ -117,8 +118,9 @@ gen1 = XhtmlReportGenerator::Generator.new(opts)
 gen1.create_layout("Page Title")
 
 ```
-### customized styling with own css
-[code](../master/examples/custom_css.rb)
+
+[Code](../master/examples/custom_css.rb)
+
 [Preview](https://cdn.rawgit.com/lumean/xhtml-report-generator/master/examples/custom_css.html)
 
 The project is built in a way that lets you supply your own methods for everything. By default the methods , js and css files provided

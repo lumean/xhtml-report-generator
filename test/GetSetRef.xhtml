@@ -7,25 +7,25 @@
 >/*<![CDATA[*/
 /* general styles */
 html {
-  height: 100%;           // needed for split.js
+  height: 100%;           /* needed for split.js */
 }
 
 body {
-	background: #FFFFFF;
-	font: 100% Arial, Helvetica, sans-serif;
-	color: #404040;
-	line-height: 110%;
-	margin: 0;
-	height: 100%;           // needed for split.js
-	box-sizing: border-box; // needed for split.js
+  background: #FFFFFF;
+  font: 100% Arial, Helvetica, sans-serif;
+  color: #404040;
+  line-height: 110%;
+  margin: 0;
+  height: 100%;           /* needed for split.js */
+  box-sizing: border-box; /* needed for split.js */
 }
 
 p {
-	background: #FFFFFF;
-	font: 100% Arial, Helvetica, sans-serif;
-	color: #202020;
-	line-height: 110%;
-	text-align: left;
+  background: #FFFFFF;
+  font: 100% Arial, Helvetica, sans-serif;
+  color: #202020;
+  line-height: 110%;
+  text-align: left;
 }
 
 #layout {
@@ -76,20 +76,22 @@ https://github.com/nathancahill/Split.js
 div classes
 ************************/
 div.head {
-	font: 200% Arial, Helvetica, sans-serif, bold;
-	font-size: 16px; font-size: 4vh;
-	text-align: center;
-	width: 100%;
-	height: 5%;
+  font: 200% Arial, Helvetica, sans-serif, bold;
+  font-size: 16px; font-size: 4vh;
+  text-align: center;
+  width: 100%;
+  height: 5%;
 }
 
 div.lefttoc {
+  white-space: nowrap;
 }
 
 div.middle {
 }
 
 div.righttoc {
+  white-space: nowrap;
 }
 
 #pre_toggle_linewrap {
@@ -104,68 +106,68 @@ div.righttoc {
 
 /*code light-blue*/
 pre {
-	font-family: courier;
-	background: #E5F1F4;
-	font-size: 80%;
-	border: 1px dotted;
-	line-height: 110%;
-	color: #000000;
-	white-space: pre-wrap;  // default: pre
-	word-wrap: break-word;  // default: initial
+  font-family: courier;
+  background: #E5F1F4;
+  font-size: 80%;
+  border: 1px dotted;
+  line-height: 110%;
+  color: #000000;
+  white-space: pre-wrap;  /* default: pre */
+  word-wrap: break-word;  /* default: initial */
 }
 .code0 {
-	background: #E5F1F4;
+  background: #E5F1F4;
 }
 /*code red-brown*/
 .code1 {
-	background: #A66C75;
+  background: #A66C75;
 }
 /*code light-green*/
 .code2 {
-	background: #DAF1DD;
+  background: #DAF1DD;
 }
 /*code light-yellow*/
 .code3 {
-	background: #F5F2B7;
+  background: #F5F2B7;
 }
 
 
 /*default highlight yellow*/
 span {
-	background: #FFFF00;
+  background: #FFFF00;
 }
 
 /*red*/
 span.r {
-	background: #FF0000;
+  background: #FF0000;
 }
 
 /*green*/
 span.g {
-	background: #00FF00;
+  background: #00FF00;
 }
 /*blue*/
 span.b {
-	background: #00FFFF;
+  background: #00FFFF;
 }
 
 a {
-	text-decoration: none;
-	color: #057fac;
+  text-decoration: none;
+  color: #057fac;
 }
 
 a:hover {
-	text-decoration: none;
-	color: #999999;
+  text-decoration: none;
+  color: #999999;
 }
 
 h1 {
-	font-size: 140%;
-	margin: 20px 0px;
+  font-size: 140%;
+  margin: 20px 0px;
 }
 
 h2 {
-	font-size: 120%;
+  font-size: 120%;
 }
 
 /*]]><!--dummy comment to make c-style comments for cdata work-->*/</style
@@ -182,11 +184,11 @@ Make toc on the left floating on top of middle div.
 
 html, body {
   height: initial;
-  width: 115%;  /* fix for scaling done by split.js*/
+  width: 115%;  /* fix for scaling done by split.js */
 }
 
 div.head {
-	position: relative;
+  position: relative;
   margin-top: 50px;
   text-align: left;
 }
@@ -196,23 +198,23 @@ div.head {
 }
 
 div.lefttoc {
-	position: relative;
-	margin: -50px 10% 100px 10%;
-	top: 100px;
-	border: none;
-	overflow: visible;
+  position: relative;
+  margin: -50px 10% 100px 10%;
+  top: 100px;
+  border: none;
+  overflow: visible;
 }
 
 div.middle {
-	position: relative;
-	margin: 200px 0px 0 10px; /*top right bottom left */
-	/* margin: x y   =  Xpx each - botten and top,   ypx each - left and right */
-	overflow: visible;
+  position: relative;
+  margin: 200px 0px 0 10px; /* top right bottom left */
+  /* margin: x y   =  Xpx each - botten and top,   ypx each - left and right */
+  overflow: visible;
 }
 
 /* quick links are not necessary for printing */
 div.righttoc {
-	display: none;
+  display: none;
 }
 
 #pre_toggle_linewrap {
@@ -221,8 +223,8 @@ div.righttoc {
 
 /* revert pre settings in case they have been toggled*/
 pre {
-	white-space: pre-wrap;
-	word-wrap: break-word;
+  white-space: pre-wrap;
+  word-wrap: break-word;
 }
 /*]]><!--dummy comment to make c-style comments for cdata work-->*/</style
 ><script type='text/javascript'
@@ -274,8 +276,7 @@ $(this).toggle(e)});d=new RegExp("div_fold_"+a[1]+"_\\d+_[1-9]\\d*");$("div").fi
 ><button id='pre_toggle_linewrap'
 >Toggle Linewrap</button
 ></div
-><div class='3' id='layout'
-/><div class='lefttoc split split-horizontal' id='ltoc'
+><div class='lefttoc split split-horizontal' id='ltoc'
 >Table of Contents<br
 /></div
 ><div class='middle split split-horizontal' id='middle'
@@ -296,6 +297,8 @@ $(this).toggle(e)});d=new RegExp("div_fold_"+a[1]+"_\\d+_[1-9]\\d*");$("div").fi
 >Quick Links<br
 /><br
 /></div
+><p class='3' id='layout'
+>this text should be hidden</p
 ></body
 ></html
 >
