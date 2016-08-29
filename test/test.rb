@@ -65,7 +65,7 @@ class TestReportGenerator < Test::Unit::TestCase
       gen1.html("<p class=\"italic\">html function: Hallo welt <br /> html test <span class=\"r\" >red span test</span></p>")
 
       # test for nested highlighting
-      gen1.code() {"some sp fancy console < & > an code\nwith newline!\nand sp another second fancy coconut an code"}
+      gen1.code() {"            whitespace          some sp fancy console < & > an code\nwith newline!\nand sp another second fancy coconut an \t\t2tabs code"}
 
       # assert the highlighting is counted correctly
       assert_equal(2, gen1.highlight(/sp.*an/))

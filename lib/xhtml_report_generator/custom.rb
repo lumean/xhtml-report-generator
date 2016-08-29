@@ -180,7 +180,7 @@ module Custom
     for i in arr do
       # detach from current
       i.parent = nil
-      if i.class.to_s()  == "REXML::Text"
+      if i.is_a?(REXML::Text)
         # in general a text looks as follows:
         # .*(matchstring|.*)*
 
@@ -201,7 +201,7 @@ module Custom
         # for non-text nodes we recurse into it and finally reattach to our parent to preserve ordering
         num_matches += highlight_captures(regex, color, i)
         el.add(i)
-      end # if  i.class.to_s()  == "REXML::Text"
+      end # if  i.is_a?(REXML::Text)
     end # for i in arr do
     return num_matches
   end
@@ -226,7 +226,7 @@ module Custom
       # detach from current
       i.parent = nil
       #puts i.class.to_s()
-      if i.class.to_s()  == "REXML::Text"
+      if i.is_a?(REXML::Text)
         # in general a text looks as follows:
         # .*(matchstring|.*)*
 
@@ -242,7 +242,7 @@ module Custom
         # puts "recurse"
         num_matches += highlight(regex, color, i)
         el.add(i)
-      end # if  i.class.to_s()  == "REXML::Text"
+      end # if  i.is_a?(REXML::Text)
     end # for i in arr do
     return num_matches
   end
@@ -338,8 +338,8 @@ module Custom
   #     some <span>arbitrary</span>
   #     text child content
   #   </test>
-  # @param element [REXML::Element] the element in whose text tags will be added at the specified indices of @index_length_array
-  # @param parent [REXML::Element] the parent to which @element should be attached after parsing
+  # @param parent [REXML::Element] the parent to which "element" should be attached after parsing, e.g. <test>
+  # @param element [REXML::Element] the Text element, into which tags will be added at the specified indices of @index_length_array, e.g. the REXML::Text children of <test> in the example
   # @param tagname [String] the tag that will be introduced as <tagname> at the indices specified
   # @param attribs [Hash] Attributes that will be added to the inserted tag e.g. <tagname attrib="test">
   # @param index_length_array [Array] Array of the form [[index, lenght], [index, lenght], ...] that specifies
@@ -352,8 +352,10 @@ module Custom
     for j in index_length_array do
       # reattach normal (unmatched) text
       if j[0] > last_end
-        text = REXML::Text.new(element.value()[ last_end, j[0] - last_end ])
-        parent.add_text(text)
+        # text = REXML::Text.new(element.value()[ last_end, j[0] - last_end ])
+        # parent.add_text(text)
+        # add text without creating a textnode, textnode screws up formatting (e.g. all whitespace are condensed into one)
+        parent.add_text( element.value()[ last_end, j[0] - last_end ] )        
       end
       #create the tag node with attributes and add the text to it
       tag = parent.add_element(REXML::Element.new(tagname), attribs)
@@ -363,8 +365,10 @@ module Custom
       # in the last round check for any remaining text
       if index == index_length_array.length - 1
         if last_end < element.value().length
-          text = REXML::Text.new(element.value()[ last_end, element.value().length - last_end ])
-          parent.add(text)
+          # text = REXML::Text.new(element.value()[ last_end, element.value().length - last_end ])
+          # parent.add(text)
+          # add text without creating a textnode, textnode screws up formatting (e.g. all whitespace are condensed into one)
+          parent.add_text( element.value()[ last_end, element.value().length - last_end ] )
         end
       end
       index  += 1
