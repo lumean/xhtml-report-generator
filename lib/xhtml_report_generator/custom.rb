@@ -79,6 +79,24 @@ module Custom
   def get_current()
     return @current
   end
+  
+  # returns the plain text without any xml tags of the specified element and all its children
+  # @param el [REXML::Element] The element from which to fetch the text children. Defaults to @current
+  # @param recursive [Boolean] whether or not to recurse into the children of the given "el"
+  # @return [String] text contents of xml node
+  def get_element_text(el = @current, recursive = true)
+    out = ""
+    el.to_a.each { |child|
+      if child.is_a?(REXML::Text)
+        out << child.value()
+      else
+        if recursive
+          out << get_element_text(child, true) 
+        end
+      end
+    }
+    return out
+  end
 
   # Appends a <pre> node after the @current node
   # @param attrs [Hash] attributes for the <pre> element
@@ -176,10 +194,10 @@ module Custom
     # get all children of the current node
     arr = el.to_a()
     num_matches = 0
+    # first we have to detach all children from parent, otherwise we can cause ordering issues
+    arr.each {|i| i.remove() }
     # depth first recursion into grand-children
     for i in arr do
-      # detach from current
-      i.parent = nil
       if i.is_a?(REXML::Text)
         # in general a text looks as follows:
         # .*(matchstring|.*)*
@@ -221,10 +239,10 @@ module Custom
     arr = el.to_a()
     num_matches = 0
     #puts arr.inspect
+    # first we have to detach all children from parent, otherwise we can cause ordering issues
+    arr.each {|i| i.remove() }
     # depth first recursion into grand-children
     for i in arr do
-      # detach from current
-      i.parent = nil
       #puts i.class.to_s()
       if i.is_a?(REXML::Text)
         # in general a text looks as follows:

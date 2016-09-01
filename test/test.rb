@@ -78,6 +78,29 @@ class TestReportGenerator < Test::Unit::TestCase
       assert_equal(0, gen1.highlight_captures(/this_regex_will_not_match/,"r"))
       assert_equal(0, gen1.highlight_captures(/this_regex_will_(not)_match/,"r"))
       
+      gen1.code() {"
+      asdfjkl
+
+      abc
+      
+      def
+      
+      abc
+      
+      def
+      
+      abc
+      
+      ajkdlf
+      
+      "}
+      
+      # in previous versions multiple highlights in reverse order would screw up text ordering. 
+      gen1.highlight(/def/, 'g')
+      gen1.highlight(/abc/, 'y')
+      # 
+      assert_match(/asdfjkl\n\n\s+abc/, gen1.get_element_text()) 
+      
       gen1.content() {"this is some normal content"}
 
       gen1.code({"class" =>"code1"}) {
