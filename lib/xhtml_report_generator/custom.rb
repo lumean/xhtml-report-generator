@@ -272,23 +272,111 @@ module Custom
   #   is equivalent to the bitwise AND of the two least significant bits with 1, 2 or 3
   # @return [REXML::Element] the Element which was just added 
   def table(table_data, headers=0, table_attrs={}, tr_attrs={}, th_attrs={}, td_attrs={})
-
+    opts = {
+      headers: headers,
+      data_is_xhtml: false,
+      table_attrs: table_attrs,
+      th_attrs: th_attrs,
+      tr_attrs: tr_attrs,
+      td_attrs: td_attrs,
+    }
+    custom_table(table_data, opts)
+  end
+  
+  # creates a html table from two dimensional array of the form Array [row] [col]
+  # @param table_data [Array<Array>] of the form Array [row] [col] containing all data, the '.to_s' method will be called on each element, 
+  # @option opts [Number] :headers either of 0, 1, 2, 3. Where 0 is no headers (<th>) at all, 1 is only the first row,
+  #                       2 is only the first column and 3 is both, first row and first column as <th> elements. Every other number
+  #                       is equivalent to the bitwise AND of the two least significant bits with 1, 2 or 3
+  # @option opts [Boolean] :data_is_xhtml defaults to false, if true table_data is inserted as xhtml without any sanitation or escaping.
+  #                                       This way a table can be used for custom layouts.
+  # @option opts [Hash] :table_attrs  html attributes for the <table> tag
+  # @option opts [Hash] :th_attrs     html attributes for the <th> tag
+  # @option opts [Hash] :tr_attrs     html attributes for the <tr> tag
+  # @option opts [Hash] :td_attrs     html attributes for the <td> tag
+  # @option opts [Array<Hash>] :special Array of hashes for custom attrbutes on specific cells (<td> only) of the table  
+  # @example Example of the :special attributes
+  #   opts[:special] = [
+  #     {
+  #       col_title: 'rx_DroppedFrameCount', # string or regexp or nil  # if neither title or index are present, just the condition counts
+  #       col_index: 5,  # Fixnum or nil     # index have precedence over title
+  #       row_title: 'D_0_BE_iMix',  # string or regexp or nil
+  #       row_index: 6,  # Fixnum or nil
+  #       condition: Proc.new { |e| Integer(e) != 0 },   # a proc
+  #       attributes: {"style" => "background-color: #DB7093;"},
+  #     },
+  #   ]
+  # @return [REXML::Element] the Element which was just added 
+  def custom_table(table_data, opts = {})
+    defaults = {
+      headers: 0,
+      data_is_xhtml: false,
+      table_attrs: {},
+      th_attrs: {},
+      tr_attrs: {},
+      td_attrs: {},
+      special: [],
+    }
+    o = defaults.merge(opts)
+    
     temp = REXML::Element.new("table")
     temp.add_attributes(table_attrs)
 
     for i in 0..table_data.length-1 do
-      row = temp.add_element("tr", tr_attrs)
+      row = temp.add_element("tr", o[:tr_attrs])
       for j in 0..table_data[i].length-1 do
-        if (i == 0 && (0x1 & headers)==0x1)
-          col = row.add_element("th", th_attrs)
-        elsif (j == 0 && (0x2 & headers)==0x2)
-          col = row.add_element("th", th_attrs)
-        elsif ((i == 0 || j ==0) && (0x3 & headers)==0x3)
-          col = row.add_element("th", th_attrs)
+        if (i == 0 && (0x1 & o[:headers])==0x1)
+          col = row.add_element("th", o[:th_attrs])
+        elsif (j == 0 && (0x2 & o[:headers])==0x2)
+          col = row.add_element("th", o[:th_attrs])
+        elsif ((i == 0 || j ==0) && (0x3 & o[:headers])==0x3)
+          col = row.add_element("th", o[:th_attrs])
         else
-          col = row.add_element("td", td_attrs)
+          _td_attrs = o[:td_attrs].clone
+          row_title = table_data[i][0]
+          col_title = table_data[0][j]
+          o[:special].each do |h|
+            # check if the current cell is a candidate for special
+            if !h[:col_index].nil?
+              next if (h[:col_index] != j)
+            elsif !h[:col_title].nil?
+              next if !col_title.match(h[:col_title])
+              # do nothing, we are a valid candidate
+            end
+            # check if the current cell is a candidate for special
+            if !h[:row_index].nil?
+              next if (h[:row_index] != i)
+            elsif !h[:row_title].nil?
+              next if !row_title.match(h[:row_title])
+            end
+            
+            # here we are a candidate for special, so we check if we meet the condition
+            if h[:condition].call table_data[i][j]
+              h[:attrbutes].each { |attr, val|
+                if !_td_attrs[attr].nil?
+                  # assume the existing attribute is a string (other types don't make much sense for html)
+                  _td_attrs[attr] << val
+                else
+                  # create the attribute if it is not already there
+                  _td_attrs[attr] = val
+                end
+              }
+            end
+          end
+          
+          col = row.add_element("td", _td_attrs)
         end
-        col.add_text(table_data[i][j].to_s)
+        if o[:data_is_xhtml]
+          # we need to create a new document with a pseudo root because having multiple nodes at top 
+          # level is not valid xml
+          doc = REXML::Document.new("<root>" + table_data[i][j].to_s + "</root>")
+          # then we move all children of root to the actual div middle element and insert after current
+          for i in doc.root.to_a do
+            col.add_element(i) # add the td element
+          end
+        else
+          col.add_text(table_data[i][j].to_s)
+        end
       end
     end
 
@@ -296,6 +384,7 @@ module Custom
     @current = temp
     return @current
   end
+  
 
   # Appends a new heading element to body, and sets current to this new heading
   # @param tag_type [String] specifiy "h1", "h2", "h3" for the heading, defaults to "h1"
