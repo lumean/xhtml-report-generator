@@ -320,7 +320,7 @@ module Custom
     o = defaults.merge(opts)
     
     temp = REXML::Element.new("table")
-    temp.add_attributes(table_attrs)
+    temp.add_attributes(o[:table_attrs])
 
     for i in 0..table_data.length-1 do
       row = temp.add_element("tr", o[:tr_attrs])
