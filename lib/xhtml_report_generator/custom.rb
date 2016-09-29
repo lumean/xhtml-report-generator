@@ -98,8 +98,33 @@ module Custom
     return out
   end
 
+  # @param elem [REXML::Element]
+  # @return [String]
+  def element_to_string(elem)
+    f = REXML::Formatters::Transitive.new(0) # use Transitive to preserve source formatting (e.g. <pre> tags)
+    out = ""
+    f.write(elem, out)
+    return out
+  end
+  
+  # see also #code
+  # Instead of adding content to the report, this method returns the produced html code as a string.
+  # This can be used to insert code into #custom_table (with the option data_is_xhtml: true)
+  # @return [String] the code including <pre> tags as a string
+  def get_code_html(attrs={}, &block)
+    temp = REXML::Element.new("pre")
+    temp.add_attributes(attrs)
+    raise "Block argument is mandatory" unless block_given?
+    text = encoding_fixer(block.call())
+    temp.add_text(text)
+    element_to_string(temp)
+  end
+  
   # Appends a <pre> node after the @current node
-  # @param attrs [Hash] attributes for the <pre> element
+  # @param attrs [Hash] attributes for the <pre> element. The following classes can be passed as attributes and are predefined with a different
+  #                     background for your convenience {"class" => "code0"} (light-blue), {"class" => "code1"} (red-brown), 
+  #                     {"class" => "code2"} (light-green), {"class" => "code3"} (light-yellow). You may also specify your own background
+  #                     as follows: {"style" => "background: #FF00FF;"}.
   # @yieldreturn [String] the text to be added to the <pre> element
   # @return [REXML::Element] the Element which was just added
   def code(attrs={}, &block)
@@ -113,6 +138,19 @@ module Custom
     return @current
   end
 
+  # see also #content
+  # Instead of adding content to the report, this method returns the produced html code as a string.
+  # This can be used to insert code into #custom_table (with the option data_is_xhtml: true)
+  # @return [String] the code including <pre> tags as a string
+  def get_content_html(attrs={}, &block)
+    temp = REXML::Element.new("p")
+    temp.add_attributes(attrs)
+    raise "Block argument is mandatory" unless block_given?
+    text = encoding_fixer(block.call())
+    temp.add_text(text)
+    element_to_string(temp)
+  end
+  
   # Appends a <p> node after the @current node
   # @param attrs [Hash] attributes for the <p> element
   # @yieldreturn [String] the text to be added to the <p> element
@@ -143,6 +181,20 @@ module Custom
     return @current
   end
   
+  # see also #link
+  # Instead of adding content to the report, this method returns the produced html code as a string.
+  # This can be used to insert code into #custom_table (with the option data_is_xhtml: true)
+  # @return [String] the code including <pre> tags as a string
+  def get_link_html(href, attrs={}, &block)
+    temp = REXML::Element.new("a")
+    attrs.merge!({"href" => href})
+    temp.add_attributes(attrs)
+    raise "Block argument is mandatory" unless block_given?
+    text = encoding_fixer(block.call())
+    temp.add_text(text)
+    element_to_string(temp)
+  end
+  
   # Appends  a <a href = > node after the @current nodes
   # @param href [String] this is the
   # @param attrs [Hash] attributes for the <a> element
@@ -158,6 +210,22 @@ module Custom
     text = encoding_fixer(block.call())
     @current.add_text(text)
     return @current
+  end
+  
+  # see also #image
+  # Instead of adding content to the report, this method returns the produced html code as a string.
+  # This can be used to insert code into #custom_table (with the option data_is_xhtml: true)
+  # @return [String] the code including <pre> tags as a string
+  def get_image_html(path, attributes = {})
+    # read image as binary and do a base64 encoding
+    binary_data = Base64.strict_encode64(IO.binread(path))
+    type = File.extname(path).gsub('.', '')
+    # create the element
+    temp = REXML::Element.new("img")
+    # add the picture
+    temp.add_attribute("src","data:image/#{type};base64,#{binary_data}")
+    temp.add_attributes(attributes)
+    element_to_string(temp)
   end
   
   # @param path [String] absolute or relative path to the image that should be inserted into the report
@@ -187,7 +255,7 @@ module Custom
   # highlight_captures then puts a <span> </span> tag around all captures of the regex
   # NOTE: nested captures are not supported and don't make sense in this context!!
   # @param regex [Regexp] a regular expression that will be matched
-  # @param color [String] at this point one of "y", "r", "g", "b" (yellow, red, green, blue) is supported
+  # @param color [String] either one of "y", "r", "g", "b" (yellow, red, green, blue) or a valid html color code (e.g. "#80BFFF")
   # @param el [REXML::Element] the Element (scope) which will be searched for pattern matches, by default the last inserted element will be scanned
   # @return [Fixnum] the number of highlighted captures
   def highlight_captures(regex, color="y", el = @current)
@@ -214,7 +282,14 @@ module Custom
           array
         }
         num_matches += positions.length
-        replace_text_with_elements(el, i, "span", {"class" => color}, positions)
+        if ["y","r","g","b"].include?(color)
+          attr = {"class" => color}
+        elsif color.match(/^#[A-Fa-f0-9]{6}$/)
+          attr = {"style" => "background: #{color};"}
+        else
+          raise "invalid color: #{color}"
+        end
+        replace_text_with_elements(el, i, "span", attr, positions)
       else
         # for non-text nodes we recurse into it and finally reattach to our parent to preserve ordering
         num_matches += highlight_captures(regex, color, i)
@@ -231,7 +306,7 @@ module Custom
   # or match newlines explicitly.
   # highlight then puts a <span> </span> tag around all matches of regex
   # @param regex [Regexp] a regular expression that will be matched
-  # @param color [String] at this point one of "y", "r", "g", "b" (yellow, red, green, blue) is supported
+  # @param color [String] either one of "y", "r", "g", "b" (yellow, red, green, blue) or a valid html color code (e.g. "#80BFFF")
   # @param el [REXML::Element] the Element (scope) which will be searched for pattern matches
   # @return [Fixnum] the number of highlighted captures
   def highlight(regex, color="y", el = @current)
@@ -254,7 +329,14 @@ module Custom
             Regexp.last_match.end(0)-Regexp.last_match.begin(0)]
         }
         num_matches += positions.length
-        replace_text_with_elements(el, i, "span", {"class" => color}, positions)
+        if ["y","r","g","b"].include?(color)
+          attr = {"class" => color}
+        elsif color.match(/^#[A-Fa-f0-9]{6}$/)
+          attr = {"style" => "background: #{color};"}
+        else
+          raise "invalid color: #{color}"
+        end
+        replace_text_with_elements(el, i, "span", attr, positions)
       else
         # for non-text nodes we recurse into it and finally reattach to our parent to preserve ordering
         # puts "recurse"
@@ -294,7 +376,7 @@ module Custom
   # @option opts [Hash] :th_attrs     html attributes for the <th> tag
   # @option opts [Hash] :tr_attrs     html attributes for the <tr> tag
   # @option opts [Hash] :td_attrs     html attributes for the <td> tag
-  # @option opts [Array<Hash>] :special Array of hashes for custom attrbutes on specific cells (<td> only) of the table  
+  # @option opts [Array<Hash>] :special Array of hashes for custom attributes on specific cells (<td> only) of the table  
   # @example Example of the :special attributes
   #   opts[:special] = [
   #     {
@@ -321,10 +403,12 @@ module Custom
     
     temp = REXML::Element.new("table")
     temp.add_attributes(o[:table_attrs])
+    row_titles = table_data.collect{|row| row[0].to_s}
+    col_titles = table_data[0].collect{|title| title.to_s}
 
-    for i in 0..table_data.length-1 do
+    for i in 0..table_data.length-1 do # row
       row = temp.add_element("tr", o[:tr_attrs])
-      for j in 0..table_data[i].length-1 do
+      for j in 0..table_data[i].length-1 do # column
         if (i == 0 && (0x1 & o[:headers])==0x1)
           col = row.add_element("th", o[:th_attrs])
         elsif (j == 0 && (0x2 & o[:headers])==0x2)
@@ -333,26 +417,38 @@ module Custom
           col = row.add_element("th", o[:th_attrs])
         else
           _td_attrs = o[:td_attrs].clone
-          row_title = table_data[i][0]
-          col_title = table_data[0][j]
+
           o[:special].each do |h|
             # check if the current cell is a candidate for special
             if !h[:col_index].nil?
-              next if (h[:col_index] != j)
+              if h[:col_index].is_a?(Range)
+                next if (!h[:col_index].include?(j)) # skip if not in range
+              elsif h[:col_index].is_a?(Integer)
+                next if (h[:col_index] != j)         # skip if not at index
+                puts "col_index:"
+                p h[:col_index]
+              end
             elsif !h[:col_title].nil?
-              next if !col_title.match(h[:col_title])
+              next if !col_titles[j].match(h[:col_title])
               # do nothing, we are a valid candidate
             end
             # check if the current cell is a candidate for special
             if !h[:row_index].nil?
-              next if (h[:row_index] != i)
-            elsif !h[:row_title].nil?
-              next if !row_title.match(h[:row_title])
+              p h[:row_index]
+              if h[:row_index].is_a?(Range)
+                next if (!h[:row_index].include?(j)) # skip if not in range
+              elsif h[:row_index].is_a?(Integer)
+                next if (h[:row_index] != j)         # skip if not at index
+                puts "row_index:"
+                p h[:row_index]
+              end
+             elsif !h[:row_title].nil?
+              next if !row_titles[i].match(h[:row_title])
             end
             
             # here we are a candidate for special, so we check if we meet the condition
-            if h[:condition].call table_data[i][j]
-              h[:attrbutes].each { |attr, val|
+            if h[:condition].call(table_data[i][j])
+              h[:attributes].each { |attr, val|
                 if !_td_attrs[attr].nil?
                   # assume the existing attribute is a string (other types don't make much sense for html)
                   _td_attrs[attr] << val
@@ -371,8 +467,8 @@ module Custom
           # level is not valid xml
           doc = REXML::Document.new("<root>" + table_data[i][j].to_s + "</root>")
           # then we move all children of root to the actual div middle element and insert after current
-          for i in doc.root.to_a do
-            col.add_element(i) # add the td element
+          for elem in doc.root.to_a do
+            col.add_element(elem) # add the td element
           end
         else
           col.add_text(table_data[i][j].to_s)

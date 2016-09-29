@@ -1,0 +1,16 @@
+3.1.0
+-----
+- #highlight and #highlight_captures now support html color codes as color input
+- added following new methods
+  - custom_table  (allows for customized attributes per cell / ranges and interpretation of table_data as html instead of text only)
+- added following additional methods, which instead of inserting something into the report just return the html code
+  as a string (in order to be used with the #custom_table method above, e.g. to construct table based layouts)
+  - get_code_html
+  - get_content_html
+  - get_link_html
+  - get_image_html
+rest of the api remains backwardcompatible with version 3.0.x
+  
+3.0.3
+-----
+- started changelog

@@ -48,9 +48,12 @@ By default "custom.rb" is loaded through instance eval, see
 [XhtmlReportGenerator/Generator](http://www.rubydoc.info/gems/xhtml_report_generator/XhtmlReportGenerator/Generator)
 for the documentation of available methods.
 
+Advanced example1: custom tables including pictures or links
+----------------------------------
 
 
-Advanced example: including some graphs to your reports
+
+Advanced example2: including some graphs to your reports
 ----------------------------------
 Due to the xml nature it is also easy to insert SVG graphs / pictures. Check out the svg-graph gem
 
@@ -82,16 +85,8 @@ graph = SVG::Graph::Line.new({
 graph.add_data({:data => data_sales_02, :title => 'Sales2002'})
 graph.add_data({:data => data_sales_03, :title => 'Sales2003'})
 
-# we can't add the entire xml document since multiple xml declarations are invalid
-# so we add only the svg part
-doc = REXML::Document.new(graph.burn())
-svg = doc.elements["//svg"]
-out = ''
-f = REXML::Formatters::Pretty.new(0)
-f.compact = true
-f.write(svg, out)
-
-gen1.html(out)
+# add the svg to the report
+gen1.html(graph.burn_svg_only())
 gen1.write("graph.xhtml")
 
 ```
@@ -129,8 +124,6 @@ to customize the look and feel of the generated html files. But if you want you 
 
 As a start you can copy the [custom.rb](../master/lib/xhtml_report_generator/custom.rb) file and rename the functions if you don't like the 
 default naming.
-
-
 
 
 Changes from version 2.x to 3.x

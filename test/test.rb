@@ -136,8 +136,8 @@ class TestReportGenerator < Test::Unit::TestCase
 
   def test_table()
     gen1 = XhtmlReportGenerator::Generator.new
-    gen1.create_layout("Manu's Table")
-    # gen1.set_title("Manu's Table")
+    gen1.create_layout("Standard Table")
+    # gen1.set_title("Table")
     gen1.heading("h1", {"class" => "bothtoc"}) {"No Headers"}
     table_data = [[1,2,3],[4,5,6],[7,8,9]]
     gen1.table(table_data)
@@ -160,6 +160,76 @@ class TestReportGenerator < Test::Unit::TestCase
     gen1.write("#{@cd}/Table.xhtml")
     test1 = File.read("#{@cd}/Table.xhtml")
     expected = File.read("#{@cd}/TableReference.xhtml")
+    assert(test1 == expected, "Reports are not equal")
+  end
+  
+  def test_custom_table()
+    gen1 = XhtmlReportGenerator::Generator.new
+    gen1.create_layout("Custom Table")
+    
+    gen1.heading("h1") {"1st Row and 1st Col headings"}
+    table_data = [
+      (0..9).collect{|i| i},
+      (10..19).collect{|i| i},
+      (20..29).collect{|i| i},
+      (30..39).collect{|i| i},
+    ]
+    table_opts = {
+      :headers => 3,
+      :data_is_xhtml => false,
+      :special => [
+        { # highlight all numbers from 0-13 green, only 11-13 should be green since the others are part of heading
+          condition: Proc.new { |e| (0 <= e.to_i) && (e.to_i <= 13) },   # a proc
+          attributes: {"style" => "background: #00FF00;"},
+        },
+        { # font-color the area if number contains a 3
+          row_index: 2..3,
+          col_index: 3..7,
+          condition: Proc.new { |e| true }, #e.to_s.match(/3/) },   # a proc
+          attributes: {"style" => "color: red;"},
+        },
+        { # red border around row 2-3 col with title 8
+          row_title: /[23]/,
+          col_title: "8",
+          condition: Proc.new { |e| true },   # a proc
+          attributes: {"style" => "border: 2px solid red;"},
+        },
+        { # black border around cell bottom right
+          row_index: 9,
+          col_index: 2,
+          condition: Proc.new { |e| true },   # a proc
+          attributes: {"style" => "border: 2px solid black;"},
+        },
+      ]
+    
+    }
+    gen1.content() {"highlight all numbers from 0-13 green, only 11-13 should be green since the others are part of heading"}
+    gen1.content() {"font-color the area if number contains a 3"}
+    gen1.content() {"red border around row 2-3 col with title 8"}
+    gen1.content() {"border around cell bottom right"}
+    gen1.custom_table(table_data, table_opts)
+    
+    gen1.heading("h1") {"Table Layout"}
+    table_opts = {
+      :headers => 0,
+      :data_is_xhtml => true,
+    }
+    
+    a = gen1.get_code_html() {"  blub\nblab\n\t\tblib"}
+    b = gen1.get_image_html("#{@cd}/test.png", {"width" => "55", "height"=> "20", "alt" => "some_interesting_text"})
+    c = gen1.get_content_html() {"   leading-whitespace removed"}
+    d = gen1.get_link_html("https://rubygems.org/gems/xhtml_report_generator/") {"download the gem"}
+
+
+    table_data = [
+      [a, d],
+      [c, b]
+    ]
+    gen1.custom_table(table_data, table_opts)
+    
+    gen1.write("#{@cd}/CustomTable.xhtml")
+    test1 = File.read("#{@cd}/CustomTable.xhtml")
+    expected = File.read("#{@cd}/CustomTableReference.xhtml")
     assert(test1 == expected, "Reports are not equal")
   end
 
