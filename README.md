@@ -51,7 +51,7 @@ for the documentation of available methods.
 Advanced example1: custom tables including pictures or links
 ----------------------------------
 [Code] (../master/test/test.rb#L166-L233)
-[Preview](https://cdn.rawgit.com/lumean/xhtml-report-generator/master/examples/CustomTableReference.xhtml)
+[Preview](https://cdn.rawgit.com/lumean/xhtml-report-generator/master/test/CustomTableReference.xhtml)
 
 
 Advanced example2: including some graphs to your reports
