@@ -30,7 +30,7 @@ class TestReportGenerator < Test::Unit::TestCase
     gen1.heading("h1", {"class" => "bothtoc"}) {"Encoding"}
     # U+01BA	ƺ	c6 ba	LATIN SMALL LETTER EZH WITH TAIL
     teststring = "\xE2\x80hallo\x98\x99\xc6\xbaäöü"
-    puts "Encoding of teststring: #{teststring.encoding()}"
+    #puts "Encoding of teststring: #{teststring.encoding()}"
     
     gen1.content() {teststring}
     gen1.highlight(/hallo/) 
@@ -46,7 +46,7 @@ class TestReportGenerator < Test::Unit::TestCase
     gen1.write("#{@cd}/test_encoding.html")
     # check if LATIN SMALL LETTER EZH WITH TAIL  is in final output
     result = IO.binread("#{@cd}/test_encoding.xhtml").force_encoding('UTF-8')
-    puts "valid encoding? : #{result.valid_encoding?}"
+    #puts "valid encoding? : #{result.valid_encoding?}"
     assert(result.match(/\u01baäöü/u), "ƺ (\\u01baäöü was not found")    
   end
   
@@ -201,7 +201,6 @@ class TestReportGenerator < Test::Unit::TestCase
           attributes: {"style" => "border: 2px solid black;"},
         },
       ]
-    
     }
     gen1.content() {"highlight all numbers from 0-13 green, only 11-13 should be green since the others are part of heading"}
     gen1.content() {"font-color the area 23-27 : 33-37 if number contains a 3"}

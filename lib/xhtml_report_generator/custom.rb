@@ -107,7 +107,7 @@ module Custom
     return out
   end
   
-  # see also #code
+  # @see #code
   # Instead of adding content to the report, this method returns the produced html code as a string.
   # This can be used to insert code into #custom_table (with the option data_is_xhtml: true)
   # @return [String] the code including <pre> tags as a string
@@ -122,9 +122,9 @@ module Custom
   
   # Appends a <pre> node after the @current node
   # @param attrs [Hash] attributes for the <pre> element. The following classes can be passed as attributes and are predefined with a different
-  #                     background for your convenience {"class" => "code0"} (light-blue), {"class" => "code1"} (red-brown), 
-  #                     {"class" => "code2"} (light-green), {"class" => "code3"} (light-yellow). You may also specify your own background
-  #                     as follows: {"style" => "background: #FF00FF;"}.
+  #                     background for your convenience !{"class" => "code0"} (light-blue), !{"class" => "code1"} (red-brown), 
+  #                     !{"class" => "code2"} (light-green), !{"class" => "code3"} (light-yellow). You may also specify your own background
+  #                     as follows: !{"style" => "background: #FF00FF;"}.
   # @yieldreturn [String] the text to be added to the <pre> element
   # @return [REXML::Element] the Element which was just added
   def code(attrs={}, &block)
@@ -138,7 +138,7 @@ module Custom
     return @current
   end
 
-  # see also #content
+  # @see #content
   # Instead of adding content to the report, this method returns the produced html code as a string.
   # This can be used to insert code into #custom_table (with the option data_is_xhtml: true)
   # @return [String] the code including <pre> tags as a string
@@ -181,7 +181,7 @@ module Custom
     return @current
   end
   
-  # see also #link
+  # @see #link
   # Instead of adding content to the report, this method returns the produced html code as a string.
   # This can be used to insert code into #custom_table (with the option data_is_xhtml: true)
   # @return [String] the code including <pre> tags as a string
@@ -212,7 +212,7 @@ module Custom
     return @current
   end
   
-  # see also #image
+  # @see #image
   # Instead of adding content to the report, this method returns the produced html code as a string.
   # This can be used to insert code into #custom_table (with the option data_is_xhtml: true)
   # @return [String] the code including <pre> tags as a string
@@ -380,10 +380,10 @@ module Custom
   # @example Example of the :special attributes
   #   opts[:special] = [
   #     {
-  #       col_title: 'rx_DroppedFrameCount', # string or regexp or nil  # if neither title or index are present, just the condition counts
-  #       col_index: 5,  # Fixnum or nil     # index have precedence over title
+  #       col_title: 'rx_DroppedFrameCount', # string or regexp or nil  # if neither title nor index are present, the condition is evaluated for all <td> cells
+  #       col_index: 5..7,  # Fixnum, Range or nil     # index has precedence over title
   #       row_title: 'D_0_BE_iMix',  # string or regexp or nil
-  #       row_index: 6,  # Fixnum or nil
+  #       row_index: 6,  # Fixnum, Range or nil  
   #       condition: Proc.new { |e| Integer(e) != 0 },   # a proc
   #       attributes: {"style" => "background-color: #DB7093;"},
   #     },
@@ -425,21 +425,16 @@ module Custom
                 next if (!h[:col_index].include?(j)) # skip if not in range
               elsif h[:col_index].is_a?(Integer)
                 next if (h[:col_index] != j)         # skip if not at index
-                puts "col_index:"
-                p h[:col_index]
               end
             elsif !h[:col_title].nil?
               next if !col_titles[j].match(h[:col_title])
             end
             # check if the current cell is a candidate for special
             if !h[:row_index].nil?
-              p h[:row_index]
               if h[:row_index].is_a?(Range)
                 next if (!h[:row_index].include?(i)) # skip if not in range
               elsif h[:row_index].is_a?(Integer)
                 next if (h[:row_index] != i)         # skip if not at index
-                puts "row_index:"
-                p h[:row_index]
               end
              elsif !h[:row_title].nil?
               next if !row_titles[i].match(h[:row_title])

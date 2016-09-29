@@ -51,6 +51,66 @@ for the documentation of available methods.
 Advanced example1: custom tables including pictures or links
 ----------------------------------
 [Code] (../master/test/test.rb#L166-L233)
+
+```ruby
+require 'xhtml_report_generator'
+gen1 = XhtmlReportGenerator::Generator.new
+gen1.create_layout("Custom Table")
+gen1.heading("h1") {"custom styling"}
+table_data = [
+  (0..9).collect{|i| i},
+  (10..19).collect{|i| i},
+  (20..29).collect{|i| i},
+  (30..39).collect{|i| i},
+]
+table_opts = {
+  :headers => 3,
+  :data_is_xhtml => false,
+  :special => [
+    { # highlight all numbers from 0-13 green, only 11-13 should be green since the others are part of heading
+      condition: Proc.new { |e| (0 <= e.to_i) && (e.to_i <= 13) },   # a proc
+      attributes: {"style" => "background: #00FF00;"},
+    },
+    { # font-color the area if number contains a 3
+      row_index: 2..3,
+      col_index: 3..7,
+      condition: Proc.new { |e| e.to_s.match(/3/) },   # a proc
+      attributes: {"style" => "color: red;"},
+    },
+    { # red border around row 2-3 col with title 8
+      row_title: /[23]/,
+      col_title: "8",
+      condition: Proc.new { |e| true },   # a proc
+      attributes: {"style" => "border: 2px solid red;"},
+    },
+    { # black border around cell bottom right
+      row_index: 2,
+      col_index: 9,
+      condition: Proc.new { |e| true },   # a proc
+      attributes: {"style" => "border: 2px solid black;"},
+    },
+  ]
+}
+gen1.custom_table(table_data, table_opts)
+gen1.heading("h1") {"Table Layout"}
+table_opts = {
+  :headers => 0,
+  :data_is_xhtml => true,
+}
+
+a = gen1.get_code_html() {"  blub\nblab\n\t\tblib"}
+b = gen1.get_image_html("path/to/test.png", {"width" => "55", "height"=> "20", "alt" => "some_interesting_text"})
+c = gen1.get_content_html() {"   leading-whitespace removed"}
+d = gen1.get_link_html("https://rubygems.org/gems/xhtml_report_generator/") {"download the gem"}
+
+table_data = [
+  [a, d],
+  [c, b]
+]
+gen1.custom_table(table_data, table_opts)
+
+gen1.write("path/to/CustomTable.xhtml")
+```
 [Preview](https://cdn.rawgit.com/lumean/xhtml-report-generator/master/test/CustomTableReference.xhtml)
 
 
