@@ -185,7 +185,7 @@ class TestReportGenerator < Test::Unit::TestCase
         { # font-color the area if number contains a 3
           row_index: 2..3,
           col_index: 3..7,
-          condition: Proc.new { |e| true }, #e.to_s.match(/3/) },   # a proc
+          condition: Proc.new { |e| e.to_s.match(/3/) },   # a proc
           attributes: {"style" => "color: red;"},
         },
         { # red border around row 2-3 col with title 8
@@ -195,8 +195,8 @@ class TestReportGenerator < Test::Unit::TestCase
           attributes: {"style" => "border: 2px solid red;"},
         },
         { # black border around cell bottom right
-          row_index: 9,
-          col_index: 2,
+          row_index: 2,
+          col_index: 9,
           condition: Proc.new { |e| true },   # a proc
           attributes: {"style" => "border: 2px solid black;"},
         },
@@ -204,7 +204,7 @@ class TestReportGenerator < Test::Unit::TestCase
     
     }
     gen1.content() {"highlight all numbers from 0-13 green, only 11-13 should be green since the others are part of heading"}
-    gen1.content() {"font-color the area if number contains a 3"}
+    gen1.content() {"font-color the area 23-27 : 33-37 if number contains a 3"}
     gen1.content() {"red border around row 2-3 col with title 8"}
     gen1.content() {"border around cell bottom right"}
     gen1.custom_table(table_data, table_opts)
@@ -219,7 +219,6 @@ class TestReportGenerator < Test::Unit::TestCase
     b = gen1.get_image_html("#{@cd}/test.png", {"width" => "55", "height"=> "20", "alt" => "some_interesting_text"})
     c = gen1.get_content_html() {"   leading-whitespace removed"}
     d = gen1.get_link_html("https://rubygems.org/gems/xhtml_report_generator/") {"download the gem"}
-
 
     table_data = [
       [a, d],

@@ -430,15 +430,14 @@ module Custom
               end
             elsif !h[:col_title].nil?
               next if !col_titles[j].match(h[:col_title])
-              # do nothing, we are a valid candidate
             end
             # check if the current cell is a candidate for special
             if !h[:row_index].nil?
               p h[:row_index]
               if h[:row_index].is_a?(Range)
-                next if (!h[:row_index].include?(j)) # skip if not in range
+                next if (!h[:row_index].include?(i)) # skip if not in range
               elsif h[:row_index].is_a?(Integer)
-                next if (h[:row_index] != j)         # skip if not at index
+                next if (h[:row_index] != i)         # skip if not at index
                 puts "row_index:"
                 p h[:row_index]
               end
