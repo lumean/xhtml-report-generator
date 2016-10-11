@@ -225,6 +225,47 @@ class TestReportGenerator < Test::Unit::TestCase
     ]
     gen1.custom_table(table_data, table_opts)
     
+    gen1.heading("h1") {"Highlighter"}
+    my_table = [["Stream_Name", "tx_FrameCount", "rx_FrameCount", "tx_FrameRate", "rx_FrameRate", "tx_BitRate", "rx_BitRate", "rx_AvgLatency", "rx_DroppedFrameCount", "rx_DroppedFrameRate"],
+    ["D_0_BE_iMix", "1084", "1058", "23", "23", "74944", "83760", "646.211", "0", "0"],
+    ["D_1_General_iMix", "767", "750", "15", "15", "42424", "50000", "660.723", "0", "1"],
+    ["D_2_Prio_iMix", "2072", "2027", "39", "39", "125168", "121584", "651.951", "0", "0"],
+    ["D_3_HPrio_iMix", "4377", "4288", "78", "78", "278232", "264584", "651.53", "3", "0"],
+    ["D_4_Video_iMix", "6044", "5926", "104", "104", "364248", "368800", "651.178", "0", "0"],
+    ["D_5_RT_218", "28182", "27534", "574", "575", "1019424", "1020608", "535.699", "0", "0"],
+    ["U_0_BE_iMix", "760", "695", "23", "23", "84384", "93448", "603.051", "0", "0"],
+    ["U_1_General_iMix", "556", "513", "15", "15", "51904", "50064", "616.774", "0", "2"],
+    ["U_2_Prio_iMix", "1561", "1490", "39", "39", "133280", "131448", "618.291", "0", "0"],
+    ["U_3_HPrio_iMix", "3279", "3135", "78", "78", "322984", "319304", "603.712", "3", "0"],
+    ["U_4_Video_iMix", "4580", "4389", "104", "104", "383496", "394288", "599.501", "0", "0"],
+    ["U_5_RT_218", "20103", "18474", "574", "575", "1019776", "1020608", "519.377", "0", "0"]]
+
+   table_opts = {
+            :headers => 3,
+            :table_attrs => {"style"=>"text-align:right; border-collapse: collapse; font-size:14px;padding:5px 5px;"}, 
+            :tr_attrs => {}, 
+            :th_attrs => {"style"=>"text-align:left; border: 1px solid black; background-color:#f0f0f0;padding:5px 5px;"}, 
+            :td_attrs => {"style"=>"border: 1px solid black;padding:5px 5px;"},
+            :data_is_xhtml => false,
+            :special => [
+              {
+                col_title: "rx_DroppedFrameCount|rx_DroppedFrameRate",
+                condition: Proc.new { |e| e.to_i != 0 },
+                attributes: {"style" => "background: red;"},
+              },
+              {
+                col_title: "rx_DroppedFrameRate",
+                condition: Proc.new { |e| e.to_i == 0 },
+                attributes: {"style" => "background: green;"},
+              },
+      ]
+    }
+
+    gen1.custom_table(my_table, table_opts)
+
+    
+    
+    
     gen1.write("#{@cd}/CustomTable.xhtml")
     test1 = File.read("#{@cd}/CustomTable.xhtml")
     expected = File.read("#{@cd}/CustomTableReference.xhtml")

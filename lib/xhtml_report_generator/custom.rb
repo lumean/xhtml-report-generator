@@ -416,8 +416,10 @@ module Custom
         elsif ((i == 0 || j ==0) && (0x3 & o[:headers])==0x3)
           col = row.add_element("th", o[:th_attrs])
         else
-          _td_attrs = o[:td_attrs].clone
+          # we need to deepcopy the attributes
+          _td_attrs = Marshal.load(Marshal.dump(o[:td_attrs]))
 
+          # check all special criteria
           o[:special].each do |h|
             # check if the current cell is a candidate for special
             if !h[:col_index].nil?
@@ -436,13 +438,18 @@ module Custom
               elsif h[:row_index].is_a?(Integer)
                 next if (h[:row_index] != i)         # skip if not at index
               end
-             elsif !h[:row_title].nil?
+            elsif !h[:row_title].nil?
               next if !row_titles[i].match(h[:row_title])
             end
             
             # here we are a candidate for special, so we check if we meet the condition
+            # puts h[:attributes].inspect
+            # puts "cell value row #{i} col #{j}: #{table_data[i][j]}"
+            # puts h[:condition].call(table_data[i][j]).inspect
             if h[:condition].call(table_data[i][j])
               h[:attributes].each { |attr, val|
+                # debug, verify deepcopy
+                # puts "objects are equal:  #{_td_attrs[attr].equal?(o[:td_attrs][attr])}"
                 if !_td_attrs[attr].nil?
                   # assume the existing attribute is a string (other types don't make much sense for html)
                   _td_attrs[attr] << val
