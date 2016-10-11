@@ -1,3 +1,8 @@
+3.1.1
+-----
+- fix issue with custom_table, the attributes hash was not properly deepcopied when using special options
+  to customize individual cells.
+
 3.1.0
 -----
 - #highlight and #highlight_captures now support html color codes as color input
