@@ -8,7 +8,7 @@ only written to disk on demand. Hence in case of crashes the data might be lost 
 
 Ruby version
 -----
-This gem was mainly tested with ruby version 2.2.3. Except of the test_encoding_issues unit tests, all other tests are 
+This gem was mainly tested with ruby version 2.2.3. Except of the test_encoding_issues unit tests, all other tests are
 also passing with 1.9.3. Probably there were issues in ruby itself for earlier versions.
 
 
@@ -27,8 +27,8 @@ def method({"attribute" => "value", "attribute2" => "value2"}) {contents}
 
 in addition the method naming convention was changed from camelCase to underscore to comply more with ruby conventions.
 
-See <a href=http://www.rubydoc.info/gems/xhtml_report_generator/Custom>http://www.rubydoc.info/gems/xhtml_report_generator/Custom</> for the documentation of available methods.
- 
+See <a href=http://www.rubydoc.info/gems/xhtml_report_generator/Custom>http://www.rubydoc.info/gems/xhtml_report_generator/Custom /> for the documentation of available methods.
+
 <pre>
 require 'xhtml_report_generator'
 
@@ -39,7 +39,7 @@ gen1.heading("h2") {"subtitel"}
 gen1.heading("h3") {"section"}
 gen1.content({"class"=>"bold"}) {"content function: Hallo welt &lt;br /> html test &lt;span class=\"r\" >red span test&lt;/span>"}
 gen1.html("&lt;p class=\"italic\">html function: Hallo welt &lt;br /> html test &lt;span class=\"r\" >red span test&lt;/span>&lt;/p>")
-gen1.highlight(/Ha.*lt/)
+gen1.highlight(/Ha.&ast;lt/)
 gen1.link("https://rubygems.org/gems/xhtml_report_generator/") {"download the gem"}
 # browser will parse this as html (based on file extension)
 gen1.write("myreport.html")
@@ -80,7 +80,7 @@ graph.add_data({:data => data_sales_02, :title => 'Sales2002'})
 graph.add_data({:data => data_sales_03, :title => 'Sales2003'})
 
 # we can't add the entire xml document since multiple xml declarations are invalid
-# so we add only 
+# so we add only
 doc = REXML::Document.new(graph.burn())
 svg = doc.elements["//svg"]
 out = ''
@@ -136,4 +136,3 @@ heading			-> heading(tag_type="h1", attrs={}, &block)
 headingTop		-> heading\_top(tag_type="h1", attrs={}, &block)
 
 </pre>
-
