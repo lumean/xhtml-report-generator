@@ -106,6 +106,7 @@ module XhtmlReportGenerator
       # don't use version 1.1 - firefox has not yet a parser vor xml 1.1
       # https://bugzilla.mozilla.org/show_bug.cgi?id=233154
       header = '<?xml version="1.0" encoding="UTF-8"?>'
+      # change of doctype to <!DOCTYPE html> for html5 compatibility
       header << '<!DOCTYPE html>'
 
       doc = REXML::Document.new(header)

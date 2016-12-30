@@ -6,25 +6,17 @@ Gem::Specification.new do |s|
   s.version     = XhtmlReportGenerator::VERSION
   s.platform    = Gem::Platform::RUBY
   s.date        = Time.now.strftime("%Y-%m-%d")
-  s.summary     = "A simple html or xhtml generator to create human readable support"
-  s.required_ruby_version = '>= 1.9.3'
+  s.summary     = "A simple html or xhtml generator or logger to create human readable reports and logs"
+  s.required_ruby_version = '>= 2.0.0'
 
   s.description = <<-HEREDOC.gsub(/^ {4}/, '')
     The generator can be used to create html or xhtml files. It comes with many utility functions.
-    == Example usage
-      gen1 = XhtmlReportGenerator::Generator.new
-      gen1.create_layout("Title")
-      gen1.heading("h1", {"class" => "bothtoc"}) {"titel"}
-      gen1.heading("h2") {"subtitel"}
-      gen1.heading("h3") {"section"}
-      gen1.content({"class"=>"bold"}) {"content function: Hallo welt <br /> html test <span class=\"r\" >red span test</span>"}
-      gen1.html("<p class=\"italic\">html function: Hallo welt <br /> html test <span class=\"r\" >red span test<span></p>")
-      gen1.highlight(/Ha.*lt/)
       
     The javascript to render the table of contents, the custom generator functions and style sheet all can be
     supplied by your own, if necessary. By default there are methods to insert tables, links, paragraphs, preformatted text
     and arbitrary xhtml code. Due to the xml nature it is also easy to insert SVG graphs / pictures.
     
+    Checkout the github project to see some examples.
   HEREDOC
 
   s.authors      = ["Manuel Widmer"]

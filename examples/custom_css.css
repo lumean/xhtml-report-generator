@@ -4,7 +4,7 @@ html {
 }
 
 body {
-  background: #FFFFFF;
+  background: #2E2E2E;
   font: 100% Arial, Helvetica, sans-serif;
   color: #404040;
   line-height: 110%;
@@ -14,9 +14,9 @@ body {
 }
 
 p {
-  background: #FFFFFF;
+  background: #2E2E2E;
   font: 100% Arial, Helvetica, sans-serif;
-  color: #202020;
+  color: #FFFFFF;
   line-height: 110%;
   text-align: left;
 }

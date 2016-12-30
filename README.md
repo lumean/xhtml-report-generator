@@ -2,34 +2,26 @@ xhtml_report_generator
 ======================
 
 This project was written to provide an easy way to create valid xhtml or html documents.
-Usecases are the automatic creation of reports (e.g. program logs) with automatically created table of contents.
-xhtml_report_generator is not a Logger replacement, since the complete document is always kept in memory and
-only written to disk on demand. Hence in case of crashes the data might be lost if you didn't write before.
+My main usecases is the automatic creation of (test-)reports that are human readable and include a table of contents.
+xhtml_report_generator can be used very similar like a ruby Logger, but there are some caveats.
+It is not a Logger replacement, since the complete document is always kept in memory and
+only written to disk on demand. Hence in case of crashes the data might be lost if it wasn't written before.
+
+All logic (js and css) is inlined which makes it very easy to send the report to someone else by mail and view it offline.
+Also pdf export is easy by just printing the report. By default there is a special css with media print making the layout suitable for printing.
 
 Ruby version
 -----
-This gem was mainly tested with ruby version 2.2.3. Except of the test_encoding_issues unit tests, all other tests are
-also passing with 1.9.3. Probably there were issues in ruby itself for earlier versions.
+This gem was mainly tested with ruby version 2.2.3. Except of the test_encoding_issues unit tests, all other tests are 
+also passing with 1.9.3.
 
 
-Example usage
+Getting started
 -------------
-In the following you can find a quick start on how to use xhtml_report_generator.
-Basically the project is built in a way that lets you supply your own methods for everything.
-By default "custom.rb" is loaded through instance eval, so you can check the corresponding documentation for available methods.
+Create a basic report with some content, highlighted text and the default layout which includes the table of contents in
+a split area on the left, and a list of quicklinks in a split area on the right.
 
-Note that there is a major syntax change for "custom.rb" between version 1.x and 2.x of the gem.
-Here an example for version >= 2 of this gem is provided.
-
-Basically starting from version 2 the syntax for each method of custom.rb is unified. It accepts an hash of html attributes as argument, and the actual contents as block argument.
-
-def method({"attribute" => "value", "attribute2" => "value2"}) {contents}
-
-in addition the method naming convention was changed from camelCase to underscore to comply more with ruby conventions.
-
-See <a href=http://www.rubydoc.info/gems/xhtml_report_generator/Custom>http://www.rubydoc.info/gems/xhtml_report_generator/Custom /> for the documentation of available methods.
-
-<pre>
+```ruby
 require 'xhtml_report_generator'
 
 gen1 = XhtmlReportGenerator::Generator.new
@@ -45,13 +37,93 @@ gen1.link("https://rubygems.org/gems/xhtml_report_generator/") {"download the ge
 gen1.write("myreport.html")
 # browser will parse this as xhtml (based on file extension)
 gen1.write("myreport.xhtml")
-</pre>
+```
 
-Adding some graphs to your reports
+[Code](../master/examples/basic_report.rb)
+
+[Preview](https://cdn.rawgit.com/lumean/xhtml-report-generator/master/examples/basic_report.html)
+
+
+More examples can be found in the [examples](../master/examples) or
+[test](../master/test) folders
+
+
+By default "custom.rb" is loaded through instance eval, see 
+[XhtmlReportGenerator/Custom](http://www.rubydoc.info/gems/xhtml_report_generator/Custom) and 
+[XhtmlReportGenerator/Generator](http://www.rubydoc.info/gems/xhtml_report_generator/XhtmlReportGenerator/Generator)
+for the documentation of available methods.
+
+Advanced example1: custom tables including pictures or links
+----------------------------------
+[Code] (../master/test/test.rb#L166-L233)
+
+```ruby
+require 'xhtml_report_generator'
+gen1 = XhtmlReportGenerator::Generator.new
+gen1.create_layout("Custom Table")
+gen1.heading("h1") {"custom styling"}
+table_data = [
+  (0..9).collect{|i| i},
+  (10..19).collect{|i| i},
+  (20..29).collect{|i| i},
+  (30..39).collect{|i| i},
+]
+table_opts = {
+  :headers => 3,
+  :data_is_xhtml => false,
+  :special => [
+    { # highlight all numbers from 0-13 green, only 11-13 should be green since the others are part of heading
+      condition: Proc.new { |e| (0 <= e.to_i) && (e.to_i <= 13) },   # a proc
+      attributes: {"style" => "background: #00FF00;"},
+    },
+    { # font-color the area if number contains a 3
+      row_index: 2..3,
+      col_index: 3..7,
+      condition: Proc.new { |e| e.to_s.match(/3/) },   # a proc
+      attributes: {"style" => "color: red;"},
+    },
+    { # red border around row 2-3 col with title 8
+      row_title: /[23]/,
+      col_title: "8",
+      condition: Proc.new { |e| true },   # a proc
+      attributes: {"style" => "border: 2px solid red;"},
+    },
+    { # black border around cell bottom right
+      row_index: 2,
+      col_index: 9,
+      condition: Proc.new { |e| true },   # a proc
+      attributes: {"style" => "border: 2px solid black;"},
+    },
+  ]
+}
+gen1.custom_table(table_data, table_opts)
+gen1.heading("h1") {"Table Layout"}
+table_opts = {
+  :headers => 0,
+  :data_is_xhtml => true,
+}
+
+a = gen1.get_code_html() {"  blub\nblab\n\t\tblib"}
+b = gen1.get_image_html("path/to/test.png", {"width" => "55", "height"=> "20", "alt" => "some_interesting_text"})
+c = gen1.get_content_html() {"   leading-whitespace removed"}
+d = gen1.get_link_html("https://rubygems.org/gems/xhtml_report_generator/") {"download the gem"}
+
+table_data = [
+  [a, d],
+  [c, b]
+]
+gen1.custom_table(table_data, table_opts)
+
+gen1.write("path/to/CustomTable.xhtml")
+```
+[Preview](https://cdn.rawgit.com/lumean/xhtml-report-generator/master/test/CustomTableReference.xhtml)
+
+
+Advanced example2: including some graphs to your reports
 ----------------------------------
 Due to the xml nature it is also easy to insert SVG graphs / pictures. Check out the svg-graph gem
 
-<pre>
+```ruby
 require 'xhtml_report_generator'
 require 'SVG/Graph/Line'
 require 'REXML/document'
@@ -65,33 +137,59 @@ data_sales_02 = [12, 45, 21]
 data_sales_03 = [15, 30, 40]
 
 graph = SVG::Graph::Line.new({
-       :height => 300,
-      :width => 500,
-  :show_graph_title      => true,
-  :graph_title          => 'Graph Title',
-  :show_x_title  => true,
-  :x_title => 'Month',
-  :show_y_title  => true,
-  #:y_title_text_direction => :bt,
-  :y_title => 'cash',
-  :fields => x_axis})
+      :height             => 300,
+      :width              => 500,
+      :show_graph_title   => true,
+      :graph_title        => 'Graph Title',
+      :show_x_title       => true,
+      :x_title            => 'Month',
+      :show_y_title       => true,
+      #:y_title_text_direction => :bt,
+      :y_title            => 'cash',
+      :fields             => x_axis})
 
 graph.add_data({:data => data_sales_02, :title => 'Sales2002'})
 graph.add_data({:data => data_sales_03, :title => 'Sales2003'})
 
-# we can't add the entire xml document since multiple xml declarations are invalid
-# so we add only
-doc = REXML::Document.new(graph.burn())
-svg = doc.elements["//svg"]
-out = ''
-f = REXML::Formatters::Pretty.new(0)
-f.compact = true
-f.write(svg, out)
-
-gen1.html(out)
+# add the svg to the report
+gen1.html(graph.burn_svg_only())
 gen1.write("graph.xhtml")
 
-</pre>
+```
+
+[Code](../master/examples/graph.rb)
+
+[Preview](https://cdn.rawgit.com/lumean/xhtml-report-generator/master/examples/graph.xhtml)
+
+
+Customizing the Report with CSS
+-------------------------------
+The styling of the report is done through css. This allowes you to customize most of the formatting as to your liking.
+The split.js relevant section should only be changed if you know what you're doing, otherwise the layout might break.
+
+As a starting point begin with the [default css used by the report](../master/lib/xhtml_report_generator/style_template.css)
+```ruby
+require 'xhtml_report_generator'
+
+opts = {
+  :css => 'path/to/my_css.css'
+}
+
+gen1 = XhtmlReportGenerator::Generator.new(opts)
+gen1.create_layout("Page Title")
+
+```
+
+[Code](../master/examples/custom_css.rb)
+
+[Preview](https://cdn.rawgit.com/lumean/xhtml-report-generator/master/examples/custom_css.html)
+
+The project is built in a way that lets you supply your own methods for everything. By default the methods , js and css files provided
+with the gem are used, but you can override those by specifying your own. The primary usecase is to override the default css 
+to customize the look and feel of the generated html files. But if you want you can event write your complete own generator.
+
+As a start you can copy the [custom.rb](../master/lib/xhtml_report_generator/custom.rb) file and rename the functions if you don't like the 
+default naming.
 
 
 Changes from version 2.x to 3.x

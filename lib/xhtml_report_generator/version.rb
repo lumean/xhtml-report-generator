@@ -1,5 +1,5 @@
 module XhtmlReportGenerator
-  VERSION = '3.0.0'
+  VERSION = '3.1.1'
 end
 
 # puts XhtmlReportGenerator::VERSION
