@@ -1,3 +1,8 @@
+3.1.2
+-----
+- fix issue with custom_table, when just using plain text without any html tags
+  and :data_is_xhtml true, invalid xhtml was produced.
+
 3.1.1
 -----
 - fix issue with custom_table, the attributes hash was not properly deepcopied when using special options
@@ -15,7 +20,7 @@
   - get_link_html
   - get_image_html
 rest of the api remains backwardcompatible with version 3.0.x
-  
+
 3.0.3
 -----
 - started changelog
