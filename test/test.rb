@@ -220,11 +220,11 @@ class TestReportGenerator < Test::Unit::TestCase
     d = gen1.get_link_html("https://rubygems.org/gems/xhtml_report_generator/") {"download the gem"}
 
     table_data = [
-      ["plain text", a, d],
-      ["is pain", c, b]
+      ["plain text<br />other text<br />newline", a, d],
+      ["lorem ipsum", c, b]
     ]
     gen1.custom_table(table_data, table_opts)
-    
+
     gen1.heading("h1") {"Highlighter"}
     my_table = [["Stream_Name", "tx_FrameCount", "rx_FrameCount", "tx_FrameRate", "rx_FrameRate", "tx_BitRate", "rx_BitRate", "rx_AvgLatency", "rx_DroppedFrameCount", "rx_DroppedFrameRate"],
     ["D_0_BE_iMix", "1084", "1058", "23", "23", "74944", "83760", "646.211", "0", "0"],
