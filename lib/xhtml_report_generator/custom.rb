@@ -3,7 +3,7 @@ require 'base64'
 # The module name doesn't matter, just make sure at the end to 'extend' it
 # because it will be 'eval'ed  by the initialize method of the XhtmlReportGenerator::Generator class.
 module Custom
-  
+
   # creates the basic page layout and sets the current Element to the main content area (middle div)
   # @example The middle div is matched by the following xPath
   #   //body/div[@id='middle']
@@ -12,21 +12,21 @@ module Custom
   #   1 means only left toc, 2 means only right toc, and 3 means full layout with left and right toc.
   def create_layout(title, layout=3)
     raise "invalid layout selector, choose from 0..3" if (layout < 0) || (layout > 3)
-    
+
     @body = @document.elements["//body"]
     # only add the layout if it is not already there
     if !@layout
       head = @body.add_element("div", {"class" => "head", "id" => "head"})
       head.add_element("button", {"id" => "pre_toggle_linewrap"}).add_text("Toggle Linewrap")
-      
+
       if (layout & 0x1) != 0
       div = @body.add_element("div", {"class" => "lefttoc split split-horizontal", "id" => "ltoc"})
       div.add_text("Table of Contents")
       div.add_element("br")
       end
-      
+
       @div_middle = @body.add_element("div", {"class" => "middle split split-horizontal", "id" => "middle"})
-      
+
       if (layout & 0x2) != 0
       div = @body.add_element("div", {"class" => "righttoc split split-horizontal", "id" => "rtoc"})
       div.add_text("Quick Links")
@@ -34,14 +34,14 @@ module Custom
       end
 
       @body.add_element("p", {"class" => "#{layout}", "id" => "layout"}).add_text("this text should be hidden")
-      
+
       @layout = true
     end
     @current = @document.elements["//body/div[@id='middle']"]
     set_title(title)
   end
 
-  # sets the title of the document in the <head> section as well as in the layout header div  
+  # sets the title of the document in the <head> section as well as in the layout header div
   # create_layout must be called before!
   # @param title [String] the text which will be insertead
   def set_title(title)
@@ -69,7 +69,7 @@ module Custom
       @current = xpath
     elsif xpath.is_a?(String)
       @current = @document.elements[xpath]
-    else 
+    else
       raise "xpath is neither a String nor a REXML::Element"
     end
   end
@@ -79,7 +79,7 @@ module Custom
   def get_current()
     return @current
   end
-  
+
   # returns the plain text without any xml tags of the specified element and all its children
   # @param el [REXML::Element] The element from which to fetch the text children. Defaults to @current
   # @param recursive [Boolean] whether or not to recurse into the children of the given "el"
@@ -91,7 +91,7 @@ module Custom
         out << child.value()
       else
         if recursive
-          out << get_element_text(child, true) 
+          out << get_element_text(child, true)
         end
       end
     }
@@ -106,7 +106,7 @@ module Custom
     f.write(elem, out)
     return out
   end
-  
+
   # @see #code
   # Instead of adding content to the report, this method returns the produced html code as a string.
   # This can be used to insert code into #custom_table (with the option data_is_xhtml: true)
@@ -119,10 +119,10 @@ module Custom
     temp.add_text(text)
     element_to_string(temp)
   end
-  
+
   # Appends a <pre> node after the @current node
   # @param attrs [Hash] attributes for the <pre> element. The following classes can be passed as attributes and are predefined with a different
-  #                     background for your convenience !{"class" => "code0"} (light-blue), !{"class" => "code1"} (red-brown), 
+  #                     background for your convenience !{"class" => "code0"} (light-blue), !{"class" => "code1"} (red-brown),
   #                     !{"class" => "code2"} (light-green), !{"class" => "code3"} (light-yellow). You may also specify your own background
   #                     as follows: !{"style" => "background: #FF00FF;"}.
   # @yieldreturn [String] the text to be added to the <pre> element
@@ -150,7 +150,7 @@ module Custom
     temp.add_text(text)
     element_to_string(temp)
   end
-  
+
   # Appends a <p> node after the @current node
   # @param attrs [Hash] attributes for the <p> element
   # @yieldreturn [String] the text to be added to the <p> element
@@ -168,9 +168,9 @@ module Custom
 
   # insert arbitrary xml code after the @current element in the content pane (div middle)
   # @param text [String] valid xhtml code which is included into the document
-  # @return [REXML::Element] the Element which was just added 
+  # @return [REXML::Element] the Element which was just added
   def html(text)
-    # we need to create a new document with a pseudo root becaus having multiple nodes at top 
+    # we need to create a new document with a pseudo root becaus having multiple nodes at top
     # level is not valid xml
     doc = REXML::Document.new("<root>"+text+"</root>")
     # then we move all children of root to the actual div middle element and insert after current
@@ -180,7 +180,7 @@ module Custom
     end
     return @current
   end
-  
+
   # @see #link
   # Instead of adding content to the report, this method returns the produced html code as a string.
   # This can be used to insert code into #custom_table (with the option data_is_xhtml: true)
@@ -194,13 +194,13 @@ module Custom
     temp.add_text(text)
     element_to_string(temp)
   end
-  
+
   # Appends  a <a href = > node after the @current nodes
   # @param href [String] this is the
   # @param attrs [Hash] attributes for the <a> element
   # @yieldreturn [String] the text to be added to the <a> element
   # @return [REXML::Element] the Element which was just added
-  def link(href, attrs={}, &block) 
+  def link(href, attrs={}, &block)
     temp = REXML::Element.new("a")
     attrs.merge!({"href" => href})
     temp.add_attributes(attrs)
@@ -211,7 +211,7 @@ module Custom
     @current.add_text(text)
     return @current
   end
-  
+
   # @see #image
   # Instead of adding content to the report, this method returns the produced html code as a string.
   # This can be used to insert code into #custom_table (with the option data_is_xhtml: true)
@@ -227,7 +227,7 @@ module Custom
     temp.add_attributes(attributes)
     element_to_string(temp)
   end
-  
+
   # @param path [String] absolute or relative path to the image that should be inserted into the report
   # @param attributes [Hash] attributes for the <img> element, any valid html attributes can be specified
   #   you may specify attributes such "alt", "height", "width"
@@ -246,10 +246,10 @@ module Custom
     @current = temp
     return @current
   end
-  
+
   # Scans all REXML::Text children of an REXML::Element for any occurrences of regex.
   # The text will be matched as one, not line by line as you might think.
-  # If you want to write a regexp matching multiple lines keep in mind that the dot "." by default doesn't 
+  # If you want to write a regexp matching multiple lines keep in mind that the dot "." by default doesn't
   # match newline characters. Consider using the "m" option (e.g. /regex/m ) which makes dot match newlines
   # or match newlines explicitly.
   # highlight_captures then puts a <span> </span> tag around all captures of the regex
@@ -301,7 +301,7 @@ module Custom
 
   # Scans all REXML::Text children of an REXML::Element for any occurrences of regex.
   # The text will be matched as one, not line by line as you might think.
-  # If you want to write a regexp matching multiple lines keep in mind that the dot "." by default doesn't 
+  # If you want to write a regexp matching multiple lines keep in mind that the dot "." by default doesn't
   # match newline characters. Consider using the "m" option (e.g. /regex/m ) which makes dot match newlines
   # or match newlines explicitly.
   # highlight then puts a <span> </span> tag around all matches of regex
@@ -348,11 +348,11 @@ module Custom
   end
 
   # creates a html table from two dimensional array of the form Array [row] [col]
-  # @param table_data [Array<Array>] of the form Array [row] [col] containing all data, the '.to_s' method will be called on each element, 
+  # @param table_data [Array<Array>] of the form Array [row] [col] containing all data, the '.to_s' method will be called on each element,
   # @param headers [Number] either of 0, 1, 2, 3. Where 0 is no headers (<th>) at all, 1 is only the first row,
   #   2 is only the first column and 3 is both, first row and first column as <th> elements. Every other number
   #   is equivalent to the bitwise AND of the two least significant bits with 1, 2 or 3
-  # @return [REXML::Element] the Element which was just added 
+  # @return [REXML::Element] the Element which was just added
   def table(table_data, headers=0, table_attrs={}, tr_attrs={}, th_attrs={}, td_attrs={})
     opts = {
       headers: headers,
@@ -364,9 +364,9 @@ module Custom
     }
     custom_table(table_data, opts)
   end
-  
+
   # creates a html table from two dimensional array of the form Array [row] [col]
-  # @param table_data [Array<Array>] of the form Array [row] [col] containing all data, the '.to_s' method will be called on each element, 
+  # @param table_data [Array<Array>] of the form Array [row] [col] containing all data, the '.to_s' method will be called on each element,
   # @option opts [Number] :headers either of 0, 1, 2, 3. Where 0 is no headers (<th>) at all, 1 is only the first row,
   #                       2 is only the first column and 3 is both, first row and first column as <th> elements. Every other number
   #                       is equivalent to the bitwise AND of the two least significant bits with 1, 2 or 3
@@ -376,19 +376,19 @@ module Custom
   # @option opts [Hash] :th_attrs     html attributes for the <th> tag
   # @option opts [Hash] :tr_attrs     html attributes for the <tr> tag
   # @option opts [Hash] :td_attrs     html attributes for the <td> tag
-  # @option opts [Array<Hash>] :special Array of hashes for custom attributes on specific cells (<td> only) of the table  
+  # @option opts [Array<Hash>] :special Array of hashes for custom attributes on specific cells (<td> only) of the table
   # @example Example of the :special attributes
   #   opts[:special] = [
   #     {
   #       col_title: 'rx_DroppedFrameCount', # string or regexp or nil  # if neither title nor index are present, the condition is evaluated for all <td> cells
   #       col_index: 5..7,  # Fixnum, Range or nil     # index has precedence over title
   #       row_title: 'D_0_BE_iMix',  # string or regexp or nil
-  #       row_index: 6,  # Fixnum, Range or nil  
+  #       row_index: 6,  # Fixnum, Range or nil
   #       condition: Proc.new { |e| Integer(e) != 0 },   # a proc
   #       attributes: {"style" => "background-color: #DB7093;"},
   #     },
   #   ]
-  # @return [REXML::Element] the Element which was just added 
+  # @return [REXML::Element] the Element which was just added
   def custom_table(table_data, opts = {})
     defaults = {
       headers: 0,
@@ -400,7 +400,7 @@ module Custom
       special: [],
     }
     o = defaults.merge(opts)
-    
+
     temp = REXML::Element.new("table")
     temp.add_attributes(o[:table_attrs])
     row_titles = table_data.collect{|row| row[0].to_s}
@@ -441,7 +441,7 @@ module Custom
             elsif !h[:row_title].nil?
               next if !row_titles[i].match(h[:row_title])
             end
-            
+
             # here we are a candidate for special, so we check if we meet the condition
             # puts h[:attributes].inspect
             # puts "cell value row #{i} col #{j}: #{table_data[i][j]}"
@@ -460,28 +460,33 @@ module Custom
               }
             end
           end
-          
+
           col = row.add_element("td", _td_attrs)
         end
         if o[:data_is_xhtml]
-          # we need to create a new document with a pseudo root because having multiple nodes at top 
+          # we need to create a new document with a pseudo root because having multiple nodes at top
           # level is not valid xml
           doc = REXML::Document.new("<root>" + table_data[i][j].to_s + "</root>")
           # then we move all children of root to the actual div middle element and insert after current
           for elem in doc.root.to_a do
-            col.add_element(elem) # add the td element
+            if elem.is_a?(REXML::Text)
+              # due to reasons unclear to me, text needs special treatment
+              col.add_text(elem)
+            else
+              col.add_element(elem) # add the td element
+            end
           end
         else
           col.add_text(table_data[i][j].to_s)
         end
-      end
-    end
+      end # for j in 0..table_data[i].length-1 do # column
+    end # for i in 0..table_data.length-1 do # row
 
     @div_middle.insert_after(@current, temp)
     @current = temp
     return @current
   end
-  
+
 
   # Appends a new heading element to body, and sets current to this new heading
   # @param tag_type [String] specifiy "h1", "h2", "h3" for the heading, defaults to "h1"
@@ -512,8 +517,8 @@ module Custom
   def heading_top(tag_type="h1", attrs={}, &block)
     temp = REXML::Element.new(tag_type)
     temp.add_attributes(attrs)
-    
-    # check if there are any child elements 
+
+    # check if there are any child elements
     if @div_middle.has_elements?()
       # insert before the first child of div middle
       @div_middle.insert_before("//div[@id='middle']/*[1]", temp)
@@ -521,7 +526,7 @@ module Custom
       # middle is empty, just insert the heading
       @div_middle.insert_after(@current, temp)
     end
-    
+
     @current = temp
     raise "Block argument is mandatory" unless block_given?
     text = encoding_fixer(block.call())
@@ -536,7 +541,7 @@ module Custom
   #     some arbitrary
   #     text child content
   #   </test>
-  #   now we call replace_text_with_elements to place <span> around the word "arbitrary" 
+  #   now we call replace_text_with_elements to place <span> around the word "arbitrary"
   #   =>
   #   <test>
   #     some <span>arbitrary</span>
@@ -559,7 +564,7 @@ module Custom
         # text = REXML::Text.new(element.value()[ last_end, j[0] - last_end ])
         # parent.add_text(text)
         # add text without creating a textnode, textnode screws up formatting (e.g. all whitespace are condensed into one)
-        parent.add_text( element.value()[ last_end, j[0] - last_end ] )        
+        parent.add_text( element.value()[ last_end, j[0] - last_end ] )
       end
       #create the tag node with attributes and add the text to it
       tag = parent.add_element(REXML::Element.new(tagname), attribs)

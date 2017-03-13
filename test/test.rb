@@ -19,11 +19,11 @@ module Test
 end
 
 class TestReportGenerator < Test::Unit::TestCase
-  
+
   def setup
     @cd = File.expand_path("..", __FILE__)
   end
-  
+
   def test_encoding_issues()
     gen1 = XhtmlReportGenerator::Generator.new
     gen1.create_layout("report")
@@ -31,9 +31,9 @@ class TestReportGenerator < Test::Unit::TestCase
     # U+01BA	ƺ	c6 ba	LATIN SMALL LETTER EZH WITH TAIL
     teststring = "\xE2\x80hallo\x98\x99\xc6\xbaäöü"
     #puts "Encoding of teststring: #{teststring.encoding()}"
-    
+
     gen1.content() {teststring}
-    gen1.highlight(/hallo/) 
+    gen1.highlight(/hallo/)
     gen1.heading("h1") {"Special characters"}
     gen1.heading("h2") {"XML forbidden chars"}
     gen1.content() {"< > /> ;&   <http://www.cl.cam.ac.uk/~mgk25/> "}
@@ -47,9 +47,9 @@ class TestReportGenerator < Test::Unit::TestCase
     # check if LATIN SMALL LETTER EZH WITH TAIL  is in final output
     result = IO.binread("#{@cd}/test_encoding.xhtml").force_encoding('UTF-8')
     #puts "valid encoding? : #{result.valid_encoding?}"
-    assert(result.match(/\u01baäöü/u), "ƺ (\\u01baäöü was not found")    
+    assert(result.match(/\u01baäöü/u), "ƺ (\\u01baäöü was not found")
   end
-  
+
   def test_overall()
     gen1 = XhtmlReportGenerator::Generator.new
     gen1.create_layout("XHTML's Testreport")
@@ -77,30 +77,30 @@ class TestReportGenerator < Test::Unit::TestCase
       # check captures without captures
       assert_equal(0, gen1.highlight_captures(/this_regex_will_not_match/,"r"))
       assert_equal(0, gen1.highlight_captures(/this_regex_will_(not)_match/,"r"))
-      
+
       gen1.code() {"
       asdfjkl
 
       abc
-      
+
       def
-      
+
       abc
-      
+
       def
-      
+
       abc
-      
+
       ajkdlf
-      
+
       "}
-      
-      # in previous versions multiple highlights in reverse order would screw up text ordering. 
+
+      # in previous versions multiple highlights in reverse order would screw up text ordering.
       gen1.highlight(/def/, 'g')
       gen1.highlight(/abc/, 'y')
-      # 
-      assert_match(/asdfjkl\n\n\s+abc/, gen1.get_element_text()) 
-      
+      #
+      assert_match(/asdfjkl\n\n\s+abc/, gen1.get_element_text())
+
       gen1.content() {"this is some normal content"}
 
       gen1.code({"class" =>"code1"}) {
@@ -162,11 +162,11 @@ class TestReportGenerator < Test::Unit::TestCase
     expected = File.read("#{@cd}/TableReference.xhtml")
     assert(test1 == expected, "Reports are not equal")
   end
-  
+
   def test_custom_table()
     gen1 = XhtmlReportGenerator::Generator.new
     gen1.create_layout("Custom Table")
-    
+
     gen1.heading("h1") {"1st Row and 1st Col headings"}
     table_data = [
       (0..9).collect{|i| i},
@@ -207,21 +207,21 @@ class TestReportGenerator < Test::Unit::TestCase
     gen1.content() {"red border around row 2-3 col with title 8"}
     gen1.content() {"border around cell bottom right"}
     gen1.custom_table(table_data, table_opts)
-    
+
     gen1.heading("h1") {"Table Layout"}
     table_opts = {
       :headers => 0,
       :data_is_xhtml => true,
     }
-    
+
     a = gen1.get_code_html() {"  blub\nblab\n\t\tblib"}
     b = gen1.get_image_html("#{@cd}/test.png", {"width" => "55", "height"=> "20", "alt" => "some_interesting_text"})
     c = gen1.get_content_html() {"   leading-whitespace removed"}
     d = gen1.get_link_html("https://rubygems.org/gems/xhtml_report_generator/") {"download the gem"}
 
     table_data = [
-      [a, d],
-      [c, b]
+      ["plain text", a, d],
+      ["is pain", c, b]
     ]
     gen1.custom_table(table_data, table_opts)
     
@@ -242,9 +242,9 @@ class TestReportGenerator < Test::Unit::TestCase
 
    table_opts = {
             :headers => 3,
-            :table_attrs => {"style"=>"text-align:right; border-collapse: collapse; font-size:14px;padding:5px 5px;"}, 
-            :tr_attrs => {}, 
-            :th_attrs => {"style"=>"text-align:left; border: 1px solid black; background-color:#f0f0f0;padding:5px 5px;"}, 
+            :table_attrs => {"style"=>"text-align:right; border-collapse: collapse; font-size:14px;padding:5px 5px;"},
+            :tr_attrs => {},
+            :th_attrs => {"style"=>"text-align:left; border: 1px solid black; background-color:#f0f0f0;padding:5px 5px;"},
             :td_attrs => {"style"=>"border: 1px solid black;padding:5px 5px;"},
             :data_is_xhtml => false,
             :special => [
@@ -263,9 +263,6 @@ class TestReportGenerator < Test::Unit::TestCase
 
     gen1.custom_table(my_table, table_opts)
 
-    
-    
-    
     gen1.write("#{@cd}/CustomTable.xhtml")
     test1 = File.read("#{@cd}/CustomTable.xhtml")
     expected = File.read("#{@cd}/CustomTableReference.xhtml")
@@ -290,7 +287,7 @@ class TestReportGenerator < Test::Unit::TestCase
     expected = File.read("#{@cd}/GetSetRef.xhtml")
     assert(test1 == expected, "Results not equal")
   end
-  
+
   def test_layout()
     for i in 0..3 do
       gen1 = XhtmlReportGenerator::Generator.new
@@ -302,7 +299,7 @@ class TestReportGenerator < Test::Unit::TestCase
       gen1.write("#{@cd}/layout#{i}.html")
     end
   end
- 
+
   # regression heading top failed when middle-div has no children
   def test_heading_top()
     gen1 = XhtmlReportGenerator::Generator.new
@@ -310,7 +307,7 @@ class TestReportGenerator < Test::Unit::TestCase
     el = gen1.heading_top() {"test"}
     assert(el != nil, "heading_top element should not be nil")
   end
-  
+
   # testcase for images
   def test_image()
     gen1 = XhtmlReportGenerator::Generator.new
@@ -318,7 +315,7 @@ class TestReportGenerator < Test::Unit::TestCase
     el = gen1.heading() {"PNG"}
     # insert image with explicit size and alt-text
     gen1.image("#{@cd}/test.png", {"width" => "55", "height"=> "20", "alt" => "some_interesting_text"})
-    
+
     el = gen1.heading() {"JPG"}
     gen1.content() {"ending .jpg"}
     # insert image with explicit size (style notation)
@@ -326,15 +323,14 @@ class TestReportGenerator < Test::Unit::TestCase
     gen1.content() {"ending .jpeg"}
     # insert image with automatic size (no additional attributes)
     gen1.image("#{@cd}/test.jpeg")
-    
+
     gen1.write("#{@cd}/Image.xhtml")
-    
+
     test1 = File.read("#{@cd}/Image.xhtml")
     expected = File.read("#{@cd}/ImageRef.xhtml")
     assert(test1 == expected, "Results not equal")
     #assert(el != nil, "heading_top element should not be nil")
   end
-  
-  
-end
 
+
+end
