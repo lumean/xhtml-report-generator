@@ -1,8 +1,8 @@
 xhtml_report_generator
 ======================
 
-This project was written to provide an easy way to create valid xhtml or html documents.
-My main usecases is the automatic creation of (test-)reports that are human readable and include a table of contents.
+This project was written to provide an easy way to create valid xhtml or html5 documents.
+The main usecases is the automatic creation of (test-)reports that are human readable and include a table of contents.
 xhtml_report_generator can be used very similar like a ruby Logger, but there are some caveats.
 It is not a Logger replacement, since the complete document is always kept in memory and
 only written to disk on demand. Hence in case of crashes the data might be lost if it wasn't written before.
@@ -12,7 +12,7 @@ Also pdf export is easy by just printing the report. By default there is a speci
 
 Ruby version
 -----
-This gem was mainly tested with ruby version 2.2.3. Except of the test_encoding_issues unit tests, all other tests are 
+This gem was mainly tested with ruby version 2.2.3. Except of the test_encoding_issues unit tests, all other tests are
 also passing with 1.9.3.
 
 
@@ -48,8 +48,8 @@ More examples can be found in the [examples](../master/examples) or
 [test](../master/test) folders
 
 
-By default "custom.rb" is loaded through instance eval, see 
-[XhtmlReportGenerator/Custom](http://www.rubydoc.info/gems/xhtml_report_generator/Custom) and 
+By default "custom.rb" is loaded through instance eval, see
+[XhtmlReportGenerator/Custom](http://www.rubydoc.info/gems/xhtml_report_generator/Custom) and
 [XhtmlReportGenerator/Generator](http://www.rubydoc.info/gems/xhtml_report_generator/XhtmlReportGenerator/Generator)
 for the documentation of available methods.
 
@@ -185,10 +185,10 @@ gen1.create_layout("Page Title")
 [Preview](https://cdn.rawgit.com/lumean/xhtml-report-generator/master/examples/custom_css.html)
 
 The project is built in a way that lets you supply your own methods for everything. By default the methods , js and css files provided
-with the gem are used, but you can override those by specifying your own. The primary usecase is to override the default css 
+with the gem are used, but you can override those by specifying your own. The primary usecase is to override the default css
 to customize the look and feel of the generated html files. But if you want you can event write your complete own generator.
 
-As a start you can copy the [custom.rb](../master/lib/xhtml_report_generator/custom.rb) file and rename the functions if you don't like the 
+As a start you can copy the [custom.rb](../master/lib/xhtml_report_generator/custom.rb) file and rename the functions if you don't like the
 default naming.
 
 
