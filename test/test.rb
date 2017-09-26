@@ -2,6 +2,7 @@
 require 'test/unit'
 
 require_relative '../lib/xhtml_report_generator'
+require_relative 'custom_reporter'
 
 # compat mixin for Ruby >1.9.1 with test-unit gem in Eclipse
 module Test
@@ -52,6 +53,8 @@ class TestReportGenerator < Test::Unit::TestCase
 
   def test_overall()
     gen1 = XhtmlReportGenerator::Generator.new
+    gen1.write("#{@cd}/Overall.xhtml")
+    gen1.sync = true
     gen1.create_layout("XHTML's Testreport")
 
     for i in 1..10 do
@@ -78,7 +81,7 @@ class TestReportGenerator < Test::Unit::TestCase
       assert_equal(0, gen1.highlight_captures(/this_regex_will_not_match/,"r"))
       assert_equal(0, gen1.highlight_captures(/this_regex_will_(not)_match/,"r"))
 
-      gen1.code() {"
+      gen1.code() {" 
       asdfjkl
 
       abc
@@ -118,7 +121,6 @@ class TestReportGenerator < Test::Unit::TestCase
 
     end
 
-    gen1.write("#{@cd}/Overall.xhtml")
     gen1.write("#{@cd}/Overall.htm")
     #File.open("test1.xhtml", 'w') {|f| f.write(gen1.to_s)}
 
@@ -127,8 +129,8 @@ class TestReportGenerator < Test::Unit::TestCase
     assert(test1 == expected, "Reports are not equal")
   end
 
-  def test_customized_module()
-    gen2 = XhtmlReportGenerator::Generator.new(:custom_rb => "#{@cd}/custom2.rb")
+  def test_subclassing()
+    gen2 = CustomReporter.new()
     result = gen2.H1
 
     assert( result ==  "Custom2 hallo H1")

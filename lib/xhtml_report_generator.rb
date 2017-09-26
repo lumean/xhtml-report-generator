@@ -1,36 +1,40 @@
 ﻿# encoding: utf-8
 require 'rexml/document'
 require 'rexml/formatters/transitive'
-
+require 'base64'
 require_relative 'version'
 
 module XhtmlReportGenerator
 
   # This is the main generator class. It can be instanced with custom javascript, css, and ruby files to allow
   # generation of arbitrary reports.
+  # @attr [REXML::Document] document This is the html document / actual report
+  # @attr [String] file path to the file where this report is saved to. Default: nil
+  # @attr [Boolean] sync if true, the report will be written to disk after every modificaiton. Default: false
   class Generator
-    attr_accessor :document, :file
+    attr_accessor :document, :file, :sync
     # @param opts [Hash] See the example for an explanation of the valid symbols
-    # @example Valid symbols for the opts Hash
+    # @example Valid keys for the opts Hash
     #   :title        Title in the header section, defaults to "Title"
-    #   :js           if specified, array of javascript files which are inlined into the html header section, in addit
-    #   :css          if specified, array of css files which are inlined into the html header section
+    #   :js           if specified, array of javascript files which are inlined into the html header section, after
+    #                 the default included js files (check in sourcecode below).
+    #   :css          if specified, array of css files which are inlined into the html header section after
+    #                 the default included css files (check in sourcecode below).
     #   :css_print    if specified, array of css files which are inlined into the html header section with media=print
-    #   :custom_rb    if specified, path to a custom Module containing all the logic to create content for the report
-    #                 see (custom.rb) on how to write it. As a last statement you should extend your module name
-    #                 outside of the module definition.
-    #   :sync         if true, all changes are immediately written to disk
+    #                 after the default included print css files (check in sourcecode below).
     def initialize(opts = {})
       # define the default values
       resources = File.expand_path("../../resource/", __FILE__)
       defaults = {
         :title     => "Title",
         :js        => [
-            File.expand_path("jquery-3.2.1.min.js", resources),
+            File.expand_path("js/jquery-3.2.1.min.js", resources),
             File.expand_path("d3v3.5.17/d3.min.js", resources),
             File.expand_path("c3v0.4.18/c3.min.js", resources),
-            File.expand_path("split.min.js", resources),
-            File.expand_path("toc_full.js", resources),
+            File.expand_path("js/split.min.js", resources),
+            File.expand_path("js/layout_split.js", resources),
+            File.expand_path("js/table_of_contents.js", resources),
+            File.expand_path("js/toggle_linewrap.js", resources),
           ],
         :css       => [
             File.expand_path("css/style.css", resources),
@@ -39,19 +43,27 @@ module XhtmlReportGenerator
         :css_print => [
             File.expand_path("css/print.css", resources)
           ],
-        :custom_rb => File.expand_path("../custom.rb", __FILE__),
-        :sync => false,
+        #:custom_rb => File.expand_path("../custom.rb", __FILE__),
       }
+      @sync = false
 
       opts[:title]      = defaults[:title]     if !opts.key?(:title)
-      opts[:js]         = defaults[:js]        if !opts.key?(:js)
-      opts[:css]        = defaults[:css]       if !opts.key?(:css)
-      opts[:css_print]  = defaults[:css_print] if !opts.key?(:css_print)
-      opts[:custom_rb]  = defaults[:custom_rb] if !opts.key?(:custom_rb)
 
-      # load the custom module and extend it, use instance_eval otherwise the module will affect
-      # all existing Generator classes
-      instance_eval(File.read(opts[:custom_rb]), opts[:custom_rb])
+      if opts.key?(:js)
+        opts[:js]         = defaults[:js] + opts[:js]
+      else
+        opts[:js]         = defaults[:js]
+      end
+      if opts.key?(:css)
+        opts[:css]        = defaults[:css] + opts[:css]
+      else
+        opts[:css]        = defaults[:css]
+      end
+      if opts.key?(:css_print)
+        opts[:css_print]  = defaults[:css_print] + opts[:css_print]
+      else
+        opts[:css_print]  = defaults[:css_print]
+      end
 
       @document = Generator.create_xhtml_document(opts[:title])
       head = @document.elements["//head"]
@@ -75,7 +87,7 @@ module XhtmlReportGenerator
         script = head.add_element("script", {"type" => "text/javascript"})
         cdata(File.read(js_path), script)
       end
-
+      document_changed()
     end
 
     # Surrounds CData tag with c-style comments to remain compatible with normal html.
@@ -85,7 +97,6 @@ module XhtmlReportGenerator
     # @param parent_element [REXML::Element] the element to which cdata should be added
     # @return [String] CDATA enclosed in c-style comments /**/
     def cdata(str, parent_element)
-      f = REXML::Formatters::Transitive.new(0) # use Transitive to preserve source formatting
       # somehow there is a problem with CDATA, any text added after will automatically go into the CDATA
       # so we have do add a dummy node after the CDATA and then add the text.
       parent_element.add_text("/*")
@@ -101,6 +112,7 @@ module XhtmlReportGenerator
     # @param str [String] of any encoding
     # @return [String] UTF-8 encoded valid string
     def encoding_fixer(str)
+      str = str.to_s  # catch str = nil
       #if !str.force_encoding('UTF-8').valid_encoding?
       #  str.encode!('UTF-8', 'ISO-8859-1', {:invalid => :replace, :undef => :replace, :xml => :text})
       #end
@@ -151,11 +163,23 @@ module XhtmlReportGenerator
     # @param mode [String] defaults to 'w', one of the file open modes that allows writing ['r+','w','w+','a','a+']
     def write(file=@file, mode='w')
       # instance variables are nil if they were never initialized
-      if file == nil
-        raise "no valid file given"
+      if file.nil?
+        raise "no valid file given: '#{file}'"
       end
       @file = file
       File.open(file, "#{mode}:UTF-8") {|f| f.write(self.to_s.force_encoding(Encoding::UTF_8))}
+    end
+
+    # This method should be called after every change to the document.
+    # Here we ensure the report is written to disk after each change
+    # if #sync is true. If #sync is false this method does nothing
+    def document_changed()
+      if @sync
+        if @file.nil?
+          raise "You must call #write at least once before you can enable synced mode"
+        end
+        write()
+      end
     end
 
     # creates the basic page layout and sets the current Element to the main content area (middle div)
@@ -193,6 +217,7 @@ module XhtmlReportGenerator
       end
       @current = @document.elements["//body/div[@id='middle']"]
       set_title(title)
+      document_changed()
     end
 
     # sets the title of the document in the <head> section as well as in the layout header div
@@ -206,6 +231,7 @@ module XhtmlReportGenerator
       pagetitle.text = title
       div = @document.elements["//body/div[@id='head']"]
       div.text = title
+      document_changed()
     end
 
     # returns the title text of the report
@@ -289,6 +315,26 @@ module XhtmlReportGenerator
       raise "Block argument is mandatory" unless block_given?
       text = encoding_fixer(block.call())
       @current.add_text(text)
+      document_changed()
+      return @current
+    end
+
+    # Appends a <script> node after the @current node
+    # @param attrs [Hash] attributes for the <script> element. The following attribute is added by default:
+    #                     type="text/javascript"
+    # @yieldreturn [String] the actual javascript code to be added to the <script> element
+    # @return [REXML::Element] the Element which was just added
+    def javascript(attrs={}, &block)
+      default_attrs = {"type" => "text/javascript"}
+      attrs = default_attrs.merge(attrs)
+      temp = REXML::Element.new("script")
+      temp.add_attributes(attrs)
+      @div_middle.insert_after(@current, temp)
+      @current = temp
+      raise "Block argument is mandatory" unless block_given?
+      script_content = encoding_fixer(block.call())
+      cdata(script_content, @current)
+      document_changed()
       return @current
     end
 
@@ -317,6 +363,7 @@ module XhtmlReportGenerator
       raise "Block argument is mandatory" unless block_given?
       text = encoding_fixer(block.call())
       @current.add_text(text)
+      document_changed()
       return @current
     end
 
@@ -326,19 +373,20 @@ module XhtmlReportGenerator
     def html(text)
       # we need to create a new document with a pseudo root becaus having multiple nodes at top
       # level is not valid xml
-      doc = REXML::Document.new("<root>"+text+"</root>")
+      doc = REXML::Document.new("<root>"+text.to_s+"</root>")
       # then we move all children of root to the actual div middle element and insert after current
       for i in doc.root.to_a do
         @div_middle.insert_after(@current, i)
         @current = i
       end
+      document_changed()
       return @current
     end
 
     # @see #link
     # Instead of adding content to the report, this method returns the produced html code as a string.
     # This can be used to insert code into #custom_table (with the option data_is_xhtml: true)
-    # @return [String] the code including <pre> tags as a string
+    # @return [String] the code including <a> tags as a string
     def get_link_html(href, attrs={}, &block)
       temp = REXML::Element.new("a")
       attrs.merge!({"href" => href})
@@ -363,6 +411,7 @@ module XhtmlReportGenerator
       raise "Block argument is mandatory" unless block_given?
       text = encoding_fixer(block.call())
       @current.add_text(text)
+      document_changed()
       return @current
     end
 
@@ -398,6 +447,7 @@ module XhtmlReportGenerator
 
       @div_middle.insert_after(@current, temp)
       @current = temp
+      document_changed()
       return @current
     end
 
@@ -450,6 +500,7 @@ module XhtmlReportGenerator
           el.add(i)
         end # if  i.is_a?(REXML::Text)
       end # for i in arr do
+      document_changed()
       return num_matches
     end
 
@@ -498,6 +549,7 @@ module XhtmlReportGenerator
           el.add(i)
         end # if  i.is_a?(REXML::Text)
       end # for i in arr do
+      document_changed()
       return num_matches
     end
 
@@ -638,6 +690,7 @@ module XhtmlReportGenerator
 
       @div_middle.insert_after(@current, temp)
       @current = temp
+      document_changed()
       return @current
     end
 
@@ -658,6 +711,7 @@ module XhtmlReportGenerator
       raise "Block argument is mandatory" unless block_given?
       text = encoding_fixer(block.call())
       @current.text = text
+      document_changed()
       return @current
     end
 
@@ -685,6 +739,7 @@ module XhtmlReportGenerator
       raise "Block argument is mandatory" unless block_given?
       text = encoding_fixer(block.call())
       @current.text = text
+      document_changed()
       return @current
     end
 
@@ -742,7 +797,7 @@ module XhtmlReportGenerator
         parent.add(element)
       end
 
-    end
+    end # replace_text_with_elements
 
-  end
-end
+  end # Generator
+end # XhtmlReportGenerator

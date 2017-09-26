@@ -1,3 +1,21 @@
+4.0.0
+-----
+- all code moved into main generator class, :custom_rb option is no longer supported.
+  please subclass the generator if you want to modify the behavior.
+- d3.js is now included by default
+- c3.js is now included by default
+- split up toc.js into separate scripts, where each has its own responsibility,
+  no longer by default highlight "passed", "failed" or "check" this is now the
+  responsibility of user code via custom java script files (:js option in initialize)
+- add Generator#javascript method, to insert arbitrary scripts at any place into the report.
+  (was already possible via html method, but this simplifies the process by automatically adding
+  CData tags around the code for better browser compatibility)
+- support sync mode, i.e. all added content is written to disk immediately
+    if enabled, calls to write() are no longer necessary. (Generator#sync = true)
+- added examples on how to subclass.
+- many methods (e.g. #code, #content) now support nil as value returned by the block
+
+
 3.1.2
 -----
 - fix issue with custom_table, when just using plain text without any html tags
@@ -5,7 +23,7 @@
 
 3.1.1
 -----
-- fix issue with custom_table, the attributes hash was not properly deepcopied when using special options
+- fix issue with custom_table, the attributes hash was not properly deep-copied when using special options
   to customize individual cells.
 
 3.1.0

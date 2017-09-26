@@ -27,9 +27,7 @@ Gem::Specification.new do |s|
                       "resource/c3v0.4.18/*",
                       "resource/d3v35.17/*",
                       "resource/css/*.css",
-                      "resource/jquery-3.2.1.min.js",
-                      "resource/split.min.js",
-                      "resource/toc_full.js",
+                      "resource/js/*.js",
                   ]
   s.require_path = 'lib'
   s.homepage    = 'https://rubygems.org/gems/xhtml_report_generator'
