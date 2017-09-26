@@ -54,6 +54,9 @@ class TestReportGenerator < Test::Unit::TestCase
   def test_overall()
     gen1 = XhtmlReportGenerator::Generator.new
     gen1.write("#{@cd}/Overall.xhtml")
+    # performance impact of sync for this testcase (using spinning harddrive not ssd):
+    # sync = true => 9 seconds
+    # sync = false => 0.3 seconds
     gen1.sync = true
     gen1.create_layout("XHTML's Testreport")
 
@@ -81,7 +84,7 @@ class TestReportGenerator < Test::Unit::TestCase
       assert_equal(0, gen1.highlight_captures(/this_regex_will_not_match/,"r"))
       assert_equal(0, gen1.highlight_captures(/this_regex_will_(not)_match/,"r"))
 
-      gen1.code() {" 
+      gen1.code() {"
       asdfjkl
 
       abc
@@ -122,11 +125,13 @@ class TestReportGenerator < Test::Unit::TestCase
     end
 
     gen1.write("#{@cd}/Overall.htm")
-    #File.open("test1.xhtml", 'w') {|f| f.write(gen1.to_s)}
+    gen1.write("#{@cd}/Overall.xhtml")
 
     test1 = File.read("#{@cd}/Overall.xhtml")
+    test2 = File.read("#{@cd}/Overall.htm")
     expected = File.read("#{@cd}/OverallReference.xhtml")
     assert(test1 == expected, "Reports are not equal")
+    assert(test2 == expected, "Reports are not equal")
   end
 
   def test_subclassing()
@@ -137,7 +142,9 @@ class TestReportGenerator < Test::Unit::TestCase
   end
 
   def test_table()
-    gen1 = XhtmlReportGenerator::Generator.new
+    pass_fail_js = File.expand_path("../../resource/passfail_bgcolor.js", __FILE__)
+    opts = {:js => [ pass_fail_js ] }
+    gen1 = XhtmlReportGenerator::Generator.new(opts)
     gen1.create_layout("Standard Table")
     # gen1.set_title("Table")
     gen1.heading("h1", {"class" => "bothtoc"}) {"No Headers"}
