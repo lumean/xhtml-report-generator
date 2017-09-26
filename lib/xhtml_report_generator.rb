@@ -2,9 +2,10 @@
 require 'rexml/document'
 require 'rexml/formatters/transitive'
 require 'base64'
-require_relative 'version'
 
 module XhtmlReportGenerator
+
+  VERSION = '4.0.0'
 
   # This is the main generator class. It can be instanced with custom javascript, css, and ruby files to allow
   # generation of arbitrary reports.

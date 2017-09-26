@@ -1,5 +1,5 @@
 # expands the path relative to location of THIS file
-require File.expand_path("../lib/xhtml_report_generator/version", __FILE__)
+require_relative 'lib/xhtml_report_generator'
 
 Gem::Specification.new do |s|
   s.name        = 'xhtml_report_generator'
@@ -21,11 +21,11 @@ Gem::Specification.new do |s|
 
   s.authors      = ["Manuel Widmer"]
   s.email        = 'm-widmer@gmx.ch'
-  s.files        = Dir["{lib}/**/*.*",
+  s.files        = Dir["{lib}/**/*.rb",
                       "LICENSE",
                       "*.md",
                       "resource/c3v0.4.18/*",
-                      "resource/d3v35.17/*",
+                      "resource/d3v3.5.17/*",
                       "resource/css/*.css",
                       "resource/js/*.js",
                   ]

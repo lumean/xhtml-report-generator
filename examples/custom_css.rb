@@ -1,4 +1,4 @@
-require_relative '../lib/xhtml_report_generator'
+require 'xhtml_report_generator'
 
 opts = {
   :css => ['custom_css.css']

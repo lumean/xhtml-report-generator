@@ -1,4 +1,4 @@
-require_relative '../lib/xhtml_report_generator'
+require 'xhtml_report_generator'
 
 gen1 = XhtmlReportGenerator::Generator.new
 gen1.create_layout("Page Title")

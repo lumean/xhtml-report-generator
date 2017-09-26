@@ -1,10 +1,60 @@
-require_relative '../lib/xhtml_report_generator'
+require 'xhtml_report_generator'
 require 'SVG/Graph/Line'
-require 'REXML/document'
+require 'json'
 
 gen1 = XhtmlReportGenerator::Generator.new
 gen1.create_layout("Graph example")
-gen1.heading("h1") {"my graph"}
+
+gen1.heading("h1")  {"Graph generated with c3.js"}
+
+gen1.html("<div id=\"this_is_my_awesom_graph\" style=\"width:600px;height:400px;\"></div>")
+# checkout c3.js documentation
+# http://c3js.org/examples.html
+graph_data = {
+  bindto: '#this_is_my_awesom_graph',
+  data: {
+    columns: [
+      ['data1', 30, 200, 100, 400, 150, 250],
+      ['data2', 300, 20, 10, 40, 15, 25]
+    ],
+    axes: {
+      data1: 'y',
+      data2: 'y2',
+    }
+  },
+  axis: {
+    x: {
+      label: 'X Label'
+    },
+    y: {
+      label: {
+        text: 'Y Axis Label',
+        position: 'outer-middle'
+      }
+    },
+    y2: {
+      show: true,
+      label: {
+        text: 'Y2 Axis Label',
+        position: 'outer-middle'
+      }
+    }
+  },
+  tooltip: {
+#   enabled: false
+  },
+  zoom: {
+    enabled: true
+  },
+  subchart: {
+    show: true
+  }
+}
+gen1.javascript() {
+  "var chart = c3.generate(#{JSON(graph_data)});"
+}
+
+gen1.heading("h1") {"Graph generated with svg-graph gem"}
 
 x_axis = %w(Jan Feb Mar);
 data_sales_02 = [12, 45, 21]
@@ -25,14 +75,6 @@ graph = SVG::Graph::Line.new({
 graph.add_data({:data => data_sales_02, :title => 'Sales2002'})
 graph.add_data({:data => data_sales_03, :title => 'Sales2003'})
 
-# we can't add the entire xml document since multiple xml declarations are invalid
-# so we add only the svg part
-doc = REXML::Document.new(graph.burn())
-svg = doc.elements["//svg"]
-out = ''
-f = REXML::Formatters::Pretty.new(0)
-f.compact = true
-f.write(svg, out)
-
-gen1.html(out)
+# add the svg to the report
+gen1.html(graph.burn_svg_only())
 gen1.write("graph.xhtml")
