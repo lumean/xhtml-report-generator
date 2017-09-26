@@ -12,6 +12,8 @@ module XhtmlReportGenerator
   # @attr [REXML::Document] document This is the html document / actual report
   # @attr [String] file path to the file where this report is saved to. Default: nil
   # @attr [Boolean] sync if true, the report will be written to disk after every modificaiton. Default: false
+  #                 Note that sync = true can have severe performance impact, since the complete
+  #                 html file is written to disk after each change.
   class Generator
     attr_accessor :document, :file, :sync
     # @param opts [Hash] See the example for an explanation of the valid symbols
