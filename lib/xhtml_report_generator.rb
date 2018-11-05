@@ -98,7 +98,7 @@ module XhtmlReportGenerator
     # Example /*<![CDATA[*/\n ...content ... \n/*]]>*/
     # @param str [String] the string to be enclosed in cdata
     # @param parent_element [REXML::Element] the element to which cdata should be added
-    # @return [String] CDATA enclosed in c-style comments /**/
+    # @return [REXML::Element] parent_element
     def cdata(str, parent_element)
       # somehow there is a problem with CDATA, any text added after will automatically go into the CDATA
       # so we have do add a dummy node after the CDATA and then add the text.
@@ -128,7 +128,7 @@ module XhtmlReportGenerator
     # Creates a minimal valid xhtml document including header title and body elements
     # @param title [String] Title in the header section
     def self.create_xhtml_document(title)
-      # don't use version 1.1 - firefox has not yet a parser vor xml 1.1
+      # don't use version 1.1 - firefox has not yet a parser for xml 1.1
       # https://bugzilla.mozilla.org/show_bug.cgi?id=233154
       header = '<?xml version="1.0" encoding="UTF-8"?>'
       # change of doctype to <!DOCTYPE html> for html5 compatibility

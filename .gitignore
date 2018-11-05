@@ -4,11 +4,12 @@
 *.yardoc
 *.settings
 
-#ignore eclipse files
+#ignore ide files
 .buildpath
 .project
+.vscode
 
-#ignore any logfiles
+#ignore any logfiles and test outputs
 *.log
 logs
 
