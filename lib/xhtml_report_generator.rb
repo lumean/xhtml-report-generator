@@ -5,7 +5,7 @@ require 'base64'
 
 module XhtmlReportGenerator
 
-  VERSION = '4.0.0'
+  VERSION = '4.0.1'
 
   # This is the main generator class. It can be instanced with custom javascript, css, and ruby files to allow
   # generation of arbitrary reports.
@@ -32,8 +32,8 @@ module XhtmlReportGenerator
         :title     => "Title",
         :js        => [
             File.expand_path("js/jquery-3.2.1.min.js", resources),
-            File.expand_path("d3v3.5.17/d3.min.js", resources),
-            File.expand_path("c3v0.4.18/c3.min.js", resources),
+            File.expand_path("d3v5.7.0/d3.min.js", resources),
+            File.expand_path("c3v0.6.12/c3.min.js", resources),
             File.expand_path("js/split.min.js", resources),
             File.expand_path("js/layout_split.js", resources),
             File.expand_path("js/table_of_contents.js", resources),
@@ -41,7 +41,7 @@ module XhtmlReportGenerator
           ],
         :css       => [
             File.expand_path("css/style.css", resources),
-            File.expand_path("c3v0.4.18/c3.min.css", resources),
+            File.expand_path("c3v0.6.12/c3.min.css", resources),
           ],
         :css_print => [
             File.expand_path("css/print.css", resources)

@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?><!DOCTYPE html><html xmlns='http://www.w3.org/1999/xhtml'
 ><head
 ><title
-></title
+>Standard Table</title
 ><meta charset='utf-8'
 /><style type='text/css'
 >/*<![CDATA[*/
@@ -508,28 +508,148 @@ $(document).ready(function() {  // add toggle linewrap functionality
 });
 
 /*]]><!--dummy comment to make c-style comments for cdata work-->*/</script
+><script type='text/javascript'
+>/*<![CDATA[*/
+
+// highlight "passed", "failed", or "check" in any table
+// It will also set the background-color attribute of <td> elements of tables containing
+// "passed", "failed", or "check" with green, red, or yellow respectively
+$(document).ready(function() {
+  $("td").each(function(i) {
+    var current = $(this);
+    if (!(current.html().match(/^passed$/i) === null)) {
+      current.attr("style", "background-color:#19D119;");  //green
+    } else if (!(current.html().match(/^failed$/i) === null)) {
+      current.attr("style", "background-color:#FF4719;");  //red
+    } else if (!(current.html().match(/^check$/i) === null)) {
+      current.attr("style", "background-color:#FFFF00;");  //yellow
+    }
+  });
+});
+
+/*]]><!--dummy comment to make c-style comments for cdata work-->*/</script
 ></head
 ><body
 ><div class='head' id='head'
 ><button id='pre_toggle_linewrap'
 >Toggle Linewrap</button
-></div
+>Standard Table</div
 ><div class='lefttoc split split-horizontal' id='ltoc'
 >Table of Contents<br
 /></div
 ><div class='middle split split-horizontal' id='middle'
-><h1
->this is before &apos;test&apos;</h1
-><p
->here we are before &apos;test&apos;</p
-><pre
->some example code before we put a heading</pre
 ><h1 class='bothtoc'
->test</h1
-><p
->blabsklfja;lsjdfka;sjdf;als</p
-><p
->here we are at the end</p
+>No Headers</h1
+><table
+><tr
+><td
+>1</td
+><td
+>2</td
+><td
+>3</td
+></tr
+><tr
+><td
+>4</td
+><td
+>5</td
+><td
+>6</td
+></tr
+><tr
+><td
+>7</td
+><td
+>8</td
+><td
+>9</td
+></tr
+></table
+><h1 class='bothtoc'
+>1st Row only</h1
+><table
+><tr
+><th
+>1</th
+><th
+>2</th
+><th
+>3</th
+></tr
+><tr
+><td
+>4</td
+><td
+>passed</td
+><td
+>6</td
+></tr
+><tr
+><td
+>7</td
+><td
+>8</td
+><td
+>9</td
+></tr
+></table
+><h1 class='bothtoc'
+>1st Col only</h1
+><table
+><tr
+><th
+>1</th
+><td
+>2</td
+><td
+>check</td
+></tr
+><tr
+><th
+>4</th
+><td
+>5</td
+><td
+>passed</td
+></tr
+><tr
+><th
+>7</th
+><td
+>8</td
+><td
+>failed</td
+></tr
+></table
+><h1 class='bothtoc'
+>1st Row and 1st Col</h1
+><table
+><tr
+><th
+>1</th
+><th
+>2</th
+><th
+>3</th
+></tr
+><tr
+><th
+>4</th
+><td
+>5</td
+><td
+>6</td
+></tr
+><tr
+><th
+>7</th
+><td
+>8</td
+><td
+>9</td
+></tr
+></table
 ></div
 ><div class='righttoc split split-horizontal' id='rtoc'
 >Quick Links<br

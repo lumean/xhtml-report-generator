@@ -24,8 +24,8 @@ Gem::Specification.new do |s|
   s.files        = Dir["{lib}/**/*.rb",
                       "LICENSE",
                       "*.md",
-                      "resource/c3v0.4.18/*",
-                      "resource/d3v3.5.17/*",
+                      "resource/c3v0.6.12/*",
+                      "resource/d3v5.7.0/*",
                       "resource/css/*.css",
                       "resource/js/*.js",
                   ]

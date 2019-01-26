@@ -129,7 +129,7 @@ class TestReportGenerator < Test::Unit::TestCase
 
     test1 = File.read("#{@cd}/Overall.xhtml")
     test2 = File.read("#{@cd}/Overall.htm")
-    expected = File.read("#{@cd}/OverallReference.xhtml")
+    expected = File.read("#{@cd}/OverallRef.xhtml")
     assert(test1 == expected, "Reports are not equal")
     assert(test2 == expected, "Reports are not equal")
   end
@@ -168,7 +168,7 @@ class TestReportGenerator < Test::Unit::TestCase
 
     gen1.write("#{@cd}/Table.xhtml")
     test1 = File.read("#{@cd}/Table.xhtml")
-    expected = File.read("#{@cd}/TableReference.xhtml")
+    expected = File.read("#{@cd}/TableRef.xhtml")
     assert(test1 == expected, "Reports are not equal")
   end
 
@@ -274,7 +274,7 @@ class TestReportGenerator < Test::Unit::TestCase
 
     gen1.write("#{@cd}/CustomTable.xhtml")
     test1 = File.read("#{@cd}/CustomTable.xhtml")
-    expected = File.read("#{@cd}/CustomTableReference.xhtml")
+    expected = File.read("#{@cd}/CustomTableRef.xhtml")
     assert(test1 == expected, "Reports are not equal")
   end
 

@@ -15,3 +15,23 @@ logs
 
 # ignore mac files
 .DS_Store
+
+# ignore some generated files
+*.gem
+test/CustomTable.xhtml
+test/GetSet.xhtml
+test/Image.xhtml
+test/Overall.htm
+test/Overall.xhtml
+test/Table.xhtml
+test/layout0.html
+test/layout0.xhtml
+test/layout1.html
+test/layout1.xhtml
+test/layout2.html
+test/layout2.xhtml
+test/layout3.html
+test/layout3.xhtml
+test/test_encoding.html
+test/test_encoding.xhtml
+

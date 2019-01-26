@@ -1,3 +1,7 @@
+4.0.1
+-----
+- update c3 and d3 to latest versions
+
 4.0.0
 -----
 - all code moved into main generator class, :custom_rb option is no longer supported.

@@ -77,4 +77,4 @@ graph.add_data({:data => data_sales_03, :title => 'Sales2003'})
 
 # add the svg to the report
 gen1.html(graph.burn_svg_only())
-gen1.write("graph.xhtml")
+gen1.write(File.expand_path("graph.xhtml", __dir__))
