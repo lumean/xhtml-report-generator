@@ -5,7 +5,7 @@ require 'base64'
 
 module XhtmlReportGenerator
 
-  VERSION = '4.0.1'
+  VERSION = '4.0.2'
 
   # This is the main generator class. It can be instanced with custom javascript, css, and ruby files to allow
   # generation of arbitrary reports.
@@ -100,6 +100,9 @@ module XhtmlReportGenerator
     # @param parent_element [REXML::Element] the element to which cdata should be added
     # @return [REXML::Element] parent_element
     def cdata(str, parent_element)
+      # sometimes depending on LC_CTYPE environemnt variable it can happen that js / css files are interpreted
+      # with wrong encoding
+      str = encoding_fixer(str)
       # somehow there is a problem with CDATA, any text added after will automatically go into the CDATA
       # so we have do add a dummy node after the CDATA and then add the text.
       parent_element.add_text("/*")

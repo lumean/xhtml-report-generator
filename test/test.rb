@@ -341,5 +341,11 @@ class TestReportGenerator < Test::Unit::TestCase
     #assert(el != nil, "heading_top element should not be nil")
   end
 
+  def test_invalid_cdata_encoding()
+
+    opts = {:js => [ "#{@cd}/UTF-8-test.txt" ] }
+    XhtmlReportGenerator::Generator.new(opts)
+
+  end
 
 end
