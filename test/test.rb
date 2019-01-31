@@ -57,7 +57,7 @@ class TestReportGenerator < Test::Unit::TestCase
     # performance impact of sync for this testcase (using spinning harddrive not ssd):
     # sync = true => 9 seconds
     # sync = false => 0.3 seconds
-    gen1.sync = true
+    gen1.sync = false
     gen1.create_layout("XHTML's Testreport")
 
     for i in 1..10 do
