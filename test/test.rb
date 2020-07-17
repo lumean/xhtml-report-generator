@@ -4,20 +4,6 @@ require 'test/unit'
 require_relative '../lib/xhtml_report_generator'
 require_relative 'custom_reporter'
 
-# compat mixin for Ruby >1.9.1 with test-unit gem in Eclipse
-module Test
-  module Unit
-    module UI
-      SILENT = false
-    end
-
-    class AutoRunner
-      def output_level=(level)
-        self.runner_options[:output_level] = level
-      end
-    end
-  end
-end
 
 class TestReportGenerator < Test::Unit::TestCase
 
@@ -48,7 +34,7 @@ class TestReportGenerator < Test::Unit::TestCase
     # check if LATIN SMALL LETTER EZH WITH TAIL  is in final output
     result = IO.binread("#{@cd}/test_encoding.xhtml").force_encoding('UTF-8')
     #puts "valid encoding? : #{result.valid_encoding?}"
-    assert(result.match(/\u01baäöü/u), "ƺ (\\u01baäöü was not found")
+    assert(result.match(/\u01baäöü/u), "\\u01baäöü was not found")
   end
 
   def test_overall()

@@ -13,7 +13,7 @@ Also pdf export is easy by just printing the report. By default there is a speci
 
 Ruby version
 -----
-This gem was mainly tested with ruby versions >=2.2. Except of the test_encoding_issues unit tests, all other tests are
+This gem was mainly tested with ruby versions >=2.6. Except of the test_encoding_issues unit tests, all other tests are
 also passing with 1.9.3.
 
 

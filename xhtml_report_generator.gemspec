@@ -24,10 +24,7 @@ Gem::Specification.new do |s|
   s.files        = Dir["{lib}/**/*.rb",
                       "LICENSE",
                       "*.md",
-                      "resource/c3v0.6.12/*",
-                      "resource/d3v5.7.0/*",
-                      "resource/css/*.css",
-                      "resource/js/*.js",
+                      "resource/**/*"
                   ]
   s.require_path = 'lib'
   s.homepage    = 'https://rubygems.org/gems/xhtml_report_generator'
