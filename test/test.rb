@@ -71,7 +71,7 @@ class TestReportGenerator < Test::Unit::TestCase
       assert_equal(0, gen1.highlight_captures(/this_regex_will_(not)_match/,"r"))
 
       gen1.code() {"
-      asdfjkl
+      asdfjkl \` \" \' <a href=\"example.org\"> my testlink </a>
 
       abc
 
@@ -91,7 +91,7 @@ class TestReportGenerator < Test::Unit::TestCase
       gen1.highlight(/def/, 'g')
       gen1.highlight(/abc/, 'y')
       #
-      assert_match(/asdfjkl\n\n\s+abc/, gen1.get_element_text())
+      assert_match(/abc\n\n\s+def/, gen1.get_element_text())
 
       gen1.content() {"this is some normal content"}
 
