@@ -5,7 +5,7 @@ require 'base64'
 
 module XhtmlReportGenerator
 
-  VERSION = '4.0.3'
+  VERSION = '4.0.4'
 
   # This is the main generator class. It can be instanced with custom javascript, css, and ruby files to allow
   # generation of arbitrary reports.
@@ -122,6 +122,7 @@ module XhtmlReportGenerator
       #if !str.force_encoding('UTF-8').valid_encoding?
       #  str.encode!('UTF-8', 'ISO-8859-1', {:invalid => :replace, :undef => :replace, :xml => :text})
       #end
+      str = str.gsub!("\"", '') # replace double quote error
       tmp = str.force_encoding('UTF-8').encode('UTF-8', :invalid => :replace, :undef => :replace, :replace => "\u2e2e")
       # replace all special control chars as well but keep newline and whitespace "\u2e2e"
       tmp.force_encoding('binary').gsub!(/[\x00-\x07\x0C-\x1F]|\xef\xbf\xbe|\xef\xbf\xbf/n, "\xe2\xb8\xae".force_encoding('binary'))
